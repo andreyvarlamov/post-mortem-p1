@@ -55,6 +55,8 @@ namespace PostMortem_P1
             Global.Player = new Player(Global.SpriteManager.Player, startingCell.X, startingCell.Y);
             Global.Camera.CenterOn(startingCell);
 
+            Global.CommandSystem = new CommandSystem();
+
             //AddEnemies(10);
 
             //Global.CombatManager = new CombatManager(_player, _enemies);
@@ -83,26 +85,11 @@ namespace PostMortem_P1
                     Global.GameState = GameStates.PlayerTurn;
                 }
             }
-            else
+
+            bool didPlayerMove = Global.CommandSystem.MovePlayer(_inputState.IsMove());
+            if (didPlayerMove)
             {
-                if (Global.GameState == GameStates.PlayerTurn &&
-                    Global.Player.HandleInput(_inputState, Global.WorldCellMap))
-                {
-                    Global.WorldCellMap.UpdatePlayerFieldOfView();
-                    // Center the camera on player when he moves
-                    Global.Camera.CenterOn(Global.WorldCellMap.GetCell(Global.Player.X, Global.Player.Y) as Cell);
-
-                    Global.GameState = GameStates.EnemyTurn;
-                }
-                if (Global.GameState == GameStates.EnemyTurn)
-                {
-                    //foreach(var enemy in _enemies)
-                    //{
-                    //    enemy.Update();
-                    //}
-
-                    Global.GameState = GameStates.PlayerTurn;
-                }
+                Global.Camera.CenterOn(Global.WorldCellMap.GetCell(Global.Player.X, Global.Player.Y) as Cell);
             }
 
             Global.Camera.HandleInput(_inputState);
@@ -119,7 +106,7 @@ namespace PostMortem_P1
 
             Global.WorldCellMap.Draw(_spriteBatch);
 
-            Global.Player.Draw(_spriteBatch, Global.WorldCellMap);
+            Global.Player.Draw(_spriteBatch);
 
             //foreach (var enemy in _enemies)
             //{

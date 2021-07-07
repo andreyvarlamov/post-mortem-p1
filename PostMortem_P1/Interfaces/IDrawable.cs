@@ -10,6 +10,6 @@ namespace PostMortem_P1.Interfaces
         int Y { get; set; }
         Texture2D Sprite { get; set; }
 
-        void Draw(SpriteBatch spriteBatch, IMap map);
+        void Draw(SpriteBatch spriteBatch);
     }
 }

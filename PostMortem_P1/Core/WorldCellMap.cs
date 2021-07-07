@@ -56,5 +56,12 @@ namespace PostMortem_P1.Core
                 }
             }
         }
+
+        public void SetIsWalkable(int x, int y, bool isWalkable)
+        {
+            Cell cell = GetCell(x, y) as Cell;
+            SetCellProperties(cell.X, cell.Y, cell.IsTransparent, isWalkable, cell.IsExplored);
+        }
+
     }
 }

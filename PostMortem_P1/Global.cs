@@ -3,6 +3,7 @@
 using PostMortem_P1;
 using PostMortem_P1.Core;
 using PostMortem_P1.Graphics;
+using PostMortem_P1.Systems;
 
 namespace PostMortem_P1
 {
@@ -33,5 +34,7 @@ namespace PostMortem_P1
         public static WorldCellMap WorldCellMap { get; set; }
 
         public static Player Player { get; set; }
+
+        public static CommandSystem CommandSystem { get; set; }
     }
 }
