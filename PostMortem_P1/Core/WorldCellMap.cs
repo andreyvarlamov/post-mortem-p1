@@ -28,11 +28,11 @@ namespace PostMortem_P1.Core
 
                 var position = new Vector2(cell.X * SpriteManager.SpriteSize, cell.Y * SpriteManager.SpriteSize);
 
-                spriteBatch.Draw(GetCellSprite(cell), position, null, tint, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.Cells);
+                spriteBatch.Draw(getCellSprite(cell), position, null, tint, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.Cells);
             }
         }
 
-        public Texture2D GetCellSprite(Cell cell)
+        private Texture2D getCellSprite(Cell cell)
         {
             if (cell.IsWalkable)
             {
@@ -41,6 +41,19 @@ namespace PostMortem_P1.Core
             else
             {
                 return Global.SpriteManager.Wall;
+            }
+        }
+
+        public void UpdatePlayerFieldOfView()
+        {
+            Player player = Global.Player;
+            ComputeFov(player.X, player.Y, Global.Player.Awareness, true);
+            foreach (Cell cell in GetAllCells())
+            {
+                if (IsInFov(cell.X, cell.Y))
+                {
+                    SetCellProperties(cell.X, cell.Y, cell.IsTransparent, cell.IsWalkable, true);
+                }
             }
         }
     }

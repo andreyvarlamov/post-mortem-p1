@@ -18,9 +18,6 @@ namespace PostMortem_P1
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        public static WorldCellMap WorldCellMap { get; private set; }
-
-        private Player _player;
         private InputState _inputState;
 
         //private List<Enemy> _enemies = new List<Enemy>();
@@ -36,8 +33,6 @@ namespace PostMortem_P1
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            MapGenerator mapGenerator = new MapGenerator(Global.MapWidth, Global.MapHeight);
-            WorldCellMap = mapGenerator.CreateMap();
 
             Global.Camera.ViewportWidth = _graphics.GraphicsDevice.Viewport.Width;
             Global.Camera.ViewportHeight = _graphics.GraphicsDevice.Viewport.Height;
@@ -50,18 +45,21 @@ namespace PostMortem_P1
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            MapGenerator mapGenerator = new MapGenerator(Global.MapWidth, Global.MapHeight);
+            Global.WorldCellMap = mapGenerator.CreateMap();
+
             Global.SpriteManager = new SpriteManager();
             Global.SpriteManager.LoadContent(Content);
 
-            Cell startingCell = WorldCellMap.GetCell(10, 10) as Cell;
-            _player = new Player(Global.SpriteManager.Player, startingCell.X, startingCell.Y);
+            Cell startingCell = Global.WorldCellMap.GetCell(10, 10) as Cell;
+            Global.Player = new Player(Global.SpriteManager.Player, startingCell.X, startingCell.Y);
             Global.Camera.CenterOn(startingCell);
 
             //AddEnemies(10);
 
             //Global.CombatManager = new CombatManager(_player, _enemies);
 
-            //UpdatePlayerFieldOfView();
+            Global.WorldCellMap.UpdatePlayerFieldOfView();
             Global.GameState = GameStates.PlayerTurn;
         }
 
@@ -87,11 +85,12 @@ namespace PostMortem_P1
             }
             else
             {
-                if (Global.GameState == GameStates.PlayerTurn && _player.HandleInput(_inputState, WorldCellMap))
+                if (Global.GameState == GameStates.PlayerTurn &&
+                    Global.Player.HandleInput(_inputState, Global.WorldCellMap))
                 {
-                    //UpdatePlayerFieldOfView();
+                    Global.WorldCellMap.UpdatePlayerFieldOfView();
                     // Center the camera on player when he moves
-                    Global.Camera.CenterOn(WorldCellMap.GetCell(_player.X, _player.Y) as Cell);
+                    Global.Camera.CenterOn(Global.WorldCellMap.GetCell(Global.Player.X, Global.Player.Y) as Cell);
 
                     Global.GameState = GameStates.EnemyTurn;
                 }
@@ -118,9 +117,9 @@ namespace PostMortem_P1
             // TODO: Add your drawing code here
             _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, null, null, null, null, Global.Camera.TranslationMatrix);
 
-            WorldCellMap.Draw(_spriteBatch);
+            Global.WorldCellMap.Draw(_spriteBatch);
 
-            _player.Draw(_spriteBatch, WorldCellMap);
+            Global.Player.Draw(_spriteBatch, Global.WorldCellMap);
 
             //foreach (var enemy in _enemies)
             //{
@@ -170,16 +169,5 @@ namespace PostMortem_P1
         //    }
         //}
 
-        //private void UpdatePlayerFieldOfView()
-        //{
-        //    _map.ComputeFov(_player.X, _player.Y, 30, true);
-        //    foreach(Cell cell in _map.GetAllCells())
-        //    {
-        //        if(_map.IsInFov(cell.X, cell.Y))
-        //        {
-        //            _map.SetCellProperties(cell.X, cell.Y, cell.IsTransparent, cell.IsWalkable, true);
-        //        }
-        //    }
-        //}
     }
 }

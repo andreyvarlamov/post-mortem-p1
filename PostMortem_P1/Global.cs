@@ -1,5 +1,7 @@
 ﻿using RogueSharp.Random;
 
+using PostMortem_P1;
+using PostMortem_P1.Core;
 using PostMortem_P1.Graphics;
 
 namespace PostMortem_P1
@@ -27,5 +29,9 @@ namespace PostMortem_P1
         public static bool Debugging = false;
 
         public static SpriteManager SpriteManager { get; set; }
+
+        public static WorldCellMap WorldCellMap { get; set; }
+
+        public static Player Player { get; set; }
     }
 }
