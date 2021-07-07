@@ -8,6 +8,8 @@ using RogueSharp.MapCreation;
 using RogueSharp.DiceNotation;
 
 using PostMortem_P1.Core;
+using PostMortem_P1.Graphics;
+using PostMortem_P1.Systems;
 
 namespace PostMortem_P1
 {
@@ -16,9 +18,8 @@ namespace PostMortem_P1
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        private Texture2D _floor;
-        private Texture2D _wall;
-        private IMap _map;
+        public static WorldCellMap WorldCellMap { get; private set; }
+
         private Player _player;
         private InputState _inputState;
 
@@ -35,8 +36,8 @@ namespace PostMortem_P1
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            IMapCreationStrategy<Map> mapCreationStrategy = new RandomRoomsMapCreationStrategy<Map>(Global.MapWidth, Global.MapHeight, 100, 7, 3);
-            _map = Map.Create(mapCreationStrategy);
+            MapGenerator mapGenerator = new MapGenerator(Global.MapWidth, Global.MapHeight);
+            WorldCellMap = mapGenerator.CreateMap();
 
             Global.Camera.ViewportWidth = _graphics.GraphicsDevice.Viewport.Width;
             Global.Camera.ViewportHeight = _graphics.GraphicsDevice.Viewport.Height;
@@ -49,18 +50,18 @@ namespace PostMortem_P1
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            _floor = Content.Load<Texture2D>("Floor");
-            _wall = Content.Load<Texture2D>("Wall");
+            Global.SpriteManager = new SpriteManager();
+            Global.SpriteManager.LoadContent(Content);
 
-            Cell startingCell = GetRandomEmptyCell();
-            _player = new Player(Content.Load<Texture2D>("Player"), startingCell.X, startingCell.Y);
+            Cell startingCell = WorldCellMap.GetCell(10, 10) as Cell;
+            _player = new Player(Global.SpriteManager.Player, startingCell.X, startingCell.Y);
             Global.Camera.CenterOn(startingCell);
 
             //AddEnemies(10);
 
             //Global.CombatManager = new CombatManager(_player, _enemies);
 
-            UpdatePlayerFieldOfView();
+            //UpdatePlayerFieldOfView();
             Global.GameState = GameStates.PlayerTurn;
         }
 
@@ -86,11 +87,11 @@ namespace PostMortem_P1
             }
             else
             {
-                if (Global.GameState == GameStates.PlayerTurn && _player.HandleInput(_inputState, _map))
+                if (Global.GameState == GameStates.PlayerTurn && _player.HandleInput(_inputState, WorldCellMap))
                 {
-                    UpdatePlayerFieldOfView();
+                    //UpdatePlayerFieldOfView();
                     // Center the camera on player when he moves
-                    Global.Camera.CenterOn(_map.GetCell(_player.X, _player.Y) as Cell);
+                    Global.Camera.CenterOn(WorldCellMap.GetCell(_player.X, _player.Y) as Cell);
 
                     Global.GameState = GameStates.EnemyTurn;
                 }
@@ -117,33 +118,9 @@ namespace PostMortem_P1
             // TODO: Add your drawing code here
             _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, null, null, null, null, Global.Camera.TranslationMatrix);
 
-            foreach (Cell cell in _map.GetAllCells())
-            {
-                // If not explored yet, don't render
-                if (!cell.IsExplored && Global.GameState != GameStates.Debugging)
-                {
-                    continue;
-                }
+            WorldCellMap.Draw(_spriteBatch);
 
-                // If explored, but not in fov - gray tint, if in fov - no tint
-                Color tint = Color.Gray;
-                if (cell.IsInFov || Global.GameState == GameStates.Debugging)
-                {
-                    tint = Color.White; 
-                }
-
-                var position = new Vector2(cell.X * Global.SpriteSize, cell.Y * Global.SpriteSize);
-                if (cell.IsWalkable)
-                {
-                    _spriteBatch.Draw(_floor, position, null, tint, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.Cells);
-                }
-                else
-                {
-                    _spriteBatch.Draw(_wall, position, null, tint, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.Cells);
-                }
-            }
-
-            _player.Draw(_spriteBatch, _map);
+            _player.Draw(_spriteBatch, WorldCellMap);
 
             //foreach (var enemy in _enemies)
             //{
@@ -179,30 +156,30 @@ namespace PostMortem_P1
         //    }
         //}
 
-        private Cell GetRandomEmptyCell()
-        {
+        //private Cell GetRandomEmptyCell()
+        //{
 
-            while (true)
-            {
-                int x = Global.Random.Next(49);
-                int y = Global.Random.Next(29);
-                if (_map.IsWalkable(x, y))
-                {
-                    return _map.GetCell(x, y) as Cell;
-                }
-            }
-        }
+        //    while (true)
+        //    {
+        //        int x = Global.Random.Next(49);
+        //        int y = Global.Random.Next(29);
+        //        if (_map.IsWalkable(x, y))
+        //        {
+        //            return _map.GetCell(x, y) as Cell;
+        //        }
+        //    }
+        //}
 
-        private void UpdatePlayerFieldOfView()
-        {
-            _map.ComputeFov(_player.X, _player.Y, 30, true);
-            foreach(Cell cell in _map.GetAllCells())
-            {
-                if(_map.IsInFov(cell.X, cell.Y))
-                {
-                    _map.SetCellProperties(cell.X, cell.Y, cell.IsTransparent, cell.IsWalkable, true);
-                }
-            }
-        }
+        //private void UpdatePlayerFieldOfView()
+        //{
+        //    _map.ComputeFov(_player.X, _player.Y, 30, true);
+        //    foreach(Cell cell in _map.GetAllCells())
+        //    {
+        //        if(_map.IsInFov(cell.X, cell.Y))
+        //        {
+        //            _map.SetCellProperties(cell.X, cell.Y, cell.IsTransparent, cell.IsWalkable, true);
+        //        }
+        //    }
+        //}
     }
 }

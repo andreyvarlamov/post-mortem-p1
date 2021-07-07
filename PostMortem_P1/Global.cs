@@ -1,5 +1,7 @@
 ﻿using RogueSharp.Random;
 
+using PostMortem_P1.Graphics;
+
 namespace PostMortem_P1
 {
     public enum GameStates
@@ -15,7 +17,6 @@ namespace PostMortem_P1
         #region Constants
         public static readonly int MapWidth = 50;
         public static readonly int MapHeight = 30;
-        public static readonly int SpriteSize = 64;
         #endregion
 
         public static readonly IRandom Random = new DotNetRandom();
@@ -24,5 +25,7 @@ namespace PostMortem_P1
         //public static CombatManager CombatManager;
 
         public static bool Debugging = false;
+
+        public static SpriteManager SpriteManager { get; set; }
     }
 }
