@@ -3,29 +3,35 @@ using Microsoft.Xna.Framework.Graphics;
 
 using RogueSharp;
 
-namespace PostMortem_P1
+namespace PostMortem_P1.Core
 {
-    public class Player : Figure
+    public class Player : Actor
     {
-        public void Draw(SpriteBatch spriteBatch)
+        public Player(Texture2D sprite, int x, int y)
         {
-            spriteBatch.Draw(Sprite, new Vector2(X * Sprite.Width, Y * Sprite.Width), null, Color.White, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.Figures);
+            Awareness = 15;
+            Name = "Player";
+            Sprite = sprite;
+            X = x;
+            Y = y;
         }
 
         public bool TryMoveTo(int x, int y, IMap map)
         {
             if (map.IsWalkable(x, y))
             {
-                var enemy = Global.CombatManager.EnemyAt(x, y);
-                if (enemy == null)
-                {
-                    X = x;
-                    Y = y;
-                }
-                else
-                {
-                    Global.CombatManager.Attack(this, enemy);
-                }
+                X = x;
+                Y = y;
+                //var enemy = Global.CombatManager.EnemyAt(x, y);
+                //if (enemy == null)
+                //{
+                //    X = x;
+                //    Y = y;
+                //}
+                //else
+                //{
+                //    Global.CombatManager.Attack(this, enemy);
+                //}
                 return true;
             }
             else

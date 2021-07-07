@@ -21,6 +21,8 @@ namespace PostMortem_P1
         public static readonly IRandom Random = new DotNetRandom();
         public static GameStates GameState { get; set; }
         public static readonly Camera Camera = new Camera();
-        public static CombatManager CombatManager;
+        //public static CombatManager CombatManager;
+
+        public static bool Debugging = false;
     }
 }

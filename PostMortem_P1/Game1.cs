@@ -7,6 +7,8 @@ using RogueSharp;
 using RogueSharp.MapCreation;
 using RogueSharp.DiceNotation;
 
+using PostMortem_P1.Core;
+
 namespace PostMortem_P1
 {
     public class Game1 : Game
@@ -20,7 +22,7 @@ namespace PostMortem_P1
         private Player _player;
         private InputState _inputState;
 
-        private List<Enemy> _enemies = new List<Enemy>();
+        //private List<Enemy> _enemies = new List<Enemy>();
 
         public Game1()
         {
@@ -51,22 +53,12 @@ namespace PostMortem_P1
             _wall = Content.Load<Texture2D>("Wall");
 
             Cell startingCell = GetRandomEmptyCell();
-            _player = new Player
-            {
-                X = startingCell.X,
-                Y = startingCell.Y,
-                Sprite = Content.Load<Texture2D>("Player"),
-                ArmorClass = 15,
-                AttackBonus = 1,
-                Damage = Dice.Parse("2d4"),
-                Health = 50,
-                Name = "Player"
-            };
+            _player = new Player(Content.Load<Texture2D>("Player"), startingCell.X, startingCell.Y);
             Global.Camera.CenterOn(startingCell);
 
-            AddEnemies(10);
+            //AddEnemies(10);
 
-            Global.CombatManager = new CombatManager(_player, _enemies);
+            //Global.CombatManager = new CombatManager(_player, _enemies);
 
             UpdatePlayerFieldOfView();
             Global.GameState = GameStates.PlayerTurn;
@@ -104,10 +96,10 @@ namespace PostMortem_P1
                 }
                 if (Global.GameState == GameStates.EnemyTurn)
                 {
-                    foreach(var enemy in _enemies)
-                    {
-                        enemy.Update();
-                    }
+                    //foreach(var enemy in _enemies)
+                    //{
+                    //    enemy.Update();
+                    //}
 
                     Global.GameState = GameStates.PlayerTurn;
                 }
@@ -151,41 +143,41 @@ namespace PostMortem_P1
                 }
             }
 
-            _player.Draw(_spriteBatch);
+            _player.Draw(_spriteBatch, _map);
 
-            foreach (var enemy in _enemies)
-            {
-                if (_map.IsInFov(enemy.X, enemy.Y) || Global.GameState == GameStates.Debugging)
-                {
-                    enemy.Draw(_spriteBatch);
-                }
-            }
+            //foreach (var enemy in _enemies)
+            //{
+            //    if (_map.IsInFov(enemy.X, enemy.Y) || Global.GameState == GameStates.Debugging)
+            //    {
+            //        enemy.Draw(_spriteBatch);
+            //    }
+            //}
 
             _spriteBatch.End();
 
             base.Draw(gameTime);
         }
 
-        private void AddEnemies(int num)
-        {
-            for (int i = 0; i < num; i++)
-            {
-                Cell enemyCell = GetRandomEmptyCell();
-                var pathFromEnemy = new PathToPlayer(_player, _map, Content.Load<Texture2D>("White"));
-                var enemy = new Enemy(_map, pathFromEnemy)
-                {
-                    X = enemyCell.X,
-                    Y = enemyCell.Y,
-                    Sprite = Content.Load<Texture2D>("Hound"),
-                    ArmorClass = 10,
-                    AttackBonus = 0,
-                    Damage = Dice.Parse("d3"),
-                    Health = 10,
-                    Name = $"Enemy {i + 1}"
-                };
-                _enemies.Add(enemy);
-            }
-        }
+        //private void AddEnemies(int num)
+        //{
+        //    for (int i = 0; i < num; i++)
+        //    {
+        //        Cell enemyCell = GetRandomEmptyCell();
+        //        var pathFromEnemy = new PathToPlayer(_player, _map, Content.Load<Texture2D>("White"));
+        //        var enemy = new Enemy(_map, pathFromEnemy)
+        //        {
+        //            X = enemyCell.X,
+        //            Y = enemyCell.Y,
+        //            Sprite = Content.Load<Texture2D>("Hound"),
+        //            ArmorClass = 10,
+        //            AttackBonus = 0,
+        //            Damage = Dice.Parse("d3"),
+        //            Health = 10,
+        //            Name = $"Enemy {i + 1}"
+        //        };
+        //        _enemies.Add(enemy);
+        //    }
+        //}
 
         private Cell GetRandomEmptyCell()
         {
