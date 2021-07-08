@@ -45,14 +45,13 @@ namespace PostMortem_P1
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            MapGenerator mapGenerator = new MapGenerator(Global.MapWidth, Global.MapHeight, 20, 13, 7);
-            Global.WorldCellMap = mapGenerator.CreateMap();
-
             Global.SpriteManager = new SpriteManager();
             Global.SpriteManager.LoadContent(Content);
 
+            MapGenerator mapGenerator = new MapGenerator(Global.MapWidth, Global.MapHeight, 20, 13, 7);
+            Global.WorldCellMap = mapGenerator.CreateMap();
+
             Cell startingCell = Global.WorldCellMap.GetCell(10, 10) as Cell;
-            Global.Player = new Player(Global.SpriteManager.Player, startingCell.X, startingCell.Y);
             Global.Camera.CenterOn(startingCell);
 
             Global.CommandSystem = new CommandSystem();

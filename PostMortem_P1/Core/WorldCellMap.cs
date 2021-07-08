@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 using RogueSharp;
 
+using PostMortem_P1.Core;
 using PostMortem_P1.Graphics;
 
 using RSRectangle = RogueSharp.Rectangle;
@@ -74,5 +75,11 @@ namespace PostMortem_P1.Core
             SetCellProperties(cell.X, cell.Y, cell.IsTransparent, isWalkable, cell.IsExplored);
         }
 
+        public void AddPlayer(Player player)
+        {
+            Global.Player = player;
+            SetIsWalkable(player.X, player.Y, false);
+            UpdatePlayerFieldOfView();
+        }
     }
 }
