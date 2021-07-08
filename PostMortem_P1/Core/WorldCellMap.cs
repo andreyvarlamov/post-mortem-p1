@@ -1,14 +1,25 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 using RogueSharp;
 
 using PostMortem_P1.Graphics;
 
+using RSRectangle = RogueSharp.Rectangle;
+
 namespace PostMortem_P1.Core
 {
     public class WorldCellMap : Map
     {
+        public List<RSRectangle> Rooms;
+
+        public WorldCellMap()
+        {
+            Rooms = new List<RSRectangle>();
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
             foreach (Cell cell in GetAllCells())

@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 using RogueSharp;
+
+using RSRectangle = RogueSharp.Rectangle;
 
 using PostMortem_P1.Core;
 
@@ -12,37 +13,62 @@ namespace PostMortem_P1.Systems
     {
         private readonly int _width;
         private readonly int _height;
+        private readonly int _maxRooms;
+        private readonly int _roomMaxSize;
+        private readonly int _roomMinSize;
+
         private readonly WorldCellMap _map;
 
-        public MapGenerator(int width, int height)
+        public MapGenerator(int width, int height, int maxRooms, int roomMaxSize, int roomMinSize)
         {
             _width = width;
             _height = height;
+            _maxRooms = maxRooms;
+            _roomMaxSize = roomMaxSize;
+            _roomMinSize = roomMinSize;
+
             _map = new WorldCellMap();
         }
 
         public WorldCellMap CreateMap()
         {
-            // Initialize every cell in the map by setitng walkable, transparency and explored to true
+            // Set the properties of all cells to false
             _map.Initialize(_width, _height);
-            foreach(Cell cell in _map.GetAllCells())
+
+            for (int r = 0; r < _maxRooms; r++)
             {
-                _map.SetCellProperties(cell.X, cell.Y, true, true, true);
+                int roomWidth = Global.Random.Next(_roomMinSize, _roomMaxSize);
+                int roomHeight = Global.Random.Next(_roomMinSize, _roomMaxSize);
+                int roomXPosition = Global.Random.Next(0, _width - roomWidth - 1);
+                int roomYPosition = Global.Random.Next(0, _height - roomHeight - 1);
+
+                var newRoom = new RSRectangle(roomXPosition, roomYPosition, roomWidth, roomHeight);
+
+                bool newRoomIntersects = _map.Rooms.Any(room => newRoom.Intersects(room));
+
+                if (!newRoomIntersects)
+                {
+                    _map.Rooms.Add(newRoom);
+                }
             }
 
-            // Set the first and last rows in the map to not be transparent or walkable
-            foreach (Cell cell in _map.GetCellsInRows(0, _height - 1))
+            foreach(RSRectangle room in _map.Rooms)
             {
-                _map.SetCellProperties(cell.X, cell.Y, false, false, true);
-            }
-
-            // Set the first and last columns int he map to not be transparent or walkable
-            foreach (Cell cell in _map.GetCellsInColumns(0, _width - 1))
-            {
-                _map.SetCellProperties(cell.X, cell.Y, false, false, true);
+                CreateRoom(room);
             }
 
             return _map;
+        }
+
+        public void CreateRoom(RSRectangle room)
+        {
+            for (int x = room.Left + 1; x < room.Right; x++)
+            {
+                for (int y = room.Top + 1; y < room.Bottom; y++)
+                {
+                    _map.SetCellProperties(x, y, true, true, true);
+                }
+            }
         }
     }
 }
