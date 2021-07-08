@@ -1,7 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-
-using RogueSharp.DiceNotation;
+﻿using RogueSharp.DiceNotation;
 
 namespace PostMortem_P1.Core
 {

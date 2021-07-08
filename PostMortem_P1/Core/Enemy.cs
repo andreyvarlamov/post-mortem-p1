@@ -1,8 +1,7 @@
-﻿using PostMortem_P1.Core;
-using PostMortem_P1.Systems;
+﻿using PostMortem_P1.Systems;
 using PostMortem_P1.Behaviors;
 
-namespace PostMortem_P1
+namespace PostMortem_P1.Core
 {
     public class Enemy : Actor
     {

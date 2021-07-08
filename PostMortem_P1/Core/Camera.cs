@@ -5,8 +5,9 @@ using RogueSharp;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 using PostMortem_P1.Graphics;
+using PostMortem_P1.Input;
 
-namespace PostMortem_P1
+namespace PostMortem_P1.Core
 {
     public class Camera
     {

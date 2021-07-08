@@ -2,7 +2,7 @@
 
 using PostMortem_P1.Core;
 
-namespace PostMortem_P1
+namespace PostMortem_P1.Input
 {
     public class InputState
     {

@@ -1,4 +1,4 @@
-﻿namespace PostMortem_P1
+﻿namespace PostMortem_P1.Core
 {
     public class LayerDepth
     {

@@ -10,19 +10,18 @@ using RogueSharp.DiceNotation;
 using PostMortem_P1.Core;
 using PostMortem_P1.Graphics;
 using PostMortem_P1.Systems;
+using PostMortem_P1.Input;
 
 namespace PostMortem_P1
 {
-    public class Game1 : Game
+    public class PostMortem : Game
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
         private InputState _inputState;
 
-        //private List<Enemy> _enemies = new List<Enemy>();
-
-        public Game1()
+        public PostMortem()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -32,8 +31,6 @@ namespace PostMortem_P1
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
             Global.Camera.ViewportWidth = _graphics.GraphicsDevice.Viewport.Width;
             Global.Camera.ViewportHeight = _graphics.GraphicsDevice.Viewport.Height;
 
@@ -44,7 +41,6 @@ namespace PostMortem_P1
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
             Global.SpriteManager = new SpriteManager();
             Global.SpriteManager.LoadContent(Content);
 
@@ -57,7 +53,6 @@ namespace PostMortem_P1
 
         protected override void Update(GameTime gameTime)
         {
-            // TODO: Add your update logic here
             _inputState.Update();
 
             if (_inputState.IsExitGame())
@@ -69,10 +64,9 @@ namespace PostMortem_P1
                 Global.Debugging = !Global.Debugging;
             }
 
-            bool didPlayerMove = false;
             if (Global.CommandSystem.IsPlayerTurn)
             {
-                didPlayerMove = Global.CommandSystem.MovePlayer(_inputState.IsMove());
+                bool didPlayerMove = Global.CommandSystem.MovePlayer(_inputState.IsMove());
                 if (didPlayerMove)
                 {
                     Global.Camera.CenterOn(Global.WorldCellMap.GetCell(Global.Player.X, Global.Player.Y) as Cell);
@@ -93,60 +87,15 @@ namespace PostMortem_P1
         {
             GraphicsDevice.Clear(Color.Black);
 
-            // TODO: Add your drawing code here
             _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, null, null, null, null, Global.Camera.TranslationMatrix);
 
             Global.WorldCellMap.Draw(_spriteBatch);
 
             Global.Player.Draw(_spriteBatch);
 
-            //foreach (var enemy in _enemies)
-            //{
-            //    if (_map.IsInFov(enemy.X, enemy.Y) || Global.GameState == GameStates.Debugging)
-            //    {
-            //        enemy.Draw(_spriteBatch);
-            //    }
-            //}
-
             _spriteBatch.End();
 
             base.Draw(gameTime);
         }
-
-        //private void AddEnemies(int num)
-        //{
-        //    for (int i = 0; i < num; i++)
-        //    {
-        //        Cell enemyCell = GetRandomEmptyCell();
-        //        var pathFromEnemy = new PathToPlayer(_player, _map, Content.Load<Texture2D>("White"));
-        //        var enemy = new Enemy(_map, pathFromEnemy)
-        //        {
-        //            X = enemyCell.X,
-        //            Y = enemyCell.Y,
-        //            Sprite = Content.Load<Texture2D>("Hound"),
-        //            ArmorClass = 10,
-        //            AttackBonus = 0,
-        //            Damage = Dice.Parse("d3"),
-        //            Health = 10,
-        //            Name = $"Enemy {i + 1}"
-        //        };
-        //        _enemies.Add(enemy);
-        //    }
-        //}
-
-        //private Cell GetRandomEmptyCell()
-        //{
-
-        //    while (true)
-        //    {
-        //        int x = Global.Random.Next(49);
-        //        int y = Global.Random.Next(29);
-        //        if (_map.IsWalkable(x, y))
-        //        {
-        //            return _map.GetCell(x, y) as Cell;
-        //        }
-        //    }
-        //}
-
     }
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace PostMortem_P1.Core
+﻿namespace PostMortem_P1.Core
 {
     public enum eDirection
     {

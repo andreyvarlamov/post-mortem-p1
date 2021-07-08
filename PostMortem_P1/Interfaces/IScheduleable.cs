@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace PostMortem_P1
+namespace PostMortem_P1.Interfaces
 {
     public interface IScheduleable
     {

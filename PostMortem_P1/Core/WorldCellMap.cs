@@ -6,7 +6,6 @@ using Microsoft.Xna.Framework.Graphics;
 
 using RogueSharp;
 
-using PostMortem_P1.Core;
 using PostMortem_P1.Graphics;
 
 using RSRectangle = RogueSharp.Rectangle;
@@ -30,14 +29,14 @@ namespace PostMortem_P1.Core
             foreach (Cell cell in GetAllCells())
             {
                 // If not explored yet, don't render
-                if (!cell.IsExplored && Global.GameState != GameStates.Debugging)
+                if (!cell.IsExplored && !Global.Debugging)
                 {
                     continue;
                 }
 
                 // If explored, but not in fov - gray tint, if in fov - no tint
                 Color tint = Color.Gray;
-                if (cell.IsInFov || Global.GameState == GameStates.Debugging)
+                if (cell.IsInFov || Global.Debugging)
                 {
                     tint = Color.White; 
                 }

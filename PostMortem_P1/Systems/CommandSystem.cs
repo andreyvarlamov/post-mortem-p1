@@ -5,6 +5,7 @@ using RogueSharp;
 using RogueSharp.DiceNotation;
 
 using PostMortem_P1.Core;
+using PostMortem_P1.Interfaces;
 
 namespace PostMortem_P1.Systems
 {

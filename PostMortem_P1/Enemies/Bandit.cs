@@ -1,5 +1,7 @@
 ﻿using RogueSharp.DiceNotation;
 
+using PostMortem_P1.Core;
+
 namespace PostMortem_P1.Enemies
 {
     public class Bandit : Enemy
