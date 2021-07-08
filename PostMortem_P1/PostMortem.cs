@@ -19,14 +19,14 @@ namespace PostMortem_P1
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        private InputState _inputState;
+        private InputManager _inputManager;
 
         public PostMortem()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-            _inputState = new InputState();
+            _inputManager = new InputManager();
         }
 
         protected override void Initialize()
@@ -53,20 +53,20 @@ namespace PostMortem_P1
 
         protected override void Update(GameTime gameTime)
         {
-            _inputState.Update();
+            _inputManager.Update(gameTime);
 
-            if (_inputState.IsExitGame())
+            if (_inputManager.IsExitGame())
             {
                 Exit();
             }
-            else if (_inputState.IsSpace())
+            else if (_inputManager.IsSpace())
             {
                 Global.Debugging = !Global.Debugging;
             }
 
             if (Global.CommandSystem.IsPlayerTurn)
             {
-                bool didPlayerMove = Global.CommandSystem.MovePlayer(_inputState.IsMove());
+                bool didPlayerMove = Global.CommandSystem.MovePlayer(_inputManager.IsMove());
                 if (didPlayerMove)
                 {
                     Global.Camera.CenterOn(Global.ChunkMap.GetCell(Global.Player.X, Global.Player.Y) as Cell);
@@ -78,7 +78,7 @@ namespace PostMortem_P1
                 Global.CommandSystem.ActivateEnemies();
             }
 
-            Global.Camera.HandleInput(_inputState);
+            Global.Camera.HandleInput(_inputManager);
 
             base.Update(gameTime);
         }
