@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
+using RogueSharp.DiceNotation;
+
 using PostMortem_P1.Interfaces;
 
 using IDrawable = PostMortem_P1.Interfaces.IDrawable;
@@ -50,55 +52,43 @@ namespace PostMortem_P1.Core
         }
 
         // Combat stats
-        private int _attack;
-        private int _attackChance;
-        private int _defense;
-        private int _defenseChance;
+        private int _attackBonus;
+        private int _armorClass;
+        private DiceExpression _damage;
         private int _health;
         private int _maxHealth;
 
-        public int Attack
+        public int AttackBonus
         {
             get
             {
-                return _attack;
+                return _attackBonus;
             }
             set
             {
-                _attack = value;
+                _attackBonus = value;
             }
         }
-        public int AttackChance
+        public int ArmorClass
         {
             get
             {
-                return _attackChance;
+                return _armorClass;
             }
             set
             {
-                _attackChance = value;
+                _armorClass = value;
             }
         }
-        public int Defense
+        public DiceExpression Damage
         {
             get
             {
-                return _defense;
+                return _damage;
             }
             set
             {
-                _defense = value;
-            }
-        }
-        public int DefenseChance
-        {
-            get
-            {
-                return _defenseChance;
-            }
-            set
-            {
-                _defenseChance = value;
+                _damage = value;
             }
         }
         public int Health

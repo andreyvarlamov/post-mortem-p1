@@ -1,4 +1,6 @@
-﻿namespace PostMortem_P1.Interfaces
+﻿using RogueSharp.DiceNotation;
+
+namespace PostMortem_P1.Interfaces
 {
     public interface IActor
     {
@@ -8,9 +10,9 @@
         int Speed { get; set; }
 
         // Combat stats
-        int Attack { get; set; }
-        int AttackChance { get; set; }
-        int DefenseChance { get; set; }
+        int AttackBonus { get; set; }
+        int ArmorClass { get; set; }
+        DiceExpression Damage { get; set; }
         int Health { get; set; }
         int MaxHealth { get; set; }
     }

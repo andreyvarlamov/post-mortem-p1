@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -94,6 +95,17 @@ namespace PostMortem_P1.Core
         {
             _enemies.Add(enemy);
             SetIsWalkable(enemy.X, enemy.Y, false);
+        }
+
+        public void RemoveEnemy(Enemy enemy)
+        {
+            _enemies.Remove(enemy);
+            SetIsWalkable(enemy.X, enemy.Y, true);
+        }
+
+        public Enemy GetEnemyAt(int x, int y)
+        {
+            return _enemies.FirstOrDefault(enemy => enemy.X == x && enemy.Y == y);
         }
 
         public RSPoint? GetRandomWalkableLocationInRoom(RSRectangle room)

@@ -18,27 +18,6 @@
 
 //        public void Attack(Figure attacker, Figure defender)
 //        {
-//            if (Dice.Roll("d20") + attacker.AttackBonus >= defender.ArmorClass)
-//            {
-//                int damage = attacker.Damage.Roll().Value;
-//                defender.Health -= damage;
-
-//                Debug.WriteLine($"{attacker.Name} hit {defender.Name} for {damage} and he has {defender.Health} remaining.");
-
-//                if (defender.Health <= 0)
-//                {
-//                    if (defender is Enemy)
-//                    {
-//                        _enemies.Remove(defender as Enemy);
-//                    }
-
-//                    Debug.WriteLine($"{attacker.Name} killed {defender.Name}.");
-//                }
-//            }
-//            else
-//            {
-//                Debug.WriteLine($"{attacker.Name} missed {defender.Name}.");
-//            }
 //        }
 
 //        public Figure FigureAt(int x, int y)

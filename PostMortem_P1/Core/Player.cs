@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-using RogueSharp;
+using RogueSharp.DiceNotation;
 
 namespace PostMortem_P1.Core
 {
@@ -17,12 +17,11 @@ namespace PostMortem_P1.Core
             Name = "Player";
             Speed = 10;
 
-            Attack = 2;
-            AttackChance = 50;
-            Defense = 2;
-            DefenseChance = 40;
-            Health = 100;
-            MaxHealth = 100;
+            ArmorClass = 15;
+            AttackBonus = 1;
+            Damage = Dice.Parse("2d4");
+            Health = 50;
+            MaxHealth = 50;
         }
     }
 }
