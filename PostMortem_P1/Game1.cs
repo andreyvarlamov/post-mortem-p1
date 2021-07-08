@@ -48,20 +48,11 @@ namespace PostMortem_P1
             Global.SpriteManager = new SpriteManager();
             Global.SpriteManager.LoadContent(Content);
 
-            MapGenerator mapGenerator = new MapGenerator(Global.MapWidth, Global.MapHeight, 20, 13, 7);
-            Global.WorldCellMap = mapGenerator.CreateMap();
-
-            Cell startingCell = Global.WorldCellMap.GetCell(10, 10) as Cell;
-            Global.Camera.CenterOn(startingCell);
-
+            Global.SchedulingSystem = new SchedulingSystem();
             Global.CommandSystem = new CommandSystem();
 
-            //AddEnemies(10);
-
-            //Global.CombatManager = new CombatManager(_player, _enemies);
-
-            Global.WorldCellMap.UpdatePlayerFieldOfView();
-            Global.GameState = GameStates.PlayerTurn;
+            MapGenerator mapGenerator = new MapGenerator(Global.MapWidth, Global.MapHeight, 20, 13, 7);
+            Global.WorldCellMap = mapGenerator.CreateMap();
         }
 
         protected override void Update(GameTime gameTime)
@@ -75,20 +66,22 @@ namespace PostMortem_P1
             }
             else if (_inputState.IsSpace())
             {
-                if (Global.GameState == GameStates.PlayerTurn)
-                {
-                    Global.GameState = GameStates.Debugging;
-                }
-                else if (Global.GameState == GameStates.Debugging)
-                {
-                    Global.GameState = GameStates.PlayerTurn;
-                }
+                Global.Debugging = !Global.Debugging;
             }
 
-            bool didPlayerMove = Global.CommandSystem.MovePlayer(_inputState.IsMove());
-            if (didPlayerMove)
+            bool didPlayerMove = false;
+            if (Global.CommandSystem.IsPlayerTurn)
             {
-                Global.Camera.CenterOn(Global.WorldCellMap.GetCell(Global.Player.X, Global.Player.Y) as Cell);
+                didPlayerMove = Global.CommandSystem.MovePlayer(_inputState.IsMove());
+                if (didPlayerMove)
+                {
+                    Global.Camera.CenterOn(Global.WorldCellMap.GetCell(Global.Player.X, Global.Player.Y) as Cell);
+                    Global.CommandSystem.EndPlayerTurn();
+                }
+            }
+            else
+            {
+                Global.CommandSystem.ActivateEnemies();
             }
 
             Global.Camera.HandleInput(_inputState);

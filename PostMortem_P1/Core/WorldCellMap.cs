@@ -88,19 +88,23 @@ namespace PostMortem_P1.Core
         {
             Global.Player = player;
             SetIsWalkable(player.X, player.Y, false);
+            Global.Camera.CenterOn(GetCell(player.X, player.Y) as Cell);
             UpdatePlayerFieldOfView();
+            Global.SchedulingSystem.Add(player);
         }
 
         public void AddEnemy(Enemy enemy)
         {
             _enemies.Add(enemy);
             SetIsWalkable(enemy.X, enemy.Y, false);
+            Global.SchedulingSystem.Add(enemy);
         }
 
         public void RemoveEnemy(Enemy enemy)
         {
             _enemies.Remove(enemy);
             SetIsWalkable(enemy.X, enemy.Y, true);
+            Global.SchedulingSystem.Remove(enemy);
         }
 
         public Enemy GetEnemyAt(int x, int y)

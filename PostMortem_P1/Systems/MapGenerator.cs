@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 
 using RogueSharp.DiceNotation;
@@ -90,7 +91,7 @@ namespace PostMortem_P1.Systems
             {
                 for (int y = room.Top + 1; y < room.Bottom; y++)
                 {
-                    _map.SetCellProperties(x, y, true, true, true);
+                    _map.SetCellProperties(x, y, true, true);
                 }
             }
         }
@@ -120,11 +121,22 @@ namespace PostMortem_P1.Systems
                 player = new Player(_map.Rooms[0].Center.X, _map.Rooms[0].Center.Y); ;
             }
 
+            Debug.WriteLine($"Initial player location: x = {player.X} y = {player.Y}");
+
             _map.AddPlayer(player);
         }
 
         private void PlaceEnemies()
         {
+            //RSPoint? randomRoomLoc = _map.GetRandomWalkableLocationInRoom(_map.Rooms[0]);
+
+            //if (randomRoomLoc.HasValue)
+            //{
+            //    var enemy = Bandit.Create(1, randomRoomLoc.Value.X, randomRoomLoc.Value.Y);
+
+            //    _map.AddEnemy(enemy);
+            //}
+
             foreach (var room in _map.Rooms)
             {
                 // 60% chance of spawning an enemy in a room

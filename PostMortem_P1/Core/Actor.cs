@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Diagnostics;
+
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 using RogueSharp.DiceNotation;
@@ -9,7 +11,7 @@ using IDrawable = PostMortem_P1.Interfaces.IDrawable;
 
 namespace PostMortem_P1.Core
 {
-    public class Actor : IActor, IDrawable
+    public class Actor : IActor, IDrawable, IScheduleable
     {
         #region IActor
         // General stats
@@ -133,10 +135,23 @@ namespace PostMortem_P1.Core
         }
         #endregion
 
+        #region IScheduleable
+        public int Time
+        {
+            get
+            {
+                return Speed;
+            }
+        }
+
+        #endregion
+
         public bool SetPosition(int x, int y)
         {
             if (Global.WorldCellMap.GetCell(x, y).IsWalkable)
             {
+                //Debug.WriteLine($"x = {x} y = {y} IsWalkable={Global.WorldCellMap.GetCell(x, y).IsWalkable}");
+
                 // Set the previous cell to walkable
                 Global.WorldCellMap.SetIsWalkable(X, Y, true);
 

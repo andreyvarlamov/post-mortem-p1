@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Collections.Generic;
 
+using RogueSharp;
 using RogueSharp.DiceNotation;
 
 using PostMortem_P1.Core;
@@ -9,6 +10,13 @@ namespace PostMortem_P1.Systems
 {
     public class CommandSystem
     {
+        public bool IsPlayerTurn { get; set; }
+
+        public void EndPlayerTurn()
+        {
+            IsPlayerTurn = false;
+        }
+
         public bool MovePlayer(eDirection direction)
         {
             int x = Global.Player.X;
@@ -87,6 +95,40 @@ namespace PostMortem_P1.Systems
             else
             {
                 Debug.WriteLine($"{attacker.Name} missed {defender.Name}.");
+            }
+        }
+
+        public void ActivateEnemies()
+        {
+            IScheduleable scheduleable = Global.SchedulingSystem.Get();
+
+            if (scheduleable is Player)
+            {
+                IsPlayerTurn = true;
+                Global.SchedulingSystem.Add(Global.Player);
+            }
+            else
+            {
+                Enemy enemy = scheduleable as Enemy;
+
+                if (enemy != null)
+                {
+                    enemy.PerformAction(this);
+                    Global.SchedulingSystem.Add(enemy);
+                }
+
+                ActivateEnemies();
+            }
+        }
+
+        public void MoveEnemy(Enemy enemy, Cell cell)
+        {
+            if (!enemy.SetPosition(cell.X, cell.Y))
+            {
+                if (Global.Player.X == cell.X && Global.Player.Y == cell.Y)
+                {
+                    Attack(enemy, Global.Player);
+                }
             }
         }
     }

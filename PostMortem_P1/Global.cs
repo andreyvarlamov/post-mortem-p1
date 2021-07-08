@@ -35,5 +35,7 @@ namespace PostMortem_P1
         public static Player Player { get; set; }
 
         public static CommandSystem CommandSystem { get; set; }
+
+        public static SchedulingSystem SchedulingSystem { get; set; }
     }
 }
