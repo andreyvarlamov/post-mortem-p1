@@ -9,11 +9,20 @@ namespace PostMortem_P1.Core
     {
         public Player(Texture2D sprite, int x, int y)
         {
-            Awareness = 15;
-            Name = "Player";
             Sprite = sprite;
             X = x;
             Y = y;
+
+            Awareness = 15;
+            Name = "Player";
+            Speed = 10;
+
+            Attack = 2;
+            AttackChance = 50;
+            Defense = 2;
+            DefenseChance = 40;
+            Health = 100;
+            MaxHealth = 100;
         }
     }
 }
