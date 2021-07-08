@@ -4,7 +4,10 @@ using RogueSharp;
 
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
-namespace PostMortem_P1
+using PostMortem_P1.Graphics;
+using PostMortem_P1.Input;
+
+namespace PostMortem_P1.Core
 {
     public class Camera
     {
@@ -98,9 +101,9 @@ namespace PostMortem_P1
         /// <returns></returns>
         private Vector2 CenteredPosition(Cell cell, bool clampToMap = false)
         {
-            var cameraPosition = new Vector2(cell.X * Global.SpriteSize, cell.Y * Global.SpriteSize);
+            var cameraPosition = new Vector2(cell.X * SpriteManager.SpriteSize, cell.Y * SpriteManager.SpriteSize);
             var cameraCenteredOnTilePosition =
-                new Vector2(cameraPosition.X + Global.SpriteSize / 2, cameraPosition.Y + Global.SpriteSize / 2);
+                new Vector2(cameraPosition.X + SpriteManager.SpriteSize / 2, cameraPosition.Y + SpriteManager.SpriteSize / 2);
             if (clampToMap)
             {
                 return MapClampedPosition(cameraCenteredOnTilePosition);
@@ -116,8 +119,8 @@ namespace PostMortem_P1
         /// <returns></returns>
         private Vector2 MapClampedPosition(Vector2 position)
         {
-            var cameraMax = new Vector2(Global.MapWidth * Global.SpriteSize - (ViewportWidth / Zoom / 2),
-                Global.MapHeight * Global.SpriteSize - (ViewportHeight / Zoom / 2));
+            var cameraMax = new Vector2(Global.MapWidth * SpriteManager.SpriteSize - (ViewportWidth / Zoom / 2),
+                Global.MapHeight * SpriteManager.SpriteSize - (ViewportHeight / Zoom / 2));
 
             return Vector2.Clamp(position, new Vector2(ViewportWidth / Zoom / 2, ViewportHeight / Zoom / 2), cameraMax);
         }

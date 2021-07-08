@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework.Input;
 
-namespace PostMortem_P1
+using PostMortem_P1.Core;
+
+namespace PostMortem_P1.Input
 {
     public class InputState
     {
@@ -95,6 +97,50 @@ namespace PostMortem_P1
         public bool IsDirSE()
         {
             return IsNewKeyPress(Keys.M);
+        }
+
+        public eDirection IsMove()
+        {
+            if (IsDirSW())
+            {
+                return eDirection.SW;
+            }
+            else if (IsDirS())
+            {
+                return eDirection.S;
+            }
+            else if (IsDirSE())
+            {
+                return eDirection.SE;
+            }
+            else if (IsDirW())
+            {
+                return eDirection.W;
+            }
+            else if (IsSkip())
+            {
+                return eDirection.Center;
+            }
+            else if (IsDirE())
+            {
+                return eDirection.E;
+            }
+            else if (IsDirNW())
+            {
+                return eDirection.NW;
+            }
+            else if (IsDirN())
+            {
+                return eDirection.N;
+            }
+            else if (IsDirNE())
+            {
+                return eDirection.NE;
+            }
+            else
+            {
+                return eDirection.None;
+            }
         }
         #endregion
 
