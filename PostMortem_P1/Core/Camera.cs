@@ -145,33 +145,33 @@ namespace PostMortem_P1.Core
             return Vector2.Transform(screenPosition, Matrix.Invert(TranslationMatrix));
         }
 
-        public void HandleInput(InputState inputState)
+        public void HandleInput(InputManager inputManager)
         {
             Vector2 cameraMovement = Vector2.Zero;
 
-            if (inputState.IsScrollLeft())
+            if (inputManager.IsScrollLeft())
             {
                 cameraMovement.X = -1;
             }
-            else if (inputState.IsScrollRight())
+            else if (inputManager.IsScrollRight())
             {
                 cameraMovement.X = 1;
             }
 
-            if (inputState.IsScrollUp())
+            if (inputManager.IsScrollUp())
             {
                 cameraMovement.Y = -1;
             }
-            else if (inputState.IsScrollDown())
+            else if (inputManager.IsScrollDown())
             {
                 cameraMovement.Y = 1;
             }
 
-            if (inputState.IsZoomIn())
+            if (inputManager.IsZoomIn())
             {
                 AdjustZoom(0.25f);
             }
-            else if (inputState.IsZoomOut())
+            else if (inputManager.IsZoomOut())
             {
                 AdjustZoom(-0.25f);
             }

@@ -1,30 +1,41 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿using System;
+using System.Diagnostics;
+
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 using PostMortem_P1.Core;
 
 namespace PostMortem_P1.Input
 {
-    public class InputState
+    public class InputManager
     {
         public KeyboardState CurrentKeyboardState { get; private set; }
         public KeyboardState LastKeyboardState { get; private set; }
         public MouseState CurrentMouseState { get; private set; }
         public MouseState LastMouseState { get; private set; }
 
-        public InputState()
+        private TimeSpan _totalGameTime;
+
+        private TimeSpan _repeatStart;
+
+        public InputManager()
         {
             CurrentKeyboardState = new KeyboardState();
             CurrentMouseState = new MouseState();
             LastMouseState = new MouseState();
         }
 
-        public void Update()
+        public void Update(GameTime gameTime)
         {
             LastKeyboardState = CurrentKeyboardState;
             CurrentKeyboardState = Keyboard.GetState();
             LastMouseState = CurrentMouseState;
             CurrentMouseState = Mouse.GetState();
+
+            _totalGameTime = gameTime.TotalGameTime;
         }
+
 
         #region Mouse Helpers
         public bool IsNewLeftMouseClick(out MouseState mouseState)
@@ -63,77 +74,65 @@ namespace PostMortem_P1.Input
         {
             return (CurrentKeyboardState.IsKeyDown(key));
         }
+        public bool IsDownDelay(Keys key)
+        {
+            if (CurrentKeyboardState.IsKeyDown(key))
+            {
+                if (LastKeyboardState.IsKeyUp(key))
+                {
+                    _repeatStart = _totalGameTime;
+                    return true;
+                }
+                else
+                {
+                    TimeSpan sinceFirstPressed = _totalGameTime - _repeatStart;
+                    if (sinceFirstPressed > TimeSpan.FromMilliseconds(400) && sinceFirstPressed.Milliseconds % 50 == 0)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         #endregion
 
         #region Player Movement
-        public bool IsDirN()
-        {
-            return IsNewKeyPress(Keys.K);
-        }
-        public bool IsDirS()
-        {
-            return IsNewKeyPress(Keys.J);
-        }
-        public bool IsDirW()
-        {
-            return IsNewKeyPress(Keys.H);
-        }
-        public bool IsDirE()
-        {
-            return IsNewKeyPress(Keys.L);
-        }
-        public bool IsDirNW()
-        {
-            return IsNewKeyPress(Keys.Y);
-        }
-        public bool IsDirNE()
-        {
-            return IsNewKeyPress(Keys.U);
-        }
-        public bool IsDirSW()
-        {
-            return IsNewKeyPress(Keys.N);
-        }
-        public bool IsDirSE()
-        {
-            return IsNewKeyPress(Keys.M);
-        }
-
         public eDirection IsMove()
         {
-            if (IsDirSW())
+            if (IsDownDelay(Keys.N))
             {
                 return eDirection.SW;
             }
-            else if (IsDirS())
+            else if (IsDownDelay(Keys.J))
             {
                 return eDirection.S;
             }
-            else if (IsDirSE())
+            else if (IsDownDelay(Keys.M))
             {
                 return eDirection.SE;
             }
-            else if (IsDirW())
+            else if (IsDownDelay(Keys.H))
             {
                 return eDirection.W;
             }
-            else if (IsSkip())
+            else if (IsDownDelay(Keys.OemPeriod))
             {
                 return eDirection.Center;
             }
-            else if (IsDirE())
+            else if (IsDownDelay(Keys.L))
             {
                 return eDirection.E;
             }
-            else if (IsDirNW())
+            else if (IsDownDelay(Keys.Y))
             {
                 return eDirection.NW;
             }
-            else if (IsDirN())
+            else if (IsDownDelay(Keys.K))
             {
                 return eDirection.N;
             }
-            else if (IsDirNE())
+            else if (IsDownDelay(Keys.U))
             {
                 return eDirection.NE;
             }
@@ -163,20 +162,15 @@ namespace PostMortem_P1.Input
         }
         public bool IsZoomOut()
         {
-            return IsKeyPressed(Keys.Z);
+            return IsNewKeyPress(Keys.Z);
         }
         public bool IsZoomIn()
         {
-            return IsKeyPressed(Keys.C);
+            return IsNewKeyPress(Keys.C);
         }
         #endregion
 
         #region Util
-        public bool IsSkip()
-        {
-            return IsNewKeyPress(Keys.OemPeriod);
-        }
-
         public bool IsSpace()
         {
             return IsNewKeyPress(Keys.Space);
