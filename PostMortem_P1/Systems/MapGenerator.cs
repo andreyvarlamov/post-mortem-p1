@@ -20,7 +20,7 @@ namespace PostMortem_P1.Systems
         private readonly int _roomMaxSize;
         private readonly int _roomMinSize;
 
-        private readonly WorldCellMap _map;
+        private readonly ChunkMap _map;
 
         public MapGenerator(int width, int height, int maxRooms, int roomMaxSize, int roomMinSize)
         {
@@ -30,12 +30,12 @@ namespace PostMortem_P1.Systems
             _roomMaxSize = roomMaxSize;
             _roomMinSize = roomMinSize;
 
-            _map = new WorldCellMap();
+            _map = new ChunkMap();
         }
 
-        public WorldCellMap CreateMap()
+        public ChunkMap CreateMap()
         {
-            // Set the properties of all cells to false
+            // Set the properties of all cells to false, sprites to Wall
             _map.Initialize(_width, _height);
 
             for (int r = 0; r < _maxRooms; r++)
@@ -92,6 +92,7 @@ namespace PostMortem_P1.Systems
                 for (int y = room.Top + 1; y < room.Bottom; y++)
                 {
                     _map.SetCellProperties(x, y, true, true);
+                    _map.GetCell(x, y).SetSprite(Global.SpriteManager.Floor);
                 }
             }
         }
@@ -101,6 +102,7 @@ namespace PostMortem_P1.Systems
             for (int x = Math.Min(xStart, xEnd); x <= Math.Max(xStart, xEnd); x++)
             {
                 _map.SetCellProperties(x, yPosition, true, true);
+                _map.GetCell(x, yPosition).SetSprite(Global.SpriteManager.Floor);
             }
         }
 
@@ -109,6 +111,7 @@ namespace PostMortem_P1.Systems
             for (int y = Math.Min(yStart, yEnd); y <= Math.Max(yStart, yEnd); y++)
             {
                 _map.SetCellProperties(xPosition, y, true, true);
+                _map.GetCell(xPosition, y).SetSprite(Global.SpriteManager.Floor);
             }
         }
         
