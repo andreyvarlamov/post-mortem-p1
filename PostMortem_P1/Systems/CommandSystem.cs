@@ -110,9 +110,7 @@ namespace PostMortem_P1.Systems
             }
             else
             {
-                Enemy enemy = scheduleable as Enemy;
-
-                if (enemy != null)
+                if (scheduleable is Enemy enemy)
                 {
                     enemy.PerformAction(this);
                     Global.SchedulingSystem.Add(enemy);
