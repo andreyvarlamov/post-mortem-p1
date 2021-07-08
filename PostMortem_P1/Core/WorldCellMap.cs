@@ -9,16 +9,19 @@ using PostMortem_P1.Core;
 using PostMortem_P1.Graphics;
 
 using RSRectangle = RogueSharp.Rectangle;
+using RSPoint = RogueSharp.Point;
 
 namespace PostMortem_P1.Core
 {
     public class WorldCellMap : Map
     {
         public List<RSRectangle> Rooms;
+        private readonly List<Enemy> _enemies;
 
         public WorldCellMap()
         {
             Rooms = new List<RSRectangle>();
+            _enemies = new List<Enemy>();
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -40,11 +43,16 @@ namespace PostMortem_P1.Core
 
                 var position = new Vector2(cell.X * SpriteManager.SpriteSize, cell.Y * SpriteManager.SpriteSize);
 
-                spriteBatch.Draw(getCellSprite(cell), position, null, tint, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.Cells);
+                spriteBatch.Draw(GetCellSprite(cell), position, null, tint, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.Cells);
+
+                foreach (Enemy enemy in _enemies)
+                {
+                    enemy.Draw(spriteBatch);
+                }
             }
         }
 
-        private Texture2D getCellSprite(Cell cell)
+        private Texture2D GetCellSprite(Cell cell)
         {
             if (cell.IsWalkable)
             {
@@ -80,6 +88,46 @@ namespace PostMortem_P1.Core
             Global.Player = player;
             SetIsWalkable(player.X, player.Y, false);
             UpdatePlayerFieldOfView();
+        }
+
+        public void AddEnemy(Enemy enemy)
+        {
+            _enemies.Add(enemy);
+            SetIsWalkable(enemy.X, enemy.Y, false);
+        }
+
+        public RSPoint? GetRandomWalkableLocationInRoom(RSRectangle room)
+        {
+            if (DoesRoomHaveWalkableSpace(room))
+            {
+                for (int i = 0; i < 100; i++)
+                {
+                    int x = Global.Random.Next(1, room.Width - 2) + room.X;
+                    int y = Global.Random.Next(1, room.Height - 2) + room.Y;
+
+                    if (IsWalkable(x, y))
+                    {
+                        return new RSPoint(x, y);
+                    }
+                }
+            }
+
+            return null;
+        }
+        public bool DoesRoomHaveWalkableSpace(RSRectangle room)
+        {
+            for (int x = 1; x <= room.Width - 2; x++)
+            {
+                for (int y = 1; y <= room.Height - 2; y++)
+                {
+                    if (IsWalkable(x + room.X, y + room.Y))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
     }
 }

@@ -1,8 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-using RogueSharp;
-
 using PostMortem_P1.Interfaces;
 
 using IDrawable = PostMortem_P1.Interfaces.IDrawable;

@@ -7,9 +7,9 @@ namespace PostMortem_P1.Core
 {
     public class Player : Actor
     {
-        public Player(Texture2D sprite, int x, int y)
+        public Player(int x, int y)
         {
-            Sprite = sprite;
+            Sprite = Global.SpriteManager.Player;
             X = x;
             Y = y;
 

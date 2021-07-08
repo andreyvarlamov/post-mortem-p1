@@ -1,6 +1,5 @@
 ﻿using RogueSharp.Random;
 
-using PostMortem_P1;
 using PostMortem_P1.Core;
 using PostMortem_P1.Graphics;
 using PostMortem_P1.Systems;

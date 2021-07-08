@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Linq;
 
-using RogueSharp;
+using RogueSharp.DiceNotation;
 
 using RSRectangle = RogueSharp.Rectangle;
+using RSPoint = RogueSharp.Point;
 
 using PostMortem_P1.Core;
+using PostMortem_P1.Enemies;
 
 namespace PostMortem_P1.Systems
 {
@@ -77,6 +79,7 @@ namespace PostMortem_P1.Systems
             }
 
             PlacePlayer();
+            PlaceEnemies();
 
             return _map;
         }
@@ -90,18 +93,6 @@ namespace PostMortem_P1.Systems
                     _map.SetCellProperties(x, y, true, true, true);
                 }
             }
-        }
-        
-        public void PlacePlayer()
-        {
-            Player player = Global.Player;
-
-            if (player == null)
-            {
-                player = new Player(Global.SpriteManager.Player, _map.Rooms[0].Center.X, _map.Rooms[0].Center.Y); ;
-            }
-
-            _map.AddPlayer(player);
         }
 
         private void CreateHorizontalTunnel(int xStart, int xEnd, int yPosition)
@@ -117,6 +108,42 @@ namespace PostMortem_P1.Systems
             for (int y = Math.Min(yStart, yEnd); y <= Math.Max(yStart, yEnd); y++)
             {
                 _map.SetCellProperties(xPosition, y, true, true);
+            }
+        }
+        
+        private void PlacePlayer()
+        {
+            Player player = Global.Player;
+
+            if (player == null)
+            {
+                player = new Player(_map.Rooms[0].Center.X, _map.Rooms[0].Center.Y); ;
+            }
+
+            _map.AddPlayer(player);
+        }
+
+        private void PlaceEnemies()
+        {
+            foreach (var room in _map.Rooms)
+            {
+                // 60% chance of spawning an enemy in a room
+                if (Dice.Roll("1d10") > 0)
+                {
+                    var enemyNum = Dice.Roll("1d4");
+                    for (int i = 0; i < enemyNum; i++)
+                    {
+                        RSPoint? randomRoomLoc = _map.GetRandomWalkableLocationInRoom(room);
+
+                        if (randomRoomLoc.HasValue)
+                        {
+                            var enemy = Bandit.Create(1, randomRoomLoc.Value.X, randomRoomLoc.Value.Y);
+
+                            _map.AddEnemy(enemy);
+
+                        }
+                    }
+                }
             }
         }
     }
