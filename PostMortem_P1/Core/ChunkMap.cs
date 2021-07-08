@@ -133,14 +133,14 @@ namespace PostMortem_P1.Core
             return _enemies.FirstOrDefault(enemy => enemy.X == x && enemy.Y == y);
         }
 
-        public RSPoint? GetRandomWalkableLocationInRoom(RSRectangle room)
+        public RSPoint? GetRandomWalkableLocationInRect(RSRectangle rect)
         {
-            if (DoesRoomHaveWalkableSpace(room))
+            if (DoesRectHaveWalkableSpace(rect))
             {
                 for (int i = 0; i < 100; i++)
                 {
-                    int x = Global.Random.Next(1, room.Width - 2) + room.X;
-                    int y = Global.Random.Next(1, room.Height - 2) + room.Y;
+                    int x = Global.Random.Next(1, rect.Width - 2) + rect.X;
+                    int y = Global.Random.Next(1, rect.Height - 2) + rect.Y;
 
                     if (IsWalkable(x, y))
                     {
@@ -151,13 +151,14 @@ namespace PostMortem_P1.Core
 
             return null;
         }
-        public bool DoesRoomHaveWalkableSpace(RSRectangle room)
+
+        private bool DoesRectHaveWalkableSpace(RSRectangle rect)
         {
-            for (int x = 1; x <= room.Width - 2; x++)
+            for (int x = 1; x <= rect.Width - 2; x++)
             {
-                for (int y = 1; y <= room.Height - 2; y++)
+                for (int y = 1; y <= rect.Height - 2; y++)
                 {
-                    if (IsWalkable(x + room.X, y + room.Y))
+                    if (IsWalkable(x + rect.X, y + rect.Y))
                     {
                         return true;
                     }

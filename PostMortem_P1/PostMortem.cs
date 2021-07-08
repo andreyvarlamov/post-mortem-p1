@@ -11,6 +11,7 @@ using PostMortem_P1.Core;
 using PostMortem_P1.Graphics;
 using PostMortem_P1.Systems;
 using PostMortem_P1.Input;
+using PostMortem_P1.MapGenSchemas;
 
 namespace PostMortem_P1
 {
@@ -47,8 +48,9 @@ namespace PostMortem_P1
             Global.SchedulingSystem = new SchedulingSystem();
             Global.CommandSystem = new CommandSystem();
 
-            MapGenerator mapGenerator = new MapGenerator(Global.MapWidth, Global.MapHeight, 20, 13, 7);
-            Global.ChunkMap = mapGenerator.CreateMap();
+            var roomsMapGen = new RoomsMapGen(20, 13, 7);
+            MapGenerator mapGenerator = new MapGenerator(roomsMapGen, Global.MapWidth, Global.MapHeight);
+            Global.ChunkMap = mapGenerator.GenerateMap();
         }
 
         protected override void Update(GameTime gameTime)

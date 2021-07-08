@@ -2,18 +2,20 @@
 
 using PostMortem_P1.Core;
 
+using RSPoint = RogueSharp.Point;
+
 namespace PostMortem_P1.Enemies
 {
     public class Bandit : Enemy
     {
-        public static Bandit Create(int level, int x, int y)
+        public static Bandit Create(RSPoint position, int level)
         {
             int health = Dice.Roll("10d5");
             return new Bandit
             {
                 Sprite = Global.SpriteManager.Enemy,
-                X = x,
-                Y = y,
+                X = position.X,
+                Y = position.Y,
 
                 Awareness = 10,
                 Name = "Bandit",

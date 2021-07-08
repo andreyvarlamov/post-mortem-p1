@@ -14,152 +14,52 @@ namespace PostMortem_P1.Systems
 {
     public class MapGenerator
     {
-        private readonly int _width;
-        private readonly int _height;
-        private readonly int _maxRooms;
-        private readonly int _roomMaxSize;
-        private readonly int _roomMinSize;
+        private MapGenSchema _mapGenSchema;
 
-        private readonly ChunkMap _map;
+        private int _width;
+        private int _height;
 
-        public MapGenerator(int width, int height, int maxRooms, int roomMaxSize, int roomMinSize)
+        public MapGenerator(MapGenSchema mapGenSchema, int width, int height)
         {
+            _mapGenSchema = mapGenSchema;
             _width = width;
             _height = height;
-            _maxRooms = maxRooms;
-            _roomMaxSize = roomMaxSize;
-            _roomMinSize = roomMinSize;
-
-            _map = new ChunkMap();
         }
 
-        public ChunkMap CreateMap()
+        public ChunkMap GenerateMap()
         {
-            // Set the properties of all cells to false, sprites to Wall
-            _map.Initialize(_width, _height);
+            var chunkMap = _mapGenSchema.CreateMap(_width, _height);
 
-            for (int r = 0; r < _maxRooms; r++)
-            {
-                int roomWidth = Global.Random.Next(_roomMinSize, _roomMaxSize);
-                int roomHeight = Global.Random.Next(_roomMinSize, _roomMaxSize);
-                int roomXPosition = Global.Random.Next(0, _width - roomWidth - 1);
-                int roomYPosition = Global.Random.Next(0, _height - roomHeight - 1);
+            PlacePlayer(chunkMap);
 
-                var newRoom = new RSRectangle(roomXPosition, roomYPosition, roomWidth, roomHeight);
+            PlaceEnemies(chunkMap);
 
-                bool newRoomIntersects = _map.Rooms.Any(room => newRoom.Intersects(room));
-
-                if (!newRoomIntersects)
-                {
-                    _map.Rooms.Add(newRoom);
-                }
-            }
-
-            foreach(RSRectangle room in _map.Rooms)
-            {
-                CreateRoom(room);
-            }
-
-            for (int r = 1; r < _map.Rooms.Count; r++)
-            {
-                int previousRoomCenterX = _map.Rooms[r - 1].Center.X;
-                int previousRoomCenterY = _map.Rooms[r - 1].Center.Y;
-                int currentRoomCenterX = _map.Rooms[r].Center.X;
-                int currentRoomCenterY = _map.Rooms[r].Center.Y;
-
-                if (Global.Random.Next(1, 2) == 1)
-                {
-                    CreateHorizontalTunnel(previousRoomCenterX, currentRoomCenterX, previousRoomCenterY);
-                    CreateVerticalTunnel(previousRoomCenterY, currentRoomCenterY, currentRoomCenterX);
-                }
-                else
-                {
-                    CreateVerticalTunnel(previousRoomCenterY, currentRoomCenterY, previousRoomCenterX);
-                    CreateHorizontalTunnel(previousRoomCenterX, currentRoomCenterX, currentRoomCenterY);
-                }
-            }
-
-            PlacePlayer();
-            PlaceEnemies();
-
-            return _map;
+            return chunkMap;
         }
 
-        public void CreateRoom(RSRectangle room)
-        {
-            for (int x = room.Left + 1; x < room.Right; x++)
-            {
-                for (int y = room.Top + 1; y < room.Bottom; y++)
-                {
-                    _map.SetCellProperties(x, y, true, true);
-                    _map.GetCell(x, y).SetSprite(Global.SpriteManager.Floor);
-                }
-            }
-        }
-
-        private void CreateHorizontalTunnel(int xStart, int xEnd, int yPosition)
-        {
-            for (int x = Math.Min(xStart, xEnd); x <= Math.Max(xStart, xEnd); x++)
-            {
-                _map.SetCellProperties(x, yPosition, true, true);
-                _map.GetCell(x, yPosition).SetSprite(Global.SpriteManager.Floor);
-            }
-        }
-
-        private void CreateVerticalTunnel(int yStart, int yEnd, int xPosition)
-        {
-            for (int y = Math.Min(yStart, yEnd); y <= Math.Max(yStart, yEnd); y++)
-            {
-                _map.SetCellProperties(xPosition, y, true, true);
-                _map.GetCell(xPosition, y).SetSprite(Global.SpriteManager.Floor);
-            }
-        }
         
-        private void PlacePlayer()
+        private void PlacePlayer(ChunkMap chunkMap)
         {
             Player player = Global.Player;
 
             if (player == null)
             {
-                player = new Player(_map.Rooms[0].Center.X, _map.Rooms[0].Center.Y); ;
+                player = new Player(_mapGenSchema.GetSuitablePlayerPosition()); ;
             }
 
             Debug.WriteLine($"Initial player location: x = {player.X} y = {player.Y}");
 
-            _map.AddPlayer(player);
+            chunkMap.AddPlayer(player);
         }
 
-        private void PlaceEnemies()
+        private void PlaceEnemies(ChunkMap chunkMap)
         {
-            //RSPoint? randomRoomLoc = _map.GetRandomWalkableLocationInRoom(_map.Rooms[0]);
-
-            //if (randomRoomLoc.HasValue)
-            //{
-            //    var enemy = Bandit.Create(1, randomRoomLoc.Value.X, randomRoomLoc.Value.Y);
-
-            //    _map.AddEnemy(enemy);
-            //}
-
-            foreach (var room in _map.Rooms)
+            var positionList = _mapGenSchema.GetSuitableEnemyPositionList(chunkMap, 10);
+            foreach (RSPoint position in positionList)
             {
-                // 60% chance of spawning an enemy in a room
-                if (Dice.Roll("1d10") > 0)
-                {
-                    var enemyNum = Dice.Roll("1d4");
-                    for (int i = 0; i < enemyNum; i++)
-                    {
-                        RSPoint? randomRoomLoc = _map.GetRandomWalkableLocationInRoom(room);
-
-                        if (randomRoomLoc.HasValue)
-                        {
-                            var enemy = Bandit.Create(1, randomRoomLoc.Value.X, randomRoomLoc.Value.Y);
-
-                            _map.AddEnemy(enemy);
-
-                        }
-                    }
-                }
+                chunkMap.AddEnemy(Bandit.Create(position, 1));
             }
+
         }
     }
 }
