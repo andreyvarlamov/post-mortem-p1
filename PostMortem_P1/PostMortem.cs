@@ -51,7 +51,8 @@ namespace PostMortem_P1
             var roomsMapGen = new RoomsMapGen(20, 13, 7);
             var cityMapGen = new CityMapGen();
             var wildernessMapGen = new WildernessMapGen(10, 5, 3);
-            MapGenerator mapGenerator = new MapGenerator(wildernessMapGen, Global.MapWidth, Global.MapHeight, 10);
+            var roadMapGen = new RoadMapGen(false);
+            MapGenerator mapGenerator = new MapGenerator(roadMapGen, Global.MapWidth, Global.MapHeight, 10);
             Global.ChunkMap = mapGenerator.GenerateMap();
         }
 

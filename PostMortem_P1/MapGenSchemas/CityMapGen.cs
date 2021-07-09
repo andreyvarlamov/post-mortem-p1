@@ -25,13 +25,13 @@ namespace PostMortem_P1.MapGenSchemas
         {
             var chunkMap = base.CreateMap(width, height);
             chunkMap.InitializeCells(Global.SpriteManager.Dirt, true, true);
-            MapGenHelpers.CreateRoad(chunkMap, _roads, _allRoadTiles, chunkMap.Height / 2, 5, true);
-            MapGenHelpers.CreateRoad(chunkMap, _roads, _allRoadTiles, chunkMap.Width / 2, 5, false);
+            MapGenHelpers.CreateRoad(chunkMap, _roads, _allRoadTiles, Height / 2, 5, true);
+            MapGenHelpers.CreateRoad(chunkMap, _roads, _allRoadTiles, Width / 2, 5, false);
 
-            CreateBuilding(chunkMap, GetBuildingRect(chunkMap, eDirection.NW), eDirection.S);
-            CreateBuilding(chunkMap, GetBuildingRect(chunkMap, eDirection.NE), eDirection.W);
-            CreateBuilding(chunkMap, GetBuildingRect(chunkMap, eDirection.SW), eDirection.E);
-            CreateBuilding(chunkMap, GetBuildingRect(chunkMap, eDirection.SE), eDirection.N);
+            CreateBuilding(chunkMap, GetBuildingRect(eDirection.NW), eDirection.S);
+            CreateBuilding(chunkMap, GetBuildingRect(eDirection.NE), eDirection.W);
+            CreateBuilding(chunkMap, GetBuildingRect(eDirection.SW), eDirection.E);
+            CreateBuilding(chunkMap, GetBuildingRect(eDirection.SE), eDirection.N);
 
             return chunkMap;
         }
@@ -60,7 +60,7 @@ namespace PostMortem_P1.MapGenSchemas
             return positions;
         }
 
-        private RSRectangle GetBuildingRect(ChunkMap chunkMap, eDirection corner)
+        private RSRectangle GetBuildingRect(eDirection corner)
         {
             int x, y, width, height;
 
