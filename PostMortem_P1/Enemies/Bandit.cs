@@ -13,7 +13,7 @@ namespace PostMortem_P1.Enemies
             int health = Dice.Roll("10d5");
             return new Bandit
             {
-                Sprite = Global.SpriteManager.Enemy,
+                Sprite = Global.SpriteManager.Bandit,
                 X = position.X,
                 Y = position.Y,
 

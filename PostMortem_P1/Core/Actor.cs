@@ -148,7 +148,9 @@ namespace PostMortem_P1.Core
 
         public bool SetPosition(int x, int y)
         {
-            if (Global.ChunkMap.GetCell(x, y).IsWalkable)
+            if (x >= 0 && x < Global.ChunkMap.Width &&
+                y >= 0 &&  y < Global.ChunkMap.Height &&
+                Global.ChunkMap.GetCell(x, y).IsWalkable)
             {
                 //Debug.WriteLine($"x = {x} y = {y} IsWalkable={Global.WorldCellMap.GetCell(x, y).IsWalkable}");
 
@@ -164,6 +166,7 @@ namespace PostMortem_P1.Core
                 if (this is Player)
                 {
                     Global.ChunkMap.UpdatePlayerFieldOfView();
+                    Debug.WriteLine($"Player position: x = {X}; y = {Y}");
                 }
 
                 return true;

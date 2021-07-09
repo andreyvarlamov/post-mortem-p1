@@ -16,8 +16,8 @@ namespace PostMortem_P1.Core
     public class Global
     {
         #region Constants
-        public static readonly int MapWidth = 64;
-        public static readonly int MapHeight = 64;
+        public static readonly int MapWidth = 32;
+        public static readonly int MapHeight = 32;
         #endregion
 
         public static bool Debugging = false;
