@@ -32,15 +32,14 @@ namespace PostMortem_P1.Systems
         {
             var chunkMap = _mapGenSchema.CreateMap(_width, _height);
 
-            PlacePlayer(chunkMap);
+            //PlacePlayer(chunkMap);
 
             PlaceEnemies(chunkMap);
 
             return chunkMap;
         }
 
-        
-        private void PlacePlayer(ChunkMap chunkMap)
+        public  void PlacePlayer(ChunkMap chunkMap)
         {
             Player player = Global.Player;
 
