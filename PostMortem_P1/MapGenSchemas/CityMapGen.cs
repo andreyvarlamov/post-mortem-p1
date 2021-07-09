@@ -25,8 +25,8 @@ namespace PostMortem_P1.MapGenSchemas
         {
             var chunkMap = base.CreateMap(width, height);
             chunkMap.InitializeCells(Global.SpriteManager.Dirt, true, true);
-            CreateRoad(chunkMap, chunkMap.Height / 2, 5, true);
-            CreateRoad(chunkMap, chunkMap.Width / 2, 5, false);
+            MapGenHelpers.CreateRoad(chunkMap, _roads, _allRoadTiles, chunkMap.Height / 2, 5, true);
+            MapGenHelpers.CreateRoad(chunkMap, _roads, _allRoadTiles, chunkMap.Width / 2, 5, false);
 
             CreateBuilding(chunkMap, GetBuildingRect(chunkMap, eDirection.NW), eDirection.S);
             CreateBuilding(chunkMap, GetBuildingRect(chunkMap, eDirection.NE), eDirection.W);
@@ -36,58 +36,6 @@ namespace PostMortem_P1.MapGenSchemas
             return chunkMap;
         }
 
-        private void CreateRoad(ChunkMap chunkMap, int position, int width, bool isHorizontal)
-        {
-            Structure road = new Structure();
-
-            for (int i = 0; i < (isHorizontal ? chunkMap.Width : chunkMap.Height); i++)
-            {
-                if (isHorizontal)
-                {
-                    for (int y = position - width / 2; y < position + width / 2 + 1; y++)
-                    {
-                        chunkMap.SetCellProperties(i, y, true, true);
-                        var tile = chunkMap.GetCell(i, y);
-                        tile.SetSprite(Global.SpriteManager.Road);
-                        road.Add(tile);
-                        _allRoadTiles.Add(tile);
-                    }
-
-                    if (!_allRoadTiles.Any(tile => tile.X == i && tile.Y == position - width / 2 - 1))
-                    {
-                        chunkMap.GetCell(i, position - width / 2 - 1).SetSprite(Global.SpriteManager.Sidewalk);
-                    }
-
-                    if (!_allRoadTiles.Any(tile => tile.X == i && tile.Y == position + width / 2 + 1))
-                    {
-                        chunkMap.GetCell(i, position + width / 2 + 1).SetSprite(Global.SpriteManager.Sidewalk);
-                    }
-                }
-                else
-                {
-                    for (int x = position - width / 2; x < position + width / 2 + 1; x++)
-                    {
-                        chunkMap.SetCellProperties(x, i, true, true);
-                        var tile = chunkMap.GetCell(x, i);
-                        tile.SetSprite(Global.SpriteManager.Road);
-                        road.Add(tile);
-                        _allRoadTiles.Add(tile);
-                    }
-                    
-                    if (!_allRoadTiles.Any(tile => tile.X == position - width / 2 - 1 && tile.Y == i))
-                    {
-                        chunkMap.GetCell(position - width / 2 - 1, i).SetSprite(Global.SpriteManager.Sidewalk);
-                    }
-
-                    if (!_allRoadTiles.Any(tile => tile.X == position + width / 2 + 1 && tile.Y == i))
-                    {
-                        chunkMap.GetCell(position + width / 2 + 1, i).SetSprite(Global.SpriteManager.Sidewalk);
-                    }
-                }
-            }
-
-            _roads.Add(road);
-        }
 
         public override List<RSPoint> GetSuitableEnemyPositionList(ChunkMap chunkMap, int num)
         {
@@ -127,20 +75,20 @@ namespace PostMortem_P1.MapGenSchemas
                 case eDirection.NE:
                     x = _roads[1].ElementAt(4).X + 3;
                     y = 1;
-                    width = chunkMap.Width - 2 - x;
+                    width = Width - 2 - x;
                     height = _roads[0].ElementAt(0).Y - 3 - y;
                     break;
                 case eDirection.SW:
                     x = 1;
                     y = _roads[0].ElementAt(4).Y + 3;
                     width = _roads[1].ElementAt(0).X - 3 - x;
-                    height = chunkMap.Height - 2 - y;
+                    height = Height - 2 - y;
                     break;
                 case eDirection.SE:
                     x = _roads[1].ElementAt(4).X + 3;
                     y = _roads[0].ElementAt(4).Y + 3;
-                    width = chunkMap.Width - 2 - x;
-                    height = chunkMap.Height - 2 - y;
+                    width = Width - 2 - x;
+                    height = Height - 2 - y;
                     break;
                 default:
                     throw new Exception("Invalid building rectangle corner");

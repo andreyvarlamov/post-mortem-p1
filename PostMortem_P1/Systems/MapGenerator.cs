@@ -18,12 +18,14 @@ namespace PostMortem_P1.Systems
 
         private int _width;
         private int _height;
+        private int _enemiesNum;
 
-        public MapGenerator(MapGenSchema mapGenSchema, int width, int height)
+        public MapGenerator(MapGenSchema mapGenSchema, int width, int height, int enemiesNum)
         {
             _mapGenSchema = mapGenSchema;
             _width = width;
             _height = height;
+            _enemiesNum = enemiesNum;
         }
 
         public ChunkMap GenerateMap()
@@ -54,7 +56,7 @@ namespace PostMortem_P1.Systems
 
         private void PlaceEnemies(ChunkMap chunkMap)
         {
-            var positionList = _mapGenSchema.GetSuitableEnemyPositionList(chunkMap, 10);
+            var positionList = _mapGenSchema.GetSuitableEnemyPositionList(chunkMap, _enemiesNum);
             foreach (RSPoint position in positionList)
             {
                 chunkMap.AddEnemy(Bandit.Create(position, 1));
