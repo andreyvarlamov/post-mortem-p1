@@ -123,12 +123,12 @@ namespace PostMortem_P1.Core
         public Texture2D Sprite { get; set; }
         public void Draw(SpriteBatch spriteBatch)
         {
-            if (!Global.WorldCellMap.GetCell(X, Y).IsExplored && !Global.Debugging)
+            if (!Global.ChunkMap.GetCell(X, Y).IsExplored && !Global.Debugging)
             {
                 return;
             }
 
-            if (Global.WorldCellMap.IsInFov(X, Y) || Global.Debugging)
+            if (Global.ChunkMap.IsInPlayerFov(X, Y) || Global.Debugging)
             {
                 spriteBatch.Draw(Sprite, new Vector2(X * Sprite.Width, Y * Sprite.Width), null, Color.White, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.Actors);
             }
@@ -148,22 +148,25 @@ namespace PostMortem_P1.Core
 
         public bool SetPosition(int x, int y)
         {
-            if (Global.WorldCellMap.GetCell(x, y).IsWalkable)
+            if (x >= 0 && x < Global.ChunkMap.Width &&
+                y >= 0 &&  y < Global.ChunkMap.Height &&
+                Global.ChunkMap.GetCell(x, y).IsWalkable)
             {
                 //Debug.WriteLine($"x = {x} y = {y} IsWalkable={Global.WorldCellMap.GetCell(x, y).IsWalkable}");
 
                 // Set the previous cell to walkable
-                Global.WorldCellMap.SetIsWalkable(X, Y, true);
+                Global.ChunkMap.SetIsWalkable(X, Y, true);
 
                 X = x;
                 Y = y;
 
                 // Set the current cell to not walkable
-                Global.WorldCellMap.SetIsWalkable(X, Y, false);
+                Global.ChunkMap.SetIsWalkable(X, Y, false);
 
                 if (this is Player)
                 {
-                    Global.WorldCellMap.UpdatePlayerFieldOfView();
+                    Global.ChunkMap.UpdatePlayerFieldOfView();
+                    Debug.WriteLine($"Player position: x = {X}; y = {Y}");
                 }
 
                 return true;

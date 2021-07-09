@@ -16,8 +16,8 @@ namespace PostMortem_P1.Core
     public class Global
     {
         #region Constants
-        public static readonly int MapWidth = 50;
-        public static readonly int MapHeight = 30;
+        public static readonly int MapWidth = 32;
+        public static readonly int MapHeight = 32;
         #endregion
 
         public static bool Debugging = false;
@@ -27,7 +27,7 @@ namespace PostMortem_P1.Core
 
         public static SpriteManager SpriteManager { get; set; }
 
-        public static WorldCellMap WorldCellMap { get; set; }
+        public static ChunkMap ChunkMap { get; set; }
 
         public static Player Player { get; set; }
 

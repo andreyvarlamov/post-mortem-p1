@@ -64,7 +64,7 @@ namespace PostMortem_P1.Systems
                 return true;
             }
 
-            Enemy enemy = Global.WorldCellMap.GetEnemyAt(x, y);
+            Enemy enemy = Global.ChunkMap.GetEnemyAt(x, y);
             if (enemy != null)
             {
                 Attack(Global.Player, enemy);
@@ -87,7 +87,7 @@ namespace PostMortem_P1.Systems
                 {
                     if (defender is Enemy)
                     {
-                        Global.WorldCellMap.RemoveEnemy(defender as Enemy);
+                        Global.ChunkMap.RemoveEnemy(defender as Enemy);
                     }
 
                     Debug.WriteLine($"{attacker.Name} killed {defender.Name}.");

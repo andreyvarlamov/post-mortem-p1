@@ -1,14 +1,16 @@
 ﻿using RogueSharp.DiceNotation;
 
+using RSPoint = RogueSharp.Point;
+
 namespace PostMortem_P1.Core
 {
     public class Player : Actor
     {
-        public Player(int x, int y)
+        public Player(RSPoint position)
         {
             Sprite = Global.SpriteManager.Player;
-            X = x;
-            Y = y;
+            X = position.X;
+            Y = position.Y;
 
             Awareness = 15;
             Name = "Player";

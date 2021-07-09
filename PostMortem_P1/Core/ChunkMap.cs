@@ -6,44 +6,47 @@ using Microsoft.Xna.Framework.Graphics;
 
 using RogueSharp;
 
-using PostMortem_P1.Graphics;
-
 using RSRectangle = RogueSharp.Rectangle;
 using RSPoint = RogueSharp.Point;
 
+using PostMortem_P1.Graphics;
+
 namespace PostMortem_P1.Core
 {
-    public class WorldCellMap : Map
+    public class ChunkMap : Map<Tile>
     {
         public List<RSRectangle> Rooms;
         private readonly List<Enemy> _enemies;
 
-        public WorldCellMap()
+        private FieldOfView<Tile> _playerFov;
+
+        public ChunkMap()
         {
             Rooms = new List<RSRectangle>();
             _enemies = new List<Enemy>();
+            _playerFov = new FieldOfView<Tile>(this);
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            foreach (Cell cell in GetAllCells())
+            foreach (Tile tile in GetAllCells())
             {
                 // If not explored yet, don't render
-                if (!cell.IsExplored && !Global.Debugging)
+                if (!tile.IsExplored && !Global.Debugging)
                 {
                     continue;
                 }
 
                 // If explored, but not in fov - gray tint, if in fov - no tint
                 Color tint = Color.Gray;
-                if (cell.IsInFov || Global.Debugging)
+                if (IsInPlayerFov(tile.X, tile.Y) || Global.Debugging)
                 {
-                    tint = Color.White; 
+                    tint = Color.White;
                 }
 
-                var position = new Vector2(cell.X * SpriteManager.SpriteSize, cell.Y * SpriteManager.SpriteSize);
+                var position = new Vector2(tile.X * SpriteManager.SpriteSize, tile.Y * SpriteManager.SpriteSize);
 
-                spriteBatch.Draw(GetCellSprite(cell), position, null, tint, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.Cells);
+                spriteBatch.Draw(tile.Sprite, position, null, tint, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.Cells);
 
                 foreach (Enemy enemy in _enemies)
                 {
@@ -52,35 +55,43 @@ namespace PostMortem_P1.Core
             }
         }
 
-        private Texture2D GetCellSprite(Cell cell)
+        public void InitializeCells(Texture2D baseSprite, bool isWalkable, bool isTransparent)
         {
-            if (cell.IsWalkable)
+            for (int x = 0; x < Width; x++)
             {
-                return Global.SpriteManager.Floor;
+                for (int y = 0; y < Height; y++)
+                {
+                    var tile = GetCell(x, y);
+                    tile.SetSprite(baseSprite);
+                    tile.IsWalkable = isWalkable;
+                    tile.IsTransparent = isTransparent;
+                }
             }
-            else
-            {
-                return Global.SpriteManager.Wall;
-            }
+        }
+
+        public bool IsInPlayerFov(int x, int y)
+        {
+            return _playerFov.IsInFov(x, y);
         }
 
         public void UpdatePlayerFieldOfView()
         {
             Player player = Global.Player;
-            ComputeFov(player.X, player.Y, Global.Player.Awareness, true);
-            foreach (Cell cell in GetAllCells())
+            _playerFov.ComputeFov(player.X, player.Y, player.Awareness, true);
+            foreach (Tile tile in GetAllCells())
             {
-                if (IsInFov(cell.X, cell.Y))
+                if (_playerFov.IsInFov(tile.X, tile.Y))
                 {
-                    SetCellProperties(cell.X, cell.Y, cell.IsTransparent, cell.IsWalkable, true);
+                    tile.SetExplored(true);
                 }
+
             }
         }
 
         public void SetIsWalkable(int x, int y, bool isWalkable)
         {
-            Cell cell = GetCell(x, y) as Cell;
-            SetCellProperties(cell.X, cell.Y, cell.IsTransparent, isWalkable, cell.IsExplored);
+            Tile tile = GetCell(x, y) as Tile;
+            SetCellProperties(tile.X, tile.Y, tile.IsTransparent, isWalkable);
         }
 
         public void AddPlayer(Player player)
@@ -111,14 +122,14 @@ namespace PostMortem_P1.Core
             return _enemies.FirstOrDefault(enemy => enemy.X == x && enemy.Y == y);
         }
 
-        public RSPoint? GetRandomWalkableLocationInRoom(RSRectangle room)
+        public RSPoint? GetRandomWalkableLocationInRect(RSRectangle rect)
         {
-            if (DoesRoomHaveWalkableSpace(room))
+            if (DoesRectHaveWalkableSpace(rect))
             {
                 for (int i = 0; i < 100; i++)
                 {
-                    int x = Global.Random.Next(1, room.Width - 2) + room.X;
-                    int y = Global.Random.Next(1, room.Height - 2) + room.Y;
+                    int x = Global.Random.Next(1, rect.Width - 2) + rect.X;
+                    int y = Global.Random.Next(1, rect.Height - 2) + rect.Y;
 
                     if (IsWalkable(x, y))
                     {
@@ -129,13 +140,14 @@ namespace PostMortem_P1.Core
 
             return null;
         }
-        public bool DoesRoomHaveWalkableSpace(RSRectangle room)
+
+        private bool DoesRectHaveWalkableSpace(RSRectangle rect)
         {
-            for (int x = 1; x <= room.Width - 2; x++)
+            for (int x = 1; x <= rect.Width - 2; x++)
             {
-                for (int y = 1; y <= room.Height - 2; y++)
+                for (int y = 1; y <= rect.Height - 2; y++)
                 {
-                    if (IsWalkable(x + room.X, y + room.Y))
+                    if (IsWalkable(x + rect.X, y + rect.Y))
                     {
                         return true;
                     }
