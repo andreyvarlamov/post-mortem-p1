@@ -74,18 +74,6 @@ namespace PostMortem_P1.Core
             return _playerFov.IsInFov(x, y);
         }
 
-        //private Texture2D GetCellSprite(Cell cell)
-        //{
-        //    if (cell.IsWalkable)
-        //    {
-        //        return Global.SpriteManager.Floor;
-        //    }
-        //    else
-        //    {
-        //        return Global.SpriteManager.Wall;
-        //    }
-        //}
-
         public void UpdatePlayerFieldOfView()
         {
             Player player = Global.Player;
