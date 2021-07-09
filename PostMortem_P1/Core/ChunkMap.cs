@@ -55,15 +55,16 @@ namespace PostMortem_P1.Core
             }
         }
 
-        public override void Initialize(int width, int height)
+        public void InitializeCells(Texture2D baseSprite, bool isWalkable, bool isTransparent)
         {
-            base.Initialize(width, height);
-
-            for (int x = 0; x < width; x++)
+            for (int x = 0; x < Width; x++)
             {
-                for (int y = 0; y < height; y++)
+                for (int y = 0; y < Height; y++)
                 {
-                    GetCell(x, y).SetSprite(Global.SpriteManager.Wall);
+                    var tile = GetCell(x, y);
+                    tile.SetSprite(baseSprite);
+                    tile.IsWalkable = isWalkable;
+                    tile.IsTransparent = isTransparent;
                 }
             }
         }

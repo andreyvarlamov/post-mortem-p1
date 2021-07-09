@@ -49,7 +49,8 @@ namespace PostMortem_P1
             Global.CommandSystem = new CommandSystem();
 
             var roomsMapGen = new RoomsMapGen(20, 13, 7);
-            MapGenerator mapGenerator = new MapGenerator(roomsMapGen, Global.MapWidth, Global.MapHeight);
+            var cityMapGen = new CityMapGen();
+            MapGenerator mapGenerator = new MapGenerator(cityMapGen, Global.MapWidth, Global.MapHeight);
             Global.ChunkMap = mapGenerator.GenerateMap();
         }
 

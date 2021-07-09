@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
+using RSPoint = RogueSharp.Point;
+
 using PostMortem_P1.Core;
 
 namespace PostMortem_P1.MapGenSchemas
@@ -11,6 +13,7 @@ namespace PostMortem_P1.MapGenSchemas
         public override ChunkMap CreateMap(int width, int height)
         {
             var chunkMap = base.CreateMap(width, height);
+            chunkMap.InitializeCells(Global.SpriteManager.Dirt, true, true);
             return chunkMap;
         }
     }

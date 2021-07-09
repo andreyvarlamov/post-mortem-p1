@@ -44,7 +44,7 @@ namespace PostMortem_P1.Systems
 
             if (player == null)
             {
-                player = new Player(_mapGenSchema.GetSuitablePlayerPosition()); ;
+                player = new Player(_mapGenSchema.GetSuitablePlayerPosition(chunkMap)); ;
             }
 
             Debug.WriteLine($"Initial player location: x = {player.X} y = {player.Y}");

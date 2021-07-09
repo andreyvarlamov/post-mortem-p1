@@ -34,6 +34,8 @@ namespace PostMortem_P1.MapGenSchemas
         {
             var chunkMap = base.CreateMap(width, height);
 
+            chunkMap.InitializeCells(Global.SpriteManager.Wall, false, false);
+
             for (int r = 0; r < _maxRooms; r++)
             {
                 int roomWidth = Global.Random.Next(_roomMinSize, _roomMaxSize);
@@ -78,7 +80,7 @@ namespace PostMortem_P1.MapGenSchemas
             return chunkMap;
         }
 
-        public override RSPoint GetSuitablePlayerPosition()
+        public override RSPoint GetSuitablePlayerPosition(ChunkMap chunkMap)
         {
             return new RSPoint(_rooms[0].Center.X, _rooms[0].Center.Y);
         }

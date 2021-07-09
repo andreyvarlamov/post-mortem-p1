@@ -25,14 +25,24 @@ namespace PostMortem_P1.Core
             return chunkMap;
         }
 
-        public virtual RSPoint GetSuitablePlayerPosition()
+        public virtual RSPoint GetSuitablePlayerPosition(ChunkMap chunkMap)
         {
-            return RSPoint.Zero;
+            return new RSPoint(chunkMap.Width / 2, chunkMap.Height / 2);
         }
 
         public virtual List<RSPoint> GetSuitableEnemyPositionList(ChunkMap chunkMap, int num)
         {
-            return new List<RSPoint>();
+            var positions = new List<RSPoint>();
+
+            for (int i = 0; i < num; i++)
+            {
+                int x = Global.Random.Next(chunkMap.Width - 1);
+                int y = Global.Random.Next(chunkMap.Height - 1);
+
+                positions.Add(new RSPoint(x, y));
+            }
+
+            return positions;
         }
     }
 }
