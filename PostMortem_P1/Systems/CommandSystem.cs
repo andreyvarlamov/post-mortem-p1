@@ -11,6 +11,21 @@ namespace PostMortem_P1.Systems
 {
     public class CommandSystem
     {
+        public void Update()
+        {
+            if (IsPlayerTurn)
+            {
+                if (MovePlayer(Global.InputManager.IsMove()))
+                {
+                    EndPlayerTurn();
+                }
+            }
+            else
+            {
+                ActivateEnemies(Global.WorldMap.CurrentChunkMap.SchedulingSystem);
+            }
+        }
+
         public bool IsPlayerTurn { get; set; }
 
         public void EndPlayerTurn()

@@ -123,24 +123,10 @@ namespace PostMortem_P1.Core
             Player.Draw(spriteBatch);
         }
 
-        public void Update(InputManager inputManager)
+        public void Update()
         {
             CurrentChunkMap.Update();
-
-            if (CommandSystem.IsPlayerTurn)
-            {
-                if (CommandSystem.MovePlayer(inputManager.IsMove()))
-                {
-                    Camera.CenterOn(CurrentChunkMap[Player.X, Player.Y]);
-                    CommandSystem.EndPlayerTurn();
-                }
-            }
-            else
-            {
-                CommandSystem.ActivateEnemies(CurrentChunkMap.SchedulingSystem);
-            }
-
-            Camera.HandleInput(inputManager);
+            CommandSystem.Update();
         }
     }
 }

@@ -148,13 +148,15 @@ namespace PostMortem_P1.Core
 
         public bool SetPosition(int setX, int setY, ChunkMap movingFromChunk)
         {
+            WorldMap worldMap = Global.WorldMap;
+
             // Player can move between world chunks
             if (this is Player)
             {
                 bool attemptedMoveChunks = false;
 
-                int playerCurrentWorldPosX = Global.WorldMap.PlayerWorldPosX;
-                int playerCurrentWorldPosY = Global.WorldMap.PlayerWorldPosY;
+                int playerCurrentWorldPosX = worldMap.PlayerWorldPosX;
+                int playerCurrentWorldPosY = worldMap.PlayerWorldPosY;
 
                 if (setX < 0)
                 {
@@ -162,7 +164,7 @@ namespace PostMortem_P1.Core
                     playerCurrentWorldPosX--;
                     attemptedMoveChunks = true;
                 }
-                else if (setX >= Global.WorldMap.CurrentChunkMap.Width)
+                else if (setX >= worldMap.CurrentChunkMap.Width)
                 {
                     // Move to the east chunk
                     playerCurrentWorldPosX++;
@@ -174,7 +176,7 @@ namespace PostMortem_P1.Core
                     playerCurrentWorldPosY--;
                     attemptedMoveChunks = true;
                 }
-                else if (setY >= Global.WorldMap.CurrentChunkMap.Height)
+                else if (setY >= worldMap.CurrentChunkMap.Height)
                 {
                     // Move to the south chunk
                     playerCurrentWorldPosY++;
@@ -183,11 +185,11 @@ namespace PostMortem_P1.Core
 
                 if (attemptedMoveChunks)
                 {
-                    return Global.WorldMap.SetPlayerWorldPosition(playerCurrentWorldPosX, playerCurrentWorldPosY);
+                    return worldMap.SetPlayerWorldPosition(playerCurrentWorldPosX, playerCurrentWorldPosY);
                 }
             }
 
-            if (CheckIfCanMoveTo(setX, setY, Global.WorldMap.CurrentChunkMap))
+            if (CheckIfCanMoveTo(setX, setY, worldMap.CurrentChunkMap))
             {
                 // If coming from previos chunk, set that tile to walkable
                 if (movingFromChunk != null)
@@ -197,18 +199,20 @@ namespace PostMortem_P1.Core
                 }
                 else
                 {
-                    Global.WorldMap.CurrentChunkMap.SetIsWalkable(X, Y, true);
+                    worldMap.CurrentChunkMap.SetIsWalkable(X, Y, true);
                 }
 
                 X = setX;
                 Y = setY;
 
+
                 // Set the current cell to not walkable
-                Global.WorldMap.CurrentChunkMap.SetIsWalkable(X, Y, false);
+                worldMap.CurrentChunkMap.SetIsWalkable(X, Y, false);
 
                 if (this is Player)
                 {
-                    Global.WorldMap.CurrentChunkMap.UpdatePlayerFieldOfView();
+                    worldMap.CurrentChunkMap.UpdatePlayerFieldOfView();
+                    worldMap.Camera.CenterOn(worldMap.CurrentChunkMap[X, Y]);
                     //Debug.WriteLine($"Player position: x = {X}; y = {Y}");
                 }
 
