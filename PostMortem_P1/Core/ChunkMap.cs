@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Diagnostics;
+using System.Collections.Generic;
 using System.Linq;
 
 using Microsoft.Xna.Framework;
@@ -9,7 +10,9 @@ using RogueSharp;
 using RSRectangle = RogueSharp.Rectangle;
 using RSPoint = RogueSharp.Point;
 
+using PostMortem_P1.Enemies;
 using PostMortem_P1.Graphics;
+using PostMortem_P1.Systems;
 
 namespace PostMortem_P1.Core
 {
@@ -20,11 +23,18 @@ namespace PostMortem_P1.Core
 
         private FieldOfView<Tile> _playerFov;
 
-        public ChunkMap()
+        private MapGenSchema _mapGenSchema;
+
+        public SchedulingSystem SchedulingSystem;
+
+        public ChunkMap(MapGenSchema mapGenSchema)
         {
             Rooms = new List<RSRectangle>();
             _enemies = new List<Enemy>();
             _playerFov = new FieldOfView<Tile>(this);
+
+            _mapGenSchema = mapGenSchema;
+            SchedulingSystem = new SchedulingSystem();
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -55,6 +65,14 @@ namespace PostMortem_P1.Core
             }
         }
 
+        public void Update()
+        {
+            //_enemies.ForEach(enemy =>
+            //{
+            //    enemy.Update();
+            //});
+        }
+
         public void InitializeCells(Texture2D baseSprite, bool isWalkable, bool isTransparent)
         {
             for (int x = 0; x < Width; x++)
@@ -76,7 +94,7 @@ namespace PostMortem_P1.Core
 
         public void UpdatePlayerFieldOfView()
         {
-            Player player = Global.Player;
+            Player player = Global.WorldMap.Player;
             _playerFov.ComputeFov(player.X, player.Y, player.Awareness, true);
             foreach (Tile tile in GetAllCells())
             {
@@ -94,27 +112,35 @@ namespace PostMortem_P1.Core
             SetCellProperties(tile.X, tile.Y, tile.IsTransparent, isWalkable);
         }
 
-        public void AddPlayer(Player player)
+        public void SetMapForPlayer(Player player)
         {
-            Global.Player = player;
             SetIsWalkable(player.X, player.Y, false);
-            Global.Camera.CenterOn(GetCell(player.X, player.Y) as Cell);
             UpdatePlayerFieldOfView();
-            Global.SchedulingSystem.Add(player);
+            AddActorToSchedulingSystem(player);
+        }
+
+        public void AddActorToSchedulingSystem(Actor actor)
+        {
+            SchedulingSystem.Add(actor);
+        }
+
+        public void RemoveActorFromSchedulingSystem(Actor actor)
+        {
+            SchedulingSystem.Remove(actor);
         }
 
         public void AddEnemy(Enemy enemy)
         {
             _enemies.Add(enemy);
             SetIsWalkable(enemy.X, enemy.Y, false);
-            Global.SchedulingSystem.Add(enemy);
+            AddActorToSchedulingSystem(enemy);
         }
 
         public void RemoveEnemy(Enemy enemy)
         {
             _enemies.Remove(enemy);
             SetIsWalkable(enemy.X, enemy.Y, true);
-            Global.SchedulingSystem.Remove(enemy);
+            RemoveActorFromSchedulingSystem(enemy);
         }
 
         public Enemy GetEnemyAt(int x, int y)
@@ -155,6 +181,21 @@ namespace PostMortem_P1.Core
             }
 
             return false;
+        }
+
+        public RSPoint GetSuitablePlayerPosition()
+        {
+            return _mapGenSchema.GetSuitablePlayerPosition(this);
+        }
+
+        public void PlaceEnemies(int enemiesNum)
+        {
+            var positionList = _mapGenSchema.GetSuitableEnemyPositionList(this, enemiesNum);
+            foreach (RSPoint position in positionList)
+            {
+                AddEnemy(Bandit.Create(position, 1));
+            }
+
         }
     }
 }

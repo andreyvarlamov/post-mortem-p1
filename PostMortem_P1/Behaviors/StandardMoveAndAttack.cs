@@ -12,8 +12,8 @@ namespace PostMortem_P1.Behaviors
     {
         public bool Act(Enemy enemy, CommandSystem commandSystem)
         {
-            ChunkMap chunkMap = Global.ChunkMap;
-            Player player = Global.Player;
+            ChunkMap chunkMap = Global.WorldMap.CurrentChunkMap;
+            Player player = Global.WorldMap.Player;
             FieldOfView<Tile> enemyFov = new FieldOfView<Tile>(chunkMap);
 
             if (!enemy.TurnsAlerted.HasValue)
@@ -55,7 +55,7 @@ namespace PostMortem_P1.Behaviors
                 {
                     try
                     {
-                        commandSystem.MoveEnemy(enemy, path.StepForward() as Cell);
+                        commandSystem.MoveEnemy(enemy, path.StepForward() as Tile);
                     }
                     catch (NoMoreStepsException)
                     {

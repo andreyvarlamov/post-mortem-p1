@@ -11,6 +11,21 @@ namespace PostMortem_P1.Systems
 {
     public class CommandSystem
     {
+        public void Update()
+        {
+            if (IsPlayerTurn)
+            {
+                if (MovePlayer(Global.InputManager.IsMove()))
+                {
+                    EndPlayerTurn();
+                }
+            }
+            else
+            {
+                ActivateEnemies(Global.WorldMap.CurrentChunkMap.SchedulingSystem);
+            }
+        }
+
         public bool IsPlayerTurn { get; set; }
 
         public void EndPlayerTurn()
@@ -20,8 +35,8 @@ namespace PostMortem_P1.Systems
 
         public bool MovePlayer(eDirection direction)
         {
-            int x = Global.Player.X;
-            int y = Global.Player.Y;
+            int x = Global.WorldMap.Player.X;
+            int y = Global.WorldMap.Player.Y;
 
             switch (direction)
             {
@@ -59,15 +74,15 @@ namespace PostMortem_P1.Systems
                     return false;
             }
 
-            if (Global.Player.SetPosition(x, y))
+            if (Global.WorldMap.Player.SetPosition(x, y, null))
             {
                 return true;
             }
 
-            Enemy enemy = Global.ChunkMap.GetEnemyAt(x, y);
+            Enemy enemy = Global.WorldMap.CurrentChunkMap.GetEnemyAt(x, y);
             if (enemy != null)
             {
-                Attack(Global.Player, enemy);
+                Attack(Global.WorldMap.Player, enemy);
                 return true;
             }
 
@@ -87,7 +102,7 @@ namespace PostMortem_P1.Systems
                 {
                     if (defender is Enemy)
                     {
-                        Global.ChunkMap.RemoveEnemy(defender as Enemy);
+                        Global.WorldMap.CurrentChunkMap.RemoveEnemy(defender as Enemy);
                     }
 
                     Debug.WriteLine($"{attacker.Name} killed {defender.Name}.");
@@ -99,34 +114,34 @@ namespace PostMortem_P1.Systems
             }
         }
 
-        public void ActivateEnemies()
+        public void ActivateEnemies(SchedulingSystem schedulingSystem)
         {
-            IScheduleable scheduleable = Global.SchedulingSystem.Get();
+            IScheduleable scheduleable = schedulingSystem.Get();
 
             if (scheduleable is Player)
             {
                 IsPlayerTurn = true;
-                Global.SchedulingSystem.Add(Global.Player);
+                schedulingSystem.Add(Global.WorldMap.Player);
             }
             else
             {
                 if (scheduleable is Enemy enemy)
                 {
                     enemy.PerformAction(this);
-                    Global.SchedulingSystem.Add(enemy);
+                    schedulingSystem.Add(enemy);
                 }
 
-                ActivateEnemies();
+                ActivateEnemies(schedulingSystem);
             }
         }
 
-        public void MoveEnemy(Enemy enemy, Cell cell)
+        public void MoveEnemy(Enemy enemy, Tile tile)
         {
-            if (!enemy.SetPosition(cell.X, cell.Y))
+            if (!enemy.SetPosition(tile.X, tile.Y, null))
             {
-                if (Global.Player.X == cell.X && Global.Player.Y == cell.Y)
+                if (Global.WorldMap.Player.X == tile.X && Global.WorldMap.Player.Y == tile.Y)
                 {
-                    Attack(enemy, Global.Player);
+                    Attack(enemy, Global.WorldMap.Player);
                 }
             }
         }

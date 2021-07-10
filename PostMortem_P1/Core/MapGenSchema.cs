@@ -19,7 +19,7 @@ namespace PostMortem_P1.Core
         {
             Width = width;
             Height = height;
-            var chunkMap = new ChunkMap();
+            var chunkMap = new ChunkMap(this);
             chunkMap.Initialize(width, height);
 
             return chunkMap;

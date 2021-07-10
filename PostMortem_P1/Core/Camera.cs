@@ -36,9 +36,12 @@ namespace PostMortem_P1.Core
                     Matrix.CreateTranslation(new Vector3(ViewPortCenter, 0));
             }
         }
-        public Camera()
+        public Camera(int viewportWidth, int viewportHeight)
         {
             Zoom = 1.0f;
+
+            ViewportWidth = viewportWidth;
+            ViewportHeight = viewportHeight;
         }
 
         public void AdjustZoom(float amount)

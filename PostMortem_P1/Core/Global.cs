@@ -2,6 +2,7 @@
 
 using PostMortem_P1.Graphics;
 using PostMortem_P1.Systems;
+using PostMortem_P1.Input;
 
 namespace PostMortem_P1.Core
 {
@@ -18,21 +19,18 @@ namespace PostMortem_P1.Core
         #region Constants
         public static readonly int MapWidth = 32;
         public static readonly int MapHeight = 32;
+
+        public static readonly int WorldWidth = 6;
+        public static readonly int WorldHeight = 6;
         #endregion
 
         public static bool Debugging = false;
         
         public static readonly IRandom Random = new DotNetRandom();
-        public static readonly Camera Camera = new Camera();
 
         public static SpriteManager SpriteManager { get; set; }
+        public static InputManager InputManager { get; set; }
+        public static WorldMap WorldMap { get; set; }
 
-        public static ChunkMap ChunkMap { get; set; }
-
-        public static Player Player { get; set; }
-
-        public static CommandSystem CommandSystem { get; set; }
-
-        public static SchedulingSystem SchedulingSystem { get; set; }
     }
 }

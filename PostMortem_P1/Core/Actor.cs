@@ -123,12 +123,12 @@ namespace PostMortem_P1.Core
         public Texture2D Sprite { get; set; }
         public void Draw(SpriteBatch spriteBatch)
         {
-            if (!Global.ChunkMap.GetCell(X, Y).IsExplored && !Global.Debugging)
+            if (!Global.WorldMap.CurrentChunkMap[X, Y].IsExplored && !Global.Debugging)
             {
                 return;
             }
 
-            if (Global.ChunkMap.IsInPlayerFov(X, Y) || Global.Debugging)
+            if (Global.WorldMap.CurrentChunkMap.IsInPlayerFov(X, Y) || Global.Debugging)
             {
                 spriteBatch.Draw(Sprite, new Vector2(X * Sprite.Width, Y * Sprite.Width), null, Color.White, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.Actors);
             }
@@ -146,33 +146,91 @@ namespace PostMortem_P1.Core
 
         #endregion
 
-        public bool SetPosition(int x, int y)
+        public bool SetPosition(int setX, int setY, ChunkMap movingFromChunk)
         {
-            if (x >= 0 && x < Global.ChunkMap.Width &&
-                y >= 0 &&  y < Global.ChunkMap.Height &&
-                Global.ChunkMap.GetCell(x, y).IsWalkable)
+            WorldMap worldMap = Global.WorldMap;
+
+            // Player can move between world chunks
+            if (this is Player)
             {
-                //Debug.WriteLine($"x = {x} y = {y} IsWalkable={Global.WorldCellMap.GetCell(x, y).IsWalkable}");
+                bool attemptedMoveChunks = false;
 
-                // Set the previous cell to walkable
-                Global.ChunkMap.SetIsWalkable(X, Y, true);
+                int playerCurrentWorldPosX = worldMap.PlayerWorldPosX;
+                int playerCurrentWorldPosY = worldMap.PlayerWorldPosY;
 
-                X = x;
-                Y = y;
+                if (setX < 0)
+                {
+                    // Move to the west chunk
+                    playerCurrentWorldPosX--;
+                    attemptedMoveChunks = true;
+                }
+                else if (setX >= worldMap.CurrentChunkMap.Width)
+                {
+                    // Move to the east chunk
+                    playerCurrentWorldPosX++;
+                    attemptedMoveChunks = true;
+                }
+                else if (setY < 0)
+                {
+                    // Move to the north chunk
+                    playerCurrentWorldPosY--;
+                    attemptedMoveChunks = true;
+                }
+                else if (setY >= worldMap.CurrentChunkMap.Height)
+                {
+                    // Move to the south chunk
+                    playerCurrentWorldPosY++;
+                    attemptedMoveChunks = true;
+                }
+
+                if (attemptedMoveChunks)
+                {
+                    return worldMap.SetPlayerWorldPosition(playerCurrentWorldPosX, playerCurrentWorldPosY);
+                }
+            }
+
+            if (CheckIfCanMoveTo(setX, setY, worldMap.CurrentChunkMap))
+            {
+                // If coming from previos chunk, set that tile to walkable
+                if (movingFromChunk != null)
+                {
+                    movingFromChunk.SetIsWalkable(X, Y, true);
+
+                }
+                else
+                {
+                    worldMap.CurrentChunkMap.SetIsWalkable(X, Y, true);
+                }
+
+                X = setX;
+                Y = setY;
+
 
                 // Set the current cell to not walkable
-                Global.ChunkMap.SetIsWalkable(X, Y, false);
+                worldMap.CurrentChunkMap.SetIsWalkable(X, Y, false);
 
                 if (this is Player)
                 {
-                    Global.ChunkMap.UpdatePlayerFieldOfView();
-                    Debug.WriteLine($"Player position: x = {X}; y = {Y}");
+                    worldMap.CurrentChunkMap.UpdatePlayerFieldOfView();
+                    worldMap.Camera.CenterOn(worldMap.CurrentChunkMap[X, Y]);
+                    //Debug.WriteLine($"Player position: x = {X}; y = {Y}");
                 }
 
                 return true;
             }
 
             return false;
+        }
+
+        public bool CheckIfCanMoveTo(int x, int y, ChunkMap chunkMap)
+        {
+            bool result = (x >= 0 && x < chunkMap.Width &&
+                y >= 0 && y < chunkMap.Height &&
+                chunkMap[x, y].IsWalkable);
+
+            Debug.WriteLine($"Checking x = {x} y = {y} CanMoveTo={result}");
+
+            return result;
         }
     }
 }

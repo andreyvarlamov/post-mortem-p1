@@ -20,22 +20,19 @@ namespace PostMortem_P1
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        private InputManager _inputManager;
 
         public PostMortem()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-            _inputManager = new InputManager();
         }
 
         protected override void Initialize()
         {
-            Global.Camera.ViewportWidth = _graphics.GraphicsDevice.Viewport.Width;
-            Global.Camera.ViewportHeight = _graphics.GraphicsDevice.Viewport.Height;
-
             base.Initialize();
+
+            Global.InputManager = new InputManager();
         }
 
         protected override void LoadContent()
@@ -45,43 +42,28 @@ namespace PostMortem_P1
             Global.SpriteManager = new SpriteManager();
             Global.SpriteManager.LoadContent(Content);
 
-            Global.SchedulingSystem = new SchedulingSystem();
-            Global.CommandSystem = new CommandSystem();
+            Camera camera = new Camera(_graphics.GraphicsDevice.Viewport.Width, _graphics.GraphicsDevice.Viewport.Height);
 
-            var roomsMapGen = new RoomsMapGen(20, 13, 7);
-            var cityMapGen = new CityMapGen();
-            MapGenerator mapGenerator = new MapGenerator(cityMapGen, Global.MapWidth, Global.MapHeight);
-            Global.ChunkMap = mapGenerator.GenerateMap();
+            Global.WorldMap = WorldGenerator.GenerateWorld(Global.WorldWidth, Global.WorldHeight, camera);
+            Global.WorldMap.SpawnPlayerInWorld(2, 0);
         }
 
         protected override void Update(GameTime gameTime)
         {
-            _inputManager.Update(gameTime);
+            Global.InputManager.Update(gameTime);
 
-            if (_inputManager.IsExitGame())
+            if (Global.InputManager.IsExitGame())
             {
                 Exit();
             }
-            else if (_inputManager.IsSpace())
+            else if (Global.InputManager.IsSpace())
             {
                 Global.Debugging = !Global.Debugging;
             }
 
-            if (Global.CommandSystem.IsPlayerTurn)
-            {
-                bool didPlayerMove = Global.CommandSystem.MovePlayer(_inputManager.IsMove());
-                if (didPlayerMove)
-                {
-                    Global.Camera.CenterOn(Global.ChunkMap.GetCell(Global.Player.X, Global.Player.Y) as Cell);
-                    Global.CommandSystem.EndPlayerTurn();
-                }
-            }
-            else
-            {
-                Global.CommandSystem.ActivateEnemies();
-            }
+            Global.WorldMap.Camera.HandleInput(Global.InputManager);
 
-            Global.Camera.HandleInput(_inputManager);
+            Global.WorldMap.Update();
 
             base.Update(gameTime);
         }
@@ -90,11 +72,9 @@ namespace PostMortem_P1
         {
             GraphicsDevice.Clear(Color.Black);
 
-            _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, null, null, null, null, Global.Camera.TranslationMatrix);
+            _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, null, null, null, null, Global.WorldMap.Camera.TranslationMatrix);
 
-            Global.ChunkMap.Draw(_spriteBatch);
-
-            Global.Player.Draw(_spriteBatch);
+            Global.WorldMap.Draw(_spriteBatch);
 
             _spriteBatch.End();
 
