@@ -9,62 +9,44 @@ namespace PostMortem_P1.Systems
 {
     public class WorldGenerator
     {
-        private int _width;
-        private int _height;
-        private int _xPlayer;
-        private int _yPlayer;
-
-        private MapGenerator[,] _mapGenerators;
-
-        public WorldGenerator(int width, int height, int xPlayer, int yPlayer)
+        public static WorldMap GenerateWorld(int width, int height, int xPlayer, int yPlayer)
         {
-            _width = width;
-            _height = height;
-            _xPlayer = xPlayer;
-            _yPlayer = yPlayer;
+            WorldMap worldMap = GenerateChunks(width, height);
 
-            _mapGenerators = new MapGenerator[width, height];
-        }
-
-        public WorldMap GenerateWorld()
-        {
-            WorldMap worldMap = new WorldMap(_width, _height);
-
-            GenerateChunks(worldMap);
-
-            _mapGenerators[_xPlayer, _yPlayer].PlacePlayer(worldMap[_xPlayer, _yPlayer]);
-            worldMap.SetPlayerWorldPosition(_xPlayer, _yPlayer);
+            worldMap.SpawnPlayerInWorld(xPlayer, yPlayer);
 
             return worldMap;
         }
 
-        private void GenerateChunks(WorldMap worldMap)
+        private static WorldMap GenerateChunks(int width, int height)
         {
-            for (int x = 0; x < _width; x++)
+            WorldMap worldMap = new WorldMap(width, height);
+
+            for (int x = 0; x < width; x++)
             {
-                for (int y = 0; y < _height; y++)
+                for (int y = 0; y < height; y++)
                 {
                     MapGenSchema mapGenSchema;
                     int enemiesNum;
 
                     if ((x == 1 && y == 1) ||
-                        (x == _width - 2 && y == _height - 2) ||
-                        (x == 1 && y == _height - 2) ||
-                        (x == _width - 2 && y == 1))
+                        (x == width - 2 && y == height - 2) ||
+                        (x == 1 && y == height - 2) ||
+                        (x == width - 2 && y == 1))
                     {
                         // Cities
                         mapGenSchema = new CityMapGen();
                         enemiesNum = 20;
                     }
-                    else if ((y == 1 && x != 0 && x != _width - 1) ||
-                        (y == _height - 2 && x != 0 && x != _width - 1))
+                    else if ((y == 1 && x != 0 && x != width - 1) ||
+                        (y == height - 2 && x != 0 && x != width - 1))
                     {
                         // Horizontal roads
                         mapGenSchema = new RoadMapGen(true);
                         enemiesNum = 5;
                     }
-                    else if ((x == 1 && y != 0 && y != _height - 1) ||
-                        (x == _width - 2 && y != 0 && y != _height - 1))
+                    else if ((x == 1 && y != 0 && y != height - 1) ||
+                        (x == width - 2 && y != 0 && y != height - 1))
                     {
                         // Vertical roads
                         mapGenSchema = new RoadMapGen(false);
@@ -76,16 +58,11 @@ namespace PostMortem_P1.Systems
                         enemiesNum = 2;
                     }
                     enemiesNum = 0;
-                    MapGenerator mapGenerator = new MapGenerator(mapGenSchema, Global.MapWidth, Global.MapHeight, enemiesNum);
-                    worldMap[x, y] = CreateChunk(mapGenerator);
-                    _mapGenerators[x, y] = mapGenerator;
+                    worldMap[x, y] = MapGenerator.GenerateMap(mapGenSchema, Global.MapWidth, Global.MapHeight, enemiesNum);
                 }
             }
-        }
 
-        private ChunkMap CreateChunk(MapGenerator mapGen)
-        {
-            return mapGen.GenerateMap();
+            return worldMap;
         }
     }
 }

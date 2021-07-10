@@ -59,12 +59,12 @@ namespace PostMortem_P1.Systems
                     return false;
             }
 
-            if (Global.Player.SetPosition(x, y))
+            if (Global.Player.SetPosition(x, y, null))
             {
                 return true;
             }
 
-            Enemy enemy = Global.CurrentChunkMap.GetEnemyAt(x, y);
+            Enemy enemy = Global.WorldMap.CurrentChunkMap.GetEnemyAt(x, y);
             if (enemy != null)
             {
                 Attack(Global.Player, enemy);
@@ -87,7 +87,7 @@ namespace PostMortem_P1.Systems
                 {
                     if (defender is Enemy)
                     {
-                        Global.CurrentChunkMap.RemoveEnemy(defender as Enemy);
+                        Global.WorldMap.CurrentChunkMap.RemoveEnemy(defender as Enemy);
                     }
 
                     Debug.WriteLine($"{attacker.Name} killed {defender.Name}.");
@@ -122,7 +122,7 @@ namespace PostMortem_P1.Systems
 
         public void MoveEnemy(Enemy enemy, Cell cell)
         {
-            if (!enemy.SetPosition(cell.X, cell.Y))
+            if (!enemy.SetPosition(cell.X, cell.Y, null))
             {
                 if (Global.Player.X == cell.X && Global.Player.Y == cell.Y)
                 {

@@ -12,7 +12,7 @@ namespace PostMortem_P1.Behaviors
     {
         public bool Act(Enemy enemy, CommandSystem commandSystem)
         {
-            ChunkMap chunkMap = Global.CurrentChunkMap;
+            ChunkMap chunkMap = Global.WorldMap.CurrentChunkMap;
             Player player = Global.Player;
             FieldOfView<Tile> enemyFov = new FieldOfView<Tile>(chunkMap);
 

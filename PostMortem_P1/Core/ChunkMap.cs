@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Diagnostics;
+using System.Collections.Generic;
 using System.Linq;
 
 using Microsoft.Xna.Framework;
@@ -9,6 +10,7 @@ using RogueSharp;
 using RSRectangle = RogueSharp.Rectangle;
 using RSPoint = RogueSharp.Point;
 
+using PostMortem_P1.Enemies;
 using PostMortem_P1.Graphics;
 
 namespace PostMortem_P1.Core
@@ -20,11 +22,15 @@ namespace PostMortem_P1.Core
 
         private FieldOfView<Tile> _playerFov;
 
-        public ChunkMap()
+        private MapGenSchema _mapGenSchema;
+
+        public ChunkMap(MapGenSchema mapGenSchema)
         {
             Rooms = new List<RSRectangle>();
             _enemies = new List<Enemy>();
             _playerFov = new FieldOfView<Tile>(this);
+
+            _mapGenSchema = mapGenSchema;
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -155,6 +161,30 @@ namespace PostMortem_P1.Core
             }
 
             return false;
+        }
+
+        public  void PlacePlayer()
+        {
+            Player player = Global.Player;
+
+            if (player == null)
+            {
+                player = new Player(_mapGenSchema.GetSuitablePlayerPosition(this)); ;
+            }
+
+            Debug.WriteLine($"Initial player location: x = {player.X} y = {player.Y}");
+
+            AddPlayer(player);
+        }
+
+        public void PlaceEnemies(int enemiesNum)
+        {
+            var positionList = _mapGenSchema.GetSuitableEnemyPositionList(this, enemiesNum);
+            foreach (RSPoint position in positionList)
+            {
+                AddEnemy(Bandit.Create(position, 1));
+            }
+
         }
     }
 }

@@ -48,10 +48,7 @@ namespace PostMortem_P1
             Global.SchedulingSystem = new SchedulingSystem();
             Global.CommandSystem = new CommandSystem();
 
-            WorldGenerator worldGenerator = new WorldGenerator(Global.WorldWidth, Global.WorldHeight, 2, 0);
-
-            Global.WorldMap = worldGenerator.GenerateWorld();
-            Global.CurrentChunkMap = Global.WorldMap[2, 0];
+            Global.WorldMap = WorldGenerator.GenerateWorld(Global.WorldWidth, Global.WorldHeight, 2, 0);
         }
 
         protected override void Update(GameTime gameTime)
@@ -72,7 +69,7 @@ namespace PostMortem_P1
                 bool didPlayerMove = Global.CommandSystem.MovePlayer(_inputManager.IsMove());
                 if (didPlayerMove)
                 {
-                    Global.Camera.CenterOn(Global.CurrentChunkMap.GetCell(Global.Player.X, Global.Player.Y) as Cell);
+                    Global.Camera.CenterOn(Global.WorldMap.CurrentChunkMap[Global.Player.X, Global.Player.Y] as Cell);
                     Global.CommandSystem.EndPlayerTurn();
                 }
             }
@@ -92,7 +89,7 @@ namespace PostMortem_P1
 
             _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, null, null, null, null, Global.Camera.TranslationMatrix);
 
-            Global.CurrentChunkMap.Draw(_spriteBatch);
+            Global.WorldMap.Draw(_spriteBatch);
 
             Global.Player.Draw(_spriteBatch);
 

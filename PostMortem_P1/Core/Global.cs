@@ -30,8 +30,6 @@ namespace PostMortem_P1.Core
 
         public static SpriteManager SpriteManager { get; set; }
 
-        public static ChunkMap CurrentChunkMap { get; set; }
-
         public static WorldMap WorldMap { get; set; }
 
         public static Player Player { get; set; }
