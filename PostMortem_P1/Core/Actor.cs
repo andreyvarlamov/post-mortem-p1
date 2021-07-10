@@ -153,8 +153,8 @@ namespace PostMortem_P1.Core
             {
                 bool attemptedMoveChunks = false;
 
-                int playerCurrentWorldPosX = Global.WorldMap.PlayerPosX;
-                int playerCurrentWorldPosY = Global.WorldMap.PlayerPosY;
+                int playerCurrentWorldPosX = Global.WorldMap.PlayerWorldPosX;
+                int playerCurrentWorldPosY = Global.WorldMap.PlayerWorldPosY;
 
                 if (setX < 0)
                 {

@@ -47,7 +47,7 @@ namespace PostMortem_P1.MapGenSchemas
                 {
                     if (Dice.Roll("1d10") > 8)
                     {
-                        int tileNum = Global.Random.Next(building.Count);
+                        int tileNum = Global.Random.Next(building.Count - 1);
                         var tile = building.ElementAt(tileNum);
                         if (chunkMap.IsWalkable(tile.X, tile.Y))
                         {

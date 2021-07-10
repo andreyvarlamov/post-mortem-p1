@@ -26,16 +26,9 @@ namespace PostMortem_P1.Core
         public static bool Debugging = false;
         
         public static readonly IRandom Random = new DotNetRandom();
-        public static readonly Camera Camera = new Camera();
 
         public static SpriteManager SpriteManager { get; set; }
-
         public static WorldMap WorldMap { get; set; }
 
-        public static Player Player { get; set; }
-
-        public static CommandSystem CommandSystem { get; set; }
-
-        public static SchedulingSystem SchedulingSystem { get; set; }
     }
 }

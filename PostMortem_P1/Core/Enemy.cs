@@ -12,5 +12,10 @@ namespace PostMortem_P1.Core
             var behavior = new StandardMoveAndAttack();
             behavior.Act(this, commandSystem);
         }
+
+        public void Update()
+        {
+
+        }
     }
 }

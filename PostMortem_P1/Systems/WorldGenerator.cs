@@ -9,18 +9,10 @@ namespace PostMortem_P1.Systems
 {
     public class WorldGenerator
     {
-        public static WorldMap GenerateWorld(int width, int height, int xPlayer, int yPlayer)
+
+        public static WorldMap GenerateWorld(int width, int height, Camera camera)
         {
-            WorldMap worldMap = GenerateChunks(width, height);
-
-            worldMap.SpawnPlayerInWorld(xPlayer, yPlayer);
-
-            return worldMap;
-        }
-
-        private static WorldMap GenerateChunks(int width, int height)
-        {
-            WorldMap worldMap = new WorldMap(width, height);
+            WorldMap worldMap = new WorldMap(width, height, camera);
 
             for (int x = 0; x < width; x++)
             {
@@ -57,7 +49,6 @@ namespace PostMortem_P1.Systems
                         mapGenSchema = new WildernessMapGen(5, 6, 4);
                         enemiesNum = 2;
                     }
-                    enemiesNum = 0;
                     worldMap[x, y] = MapGenerator.GenerateMap(mapGenSchema, Global.MapWidth, Global.MapHeight, enemiesNum);
                 }
             }
