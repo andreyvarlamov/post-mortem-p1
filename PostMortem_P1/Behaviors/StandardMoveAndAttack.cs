@@ -14,7 +14,7 @@ namespace PostMortem_P1.Behaviors
         {
             ChunkMap chunkMap = Global.WorldMap.CurrentChunkMap;
             Player player = Global.WorldMap.Player;
-            FieldOfView<Tile> enemyFov = new FieldOfView<Tile>(chunkMap);
+            FieldOfView<Tile> enemyFov = new FieldOfView<Tile>(chunkMap.Blocks);
 
             if (!enemy.TurnsAlerted.HasValue)
             {
@@ -32,14 +32,14 @@ namespace PostMortem_P1.Behaviors
                 chunkMap.SetIsWalkable(enemy.X, enemy.Y, true);
                 chunkMap.SetIsWalkable(player.X, player.Y, true);
 
-                PathFinder<Tile> pathFinder = new PathFinder<Tile>(chunkMap);
+                PathFinder<Tile> pathFinder = new PathFinder<Tile>(chunkMap.Blocks);
                 Path path = null;
 
                 try
                 {
                     path = pathFinder.ShortestPath(
-                        chunkMap.GetCell(enemy.X, enemy.Y),
-                        chunkMap.GetCell(player.X, player.Y)
+                        chunkMap.Blocks[enemy.X, enemy.Y],
+                        chunkMap.Blocks[player.X, player.Y]
                     );
                 }
                 catch(PathNotFoundException)

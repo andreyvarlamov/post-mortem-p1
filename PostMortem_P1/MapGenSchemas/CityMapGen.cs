@@ -24,7 +24,7 @@ namespace PostMortem_P1.MapGenSchemas
         public override ChunkMap CreateMap(int width, int height)
         {
             var chunkMap = base.CreateMap(width, height);
-            chunkMap.InitializeCells(Global.SpriteManager.Dirt, true, true);
+            chunkMap.InitializeCells(Global.SpriteManager.Dirt, null, true);
             MapGenHelpers.CreateRoad(chunkMap, _roads, _allRoadTiles, Height / 2, 5, true);
             MapGenHelpers.CreateRoad(chunkMap, _roads, _allRoadTiles, Width / 2, 5, false);
 
@@ -103,20 +103,14 @@ namespace PostMortem_P1.MapGenSchemas
 
             for (int xPos = rect.X; xPos < rect.X + rect.Width + 1; xPos++)
             {
-                chunkMap.SetCellProperties(xPos, rect.Y, false, false);
-                chunkMap.GetCell(xPos, rect.Y).SetSprite(Global.SpriteManager.BuildingWall);
-                
-                chunkMap.SetCellProperties(xPos, rect.Y + rect.Height, false, false);
-                chunkMap.GetCell(xPos, rect.Y + rect.Height).SetSprite(Global.SpriteManager.BuildingWall);
+                chunkMap.SetBlock(xPos, rect.Y, Global.SpriteManager.BuildingWall, false, false);
+                chunkMap.SetBlock(xPos, rect.Y + rect.Height, Global.SpriteManager.BuildingWall, false, false);
             }
 
             for (int yPos = rect.Y; yPos < rect.Y + rect.Height + 1; yPos++)
             {
-                chunkMap.SetCellProperties(rect.X, yPos, false, false);
-                chunkMap.GetCell(rect.X, yPos).SetSprite(Global.SpriteManager.BuildingWall);
-                
-                chunkMap.SetCellProperties(rect.X + rect.Width, yPos, false, false);
-                chunkMap.GetCell(rect.X + rect.Width, yPos).SetSprite(Global.SpriteManager.BuildingWall);
+                chunkMap.SetBlock(rect.X, yPos, Global.SpriteManager.BuildingWall, false, false);
+                chunkMap.SetBlock(rect.X + rect.Width, yPos, Global.SpriteManager.BuildingWall, false, false);
             }
 
             int x, y;
@@ -142,19 +136,13 @@ namespace PostMortem_P1.MapGenSchemas
                     throw new Exception("Invalid direction for building entrance");
             }
 
-            chunkMap.SetCellProperties(x, y, true, true);
-            var tile = chunkMap.GetCell(x, y);
-            tile.SetSprite(Global.SpriteManager.Floor);
-            buildingFloor.Add(tile);
+            buildingFloor.Add(chunkMap.RemoveBlockAndSetFloor(x, y, Global.SpriteManager.Floor, true, true));
 
             for (int xPos = rect.X + 1; xPos < rect.X + rect.Width; xPos++)
             {
                 for (int yPos = rect.Y + 1; yPos < rect.Y + rect.Height; yPos++)
                 {
-                    chunkMap.SetCellProperties(xPos, yPos, true, true);
-                    tile = chunkMap.GetCell(xPos, yPos);
-                    tile.SetSprite(Global.SpriteManager.Floor);
-                    buildingFloor.Add(tile);
+                    buildingFloor.Add(chunkMap.RemoveBlockAndSetFloor(xPos, yPos, Global.SpriteManager.Floor, true, true));
                 }
             }
 
