@@ -123,14 +123,14 @@ namespace PostMortem_P1.Core
         public Texture2D Sprite { get; set; }
         public void Draw(SpriteBatch spriteBatch)
         {
-            if (!Global.WorldMap.CurrentChunkMap[X, Y].IsExplored && !Global.Debugging)
+            if (!Global.WorldMap.CurrentChunkMap.IsExplored(X, Y) && !Global.Debugging)
             {
                 return;
             }
 
             if (Global.WorldMap.CurrentChunkMap.IsInPlayerFov(X, Y) || Global.Debugging)
             {
-                spriteBatch.Draw(Sprite, new Vector2(X * Sprite.Width, Y * Sprite.Width), null, Color.White, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.Actors);
+                spriteBatch.Draw(Sprite, new Vector2(X * Sprite.Width, Y * Sprite.Width), null, Color.White, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.Blocks);
             }
         }
         #endregion
@@ -212,8 +212,8 @@ namespace PostMortem_P1.Core
                 if (this is Player)
                 {
                     worldMap.CurrentChunkMap.UpdatePlayerFieldOfView();
-                    worldMap.Camera.CenterOn(worldMap.CurrentChunkMap[X, Y]);
-                    //Debug.WriteLine($"Player position: x = {X}; y = {Y}");
+                    worldMap.Camera.CenterOn(worldMap.CurrentChunkMap.Floors[X, Y]);
+                    Debug.WriteLine($"PLAYER: x{X} y{Y}; X{worldMap.PlayerWorldPosX} Y{worldMap.PlayerWorldPosY}");
                 }
 
                 return true;
@@ -226,9 +226,7 @@ namespace PostMortem_P1.Core
         {
             bool result = (x >= 0 && x < chunkMap.Width &&
                 y >= 0 && y < chunkMap.Height &&
-                chunkMap[x, y].IsWalkable);
-
-            Debug.WriteLine($"Checking x = {x} y = {y} CanMoveTo={result}");
+                chunkMap.IsWalkable(x, y));
 
             return result;
         }

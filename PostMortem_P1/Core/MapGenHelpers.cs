@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -35,33 +36,45 @@ namespace PostMortem_P1.Core
 
             return rooms;
         }
+        /// <summary>
+        /// Carve out a room
+        /// </summary>
         public static void CreateRoom(ChunkMap chunkMap, RSRectangle room, Texture2D floorSprite)
         {
             for (int x = room.Left + 1; x < room.Right; x++)
             {
                 for (int y = room.Top + 1; y < room.Bottom; y++)
                 {
-                    chunkMap.SetCellProperties(x, y, true, true);
-                    chunkMap.GetCell(x, y).SetSprite(floorSprite);
+                    chunkMap.Blocks[x, y].SetAir(true);
+                    chunkMap.Floors.SetCellProperties(x, y, true, true);
+                    chunkMap.Floors[x, y].SetSprite(floorSprite);
                 }
             }
         }
 
+        /// <summary>
+        /// Carve out a tunnel
+        /// </summary>
         public static void CreateHorizontalTunnel(ChunkMap chunkMap, int xStart, int xEnd, int yPosition)
         {
             for (int x = Math.Min(xStart, xEnd); x <= Math.Max(xStart, xEnd); x++)
             {
-                chunkMap.SetCellProperties(x, yPosition, true, true);
-                chunkMap.GetCell(x, yPosition).SetSprite(Global.SpriteManager.Floor);
+                chunkMap.Blocks[x, yPosition].SetAir(true);
+                chunkMap.Floors.SetCellProperties(x, yPosition, true, true);
+                chunkMap.Floors[x, yPosition].SetSprite(Global.SpriteManager.Floor);
             }
         }
 
+        /// <summary>
+        /// Carve out a tunnel
+        /// </summary>
         public static void CreateVerticalTunnel(ChunkMap chunkMap, int yStart, int yEnd, int xPosition)
         {
             for (int y = Math.Min(yStart, yEnd); y <= Math.Max(yStart, yEnd); y++)
             {
-                chunkMap.SetCellProperties(xPosition, y, true, true);
-                chunkMap.GetCell(xPosition, y).SetSprite(Global.SpriteManager.Floor);
+                chunkMap.Blocks[xPosition, y].SetAir(true);
+                chunkMap.Floors.SetCellProperties(xPosition, y, true, true);
+                chunkMap.Floors[xPosition, y].SetSprite(Global.SpriteManager.Floor);
             }
         }
 
@@ -75,8 +88,9 @@ namespace PostMortem_P1.Core
                 {
                     for (int y = position - width / 2; y < position + width / 2 + 1; y++)
                     {
-                        chunkMap.SetCellProperties(i, y, true, true);
-                        var tile = chunkMap.GetCell(i, y);
+                        chunkMap.Blocks[i, y].SetAir(true);
+                        chunkMap.Floors.SetCellProperties(i, y, true, true);
+                        var tile = chunkMap.Floors[i, y];
                         tile.SetSprite(Global.SpriteManager.Road);
                         road.Add(tile);
                         allRoadTiles.Add(tile);
@@ -84,20 +98,21 @@ namespace PostMortem_P1.Core
 
                     if (!allRoadTiles.Any(tile => tile.X == i && tile.Y == position - width / 2 - 1))
                     {
-                        chunkMap.GetCell(i, position - width / 2 - 1).SetSprite(Global.SpriteManager.Sidewalk);
+                        chunkMap.Floors[i, position - width / 2 - 1].SetSprite(Global.SpriteManager.Sidewalk);
                     }
 
                     if (!allRoadTiles.Any(tile => tile.X == i && tile.Y == position + width / 2 + 1))
                     {
-                        chunkMap.GetCell(i, position + width / 2 + 1).SetSprite(Global.SpriteManager.Sidewalk);
+                        chunkMap.Floors[i, position + width / 2 + 1].SetSprite(Global.SpriteManager.Sidewalk);
                     }
                 }
                 else
                 {
                     for (int x = position - width / 2; x < position + width / 2 + 1; x++)
                     {
-                        chunkMap.SetCellProperties(x, i, true, true);
-                        var tile = chunkMap.GetCell(x, i);
+                        chunkMap.Blocks[x, i].SetAir(true);
+                        chunkMap.Floors.SetCellProperties(x, i, true, true);
+                        var tile = chunkMap.Floors[x, i];
                         tile.SetSprite(Global.SpriteManager.Road);
                         road.Add(tile);
                         allRoadTiles.Add(tile);
@@ -105,12 +120,12 @@ namespace PostMortem_P1.Core
                     
                     if (!allRoadTiles.Any(tile => tile.X == position - width / 2 - 1 && tile.Y == i))
                     {
-                        chunkMap.GetCell(position - width / 2 - 1, i).SetSprite(Global.SpriteManager.Sidewalk);
+                        chunkMap.Floors[position - width / 2 - 1, i].SetSprite(Global.SpriteManager.Sidewalk);
                     }
 
                     if (!allRoadTiles.Any(tile => tile.X == position + width / 2 + 1 && tile.Y == i))
                     {
-                        chunkMap.GetCell(position + width / 2 + 1, i).SetSprite(Global.SpriteManager.Sidewalk);
+                        chunkMap.Floors[position + width / 2 + 1, i].SetSprite(Global.SpriteManager.Sidewalk);
                     }
                 }
             }
