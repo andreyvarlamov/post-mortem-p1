@@ -100,15 +100,22 @@ namespace PostMortem_P1.Core
             _playerFov.ComputeFov(player.X, player.Y, player.Awareness, true);
 
             // Setting tiles in fov to explored (that information is stored in floors layer)
-            foreach (Tile tile in Floors.GetAllCells())
+            for (int x = 0; x < Width; x++)
             {
-                if (_playerFov.IsInFov(tile.X, tile.Y))
+                for (int y = 0; y < Height; y++)
                 {
-                    tile.SetExplored(true);
-                    Blocks[tile.X, tile.Y].SetExplored(true);
+                    if (_playerFov.IsInFov(x, y))
+                    {
+                        SetExplored(x, y, true);
+                    }
                 }
-
             }
+        }
+
+        public void SetExplored(int x, int y, bool isExplored)
+        {
+            Blocks[x, y].SetExplored(isExplored);
+            Floors[x, y].SetExplored(isExplored);
         }
 
         public Tile SetBlock(int x, int y, Texture2D sprite, bool isTransparent, bool isWalkable)
