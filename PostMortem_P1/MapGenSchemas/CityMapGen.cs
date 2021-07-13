@@ -103,24 +103,14 @@ namespace PostMortem_P1.MapGenSchemas
 
             for (int xPos = rect.X; xPos < rect.X + rect.Width + 1; xPos++)
             {
-                chunkMap.Blocks.SetCellProperties(xPos, rect.Y, false, false);
-                chunkMap.Blocks[xPos, rect.Y].SetAir(false);
-                chunkMap.Blocks[xPos, rect.Y].SetSprite(Global.SpriteManager.BuildingWall);
-
-                chunkMap.Blocks.SetCellProperties(xPos, rect.Y + rect.Height, false, false);
-                chunkMap.Blocks[xPos, rect.Y + rect.Height].SetAir(false);
-                chunkMap.Blocks[xPos, rect.Y + rect.Height].SetSprite(Global.SpriteManager.BuildingWall);
+                chunkMap.SetBlock(xPos, rect.Y, Global.SpriteManager.BuildingWall, false, false);
+                chunkMap.SetBlock(xPos, rect.Y + rect.Height, Global.SpriteManager.BuildingWall, false, false);
             }
 
             for (int yPos = rect.Y; yPos < rect.Y + rect.Height + 1; yPos++)
             {
-                chunkMap.Blocks.SetCellProperties(rect.X, yPos, false, false);
-                chunkMap.Blocks[rect.X, yPos].SetAir(false);
-                chunkMap.Blocks[rect.X, yPos].SetSprite(Global.SpriteManager.BuildingWall);
-                
-                chunkMap.Blocks.SetCellProperties(rect.X + rect.Width, yPos, false, false);
-                chunkMap.Blocks[rect.X + rect.Width, yPos].SetAir(false);
-                chunkMap.Blocks[rect.X + rect.Width, yPos].SetSprite(Global.SpriteManager.BuildingWall);
+                chunkMap.SetBlock(rect.X, yPos, Global.SpriteManager.BuildingWall, false, false);
+                chunkMap.SetBlock(rect.X + rect.Width, yPos, Global.SpriteManager.BuildingWall, false, false);
             }
 
             int x, y;
@@ -146,21 +136,13 @@ namespace PostMortem_P1.MapGenSchemas
                     throw new Exception("Invalid direction for building entrance");
             }
 
-            chunkMap.Blocks[x, y].SetAir(true);
-            chunkMap.Floors.SetCellProperties(x, y, true, true);
-            var tile = chunkMap.Floors[x, y];
-            tile.SetSprite(Global.SpriteManager.Floor);
-            buildingFloor.Add(tile);
+            buildingFloor.Add(chunkMap.RemoveBlockAndSetFloor(x, y, Global.SpriteManager.Floor, true, true));
 
             for (int xPos = rect.X + 1; xPos < rect.X + rect.Width; xPos++)
             {
                 for (int yPos = rect.Y + 1; yPos < rect.Y + rect.Height; yPos++)
                 {
-                    chunkMap.Blocks[xPos, yPos].SetAir(true);
-                    chunkMap.Floors.SetCellProperties(xPos, yPos, true, true);
-                    tile = chunkMap.Floors[xPos, yPos];
-                    tile.SetSprite(Global.SpriteManager.Floor);
-                    buildingFloor.Add(tile);
+                    buildingFloor.Add(chunkMap.RemoveBlockAndSetFloor(xPos, yPos, Global.SpriteManager.Floor, true, true));
                 }
             }
 

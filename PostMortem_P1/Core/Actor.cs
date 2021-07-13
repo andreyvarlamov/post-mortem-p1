@@ -205,7 +205,6 @@ namespace PostMortem_P1.Core
                 X = setX;
                 Y = setY;
 
-
                 // Set the current cell to not walkable
                 worldMap.CurrentChunkMap.SetIsWalkable(X, Y, false);
 

@@ -111,6 +111,26 @@ namespace PostMortem_P1.Core
             }
         }
 
+        public Tile SetBlock(int x, int y, Texture2D sprite, bool isTransparent, bool isWalkable)
+        {
+            Tile block = Blocks[x, y];
+            block.IsTransparent = isTransparent;
+            block.IsWalkable = isWalkable;
+            block.SetAir(false);
+            block.SetSprite(sprite);
+            return block;
+        }
+
+        public Tile RemoveBlockAndSetFloor(int x, int y, Texture2D sprite, bool isTransparent, bool isWalkable)
+        {
+            Blocks[x, y].SetAir(true);
+            Tile floor = Floors[x, y];
+            floor.IsTransparent = isTransparent;
+            floor.IsWalkable = isWalkable;
+            floor.SetSprite(sprite);
+            return floor;
+        }
+
         public bool IsWalkable(int x, int y)
         {
             return Floors.IsWalkable(x, y) && Blocks.IsWalkable(x, y);
