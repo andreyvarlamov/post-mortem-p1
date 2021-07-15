@@ -211,7 +211,7 @@ namespace PostMortem_P1.Core
                 if (this is Player)
                 {
                     worldMap.CurrentChunkMap.UpdatePlayerFieldOfView();
-                    worldMap.Camera.CenterOn(worldMap.CurrentChunkMap.Floors[X, Y]);
+                    worldMap.Camera.CenterOn(worldMap.CurrentChunkMap[X, Y]);
                     Debug.WriteLine($"PLAYER: x{X} y{Y}; X{worldMap.PlayerWorldPosX} Y{worldMap.PlayerWorldPosY}");
                 }
 

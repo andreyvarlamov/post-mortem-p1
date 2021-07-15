@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -16,7 +17,7 @@ using PostMortem_P1.Systems;
 
 namespace PostMortem_P1.Core
 {
-    public class ChunkMap
+    public class ChunkMap : Map<Tile>
     {
         private readonly List<Enemy> _enemies;
 
@@ -26,12 +27,6 @@ namespace PostMortem_P1.Core
 
         public SchedulingSystem SchedulingSystem;
 
-        public LayerMap Floors { get; private set; }
-        public LayerMap Blocks { get; private set; }
-
-        public int Width { get; set; }
-        public int Height { get; set; }
-
         public ChunkMap(MapGenSchema mapGenSchema)
         {
             _enemies = new List<Enemy>();
@@ -39,17 +34,62 @@ namespace PostMortem_P1.Core
             _mapGenSchema = mapGenSchema;
             SchedulingSystem = new SchedulingSystem();
 
-            Floors = new LayerMap(LayerDepth.Floors);
-            Blocks = new LayerMap(LayerDepth.Blocks);
+            _playerFov = new FieldOfView<Tile>(this);
+        }
 
-            _playerFov = new FieldOfView<Tile>(Blocks);
+        public void InitializeDefaultTiles(Texture2D floorSprite, Block block, bool isBlocks)
+        {
+            for (int x = 0; x < Width; x++)
+            {
+                for (int y = 0; y < Height; y++)
+                {
+                    if (isBlocks)
+                    {
+                        if (block == null)
+                        {
+                            throw new Exception("No block isntance has been passed, while isBlocks=true.");
+                        }
+                        this[x, y] = new Tile(x, y, block);
+
+                    }
+                    else
+                    {
+                        if (floorSprite == null)
+                        {
+                            throw new Exception("No floor sprite has been passed, while isBlocks=false.");
+                        }
+                        this[x, y] = new Tile(x, y, floorSprite);
+                    }
+                }
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            foreach (Tile tile in GetAllCells())
+            {
+                if (!tile.IsAir)
+                {
+                    // If not explored yet, don't render
+                    if (!tile.IsExplored && !Global.Debugging)
+                    {
+                        continue;
+                    }
 
-            Floors.Draw(spriteBatch, _playerFov);
-            Blocks.Draw(spriteBatch, _playerFov);
+                    // If explored, but not in fov - gray tint, if in fov - no tint
+                    Color tint = Color.Gray;
+                    if (_playerFov.IsInFov(tile.X, tile.Y) || Global.Debugging)
+                    {
+                        tint = Color.White;
+                    }
+
+                    var position = new Vector2(tile.X * SpriteManager.SpriteSize, tile.Y * SpriteManager.SpriteSize);
+
+                    spriteBatch.Draw(tile.Floor, position, null, tint, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.Floors);
+                    spriteBatch.Draw(tile.Block.Sprite, position, null, tint, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.Blocks);
+                }
+            }
+
             foreach (Enemy enemy in _enemies)
             {
                 enemy.Draw(spriteBatch);
@@ -64,32 +104,7 @@ namespace PostMortem_P1.Core
             //});
         }
 
-        public void Initialize(int width, int height)
-        {
-            Width = width;
-            Height = height;
-
-            Floors.Initialize(width, height);
-            Blocks.Initialize(width, height);
-        }
-
-        public void InitializeCells(Texture2D floorSprite, Texture2D blockSprite, bool isWalkable)
-        {
-            // Initialize all Floor tiles
-            Floors.InitializeTiles(floorSprite, true, true);
-
-            // If not walkable, initialize all Block tiles as well
-            if (!isWalkable)
-            {
-                Blocks.InitializeTiles(blockSprite, false, false);
-            }
-            else
-            {
-                Blocks.InitializeAsAir();
-            }
-        }
-
-        public bool IsInPlayerFov(int x, int y)
+               public bool IsInPlayerFov(int x, int y)
         {
             return _playerFov.IsInFov(x, y);
         }
@@ -114,44 +129,34 @@ namespace PostMortem_P1.Core
 
         public void SetExplored(int x, int y, bool isExplored)
         {
-            Blocks[x, y].SetExplored(isExplored);
-            Floors[x, y].SetExplored(isExplored);
+            this[x, y].SetExplored(isExplored);
         }
 
-        public Tile SetBlock(int x, int y, Texture2D sprite, bool isTransparent, bool isWalkable)
+        public Tile SetBlock(int x, int y, Block block)
         {
-            Tile block = Blocks[x, y];
-            block.IsTransparent = isTransparent;
-            block.IsWalkable = isWalkable;
-            block.SetAir(false);
-            block.SetSprite(sprite);
-            return block;
+            Tile tile = this[x, y];
+            tile.SetBlock(block);
+            return tile;
         }
 
-        public Tile RemoveBlockAndSetFloor(int x, int y, Texture2D sprite, bool isTransparent, bool isWalkable)
+        public Tile RemoveBlockAndSetFloor(int x, int y, Texture2D floorSprite)
         {
-            Blocks[x, y].SetAir(true);
-            Tile floor = Floors[x, y];
-            floor.IsTransparent = isTransparent;
-            floor.IsWalkable = isWalkable;
-            floor.SetSprite(sprite);
-            return floor;
-        }
 
-        public bool IsWalkable(int x, int y)
-        {
-            return Floors.IsWalkable(x, y) && Blocks.IsWalkable(x, y);
+            Tile tile = this[x, y];
+            tile.SetBlock(BlockType.Air());
+            tile.SetFloor(floorSprite);
+            return tile;
         }
 
         public bool IsExplored(int x, int y)
         {
-            return Floors[x, y].IsExplored;
+            return this[x, y].IsExplored;
         }
 
         public void SetIsWalkable(int x, int y, bool isWalkable)
         {
-            Tile tile = Blocks[x, y];
-            Blocks.SetCellProperties(tile.X, tile.Y, tile.IsTransparent, isWalkable);
+            Tile tile = this[x, y];
+            SetCellProperties(tile.X, tile.Y, tile.IsTransparent, isWalkable);
         }
 
         public void SetMapForPlayer(Player player)

@@ -33,7 +33,7 @@ namespace PostMortem_P1.MapGenSchemas
         {
             var chunkMap = base.CreateMap(width, height);
 
-            chunkMap.InitializeCells(null, Global.SpriteManager.BuildingWall, false);
+            chunkMap.InitializeDefaultTiles(Global.SpriteManager.BuildingWall, null, false); ;
 
             _rooms = MapGenHelpers.GenerateNonIntersectingRects(Width, Height, _maxRooms, _roomMaxSize, _roomMinSize);
 

@@ -26,7 +26,7 @@ namespace PostMortem_P1.MapGenSchemas
         {
             var chunkMap = base.CreateMap(width, height);
 
-            chunkMap.InitializeCells(Global.SpriteManager.Grass, null, true);
+            chunkMap.InitializeDefaultTiles(Global.SpriteManager.Grass, null, false);
 
             _dirtPatches = MapGenHelpers.GenerateNonIntersectingRects(Width, Height, _maxDirtPatches, _dirtPatchMaxSize, _dirtPatchMinSize);
 

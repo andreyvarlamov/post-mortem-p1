@@ -61,7 +61,7 @@ namespace PostMortem_P1.Core
                 Player = new Player(CurrentChunkMap.GetSuitablePlayerPosition());
             }
 
-            Camera.CenterOn(CurrentChunkMap.Floors[Player.X, Player.Y]);
+            Camera.CenterOn(CurrentChunkMap[Player.X, Player.Y]);
 
             Debug.WriteLine($"Initial player location: /n" +
                 $"WORLD: x = {PlayerWorldPosX} y = {PlayerWorldPosY}" +
