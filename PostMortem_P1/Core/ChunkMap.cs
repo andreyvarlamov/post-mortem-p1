@@ -68,24 +68,26 @@ namespace PostMortem_P1.Core
         {
             foreach (Tile tile in GetAllCells())
             {
+                // If not explored yet, don't render
+                if (!tile.IsExplored && !Global.Debugging)
+                {
+                    continue;
+                }
+
+
+                // If explored, but not in fov - gray tint, if in fov - no tint
+                Color tint = Color.Gray;
+                if (_playerFov.IsInFov(tile.X, tile.Y) || Global.Debugging)
+                {
+                    tint = Color.White;
+                }
+
+                var position = new Vector2(tile.X * SpriteManager.SpriteSize, tile.Y * SpriteManager.SpriteSize);
+
+                spriteBatch.Draw(tile.Floor, position, null, tint, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.Floors);
+
                 if (!tile.IsAir)
                 {
-                    // If not explored yet, don't render
-                    if (!tile.IsExplored && !Global.Debugging)
-                    {
-                        continue;
-                    }
-
-                    // If explored, but not in fov - gray tint, if in fov - no tint
-                    Color tint = Color.Gray;
-                    if (_playerFov.IsInFov(tile.X, tile.Y) || Global.Debugging)
-                    {
-                        tint = Color.White;
-                    }
-
-                    var position = new Vector2(tile.X * SpriteManager.SpriteSize, tile.Y * SpriteManager.SpriteSize);
-
-                    spriteBatch.Draw(tile.Floor, position, null, tint, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.Floors);
                     spriteBatch.Draw(tile.Block.Sprite, position, null, tint, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.Blocks);
                 }
             }
