@@ -24,7 +24,7 @@ namespace PostMortem_P1.MapGenSchemas
         public override ChunkMap CreateMap(int width, int height)
         {
             var chunkMap = base.CreateMap(width, height);
-            chunkMap.InitializeCells(Global.SpriteManager.Dirt, null, true);
+            chunkMap.InitializeDefaultTiles(Global.SpriteManager.Grass, null, false);
             MapGenHelpers.CreateRoad(chunkMap, _roads, _allRoadTiles, Height / 2, 5, true);
             MapGenHelpers.CreateRoad(chunkMap, _roads, _allRoadTiles, Width / 2, 5, false);
 
@@ -49,7 +49,7 @@ namespace PostMortem_P1.MapGenSchemas
                     {
                         int tileNum = Global.Random.Next(building.Count - 1);
                         var tile = building.ElementAt(tileNum);
-                        if (chunkMap.IsWalkable(tile.X, tile.Y))
+                        if (chunkMap.IsTileWalkable(tile.X, tile.Y))
                         {
                             positions.Add(new RSPoint(tile.X, tile.Y));
                         }
@@ -103,14 +103,14 @@ namespace PostMortem_P1.MapGenSchemas
 
             for (int xPos = rect.X; xPos < rect.X + rect.Width + 1; xPos++)
             {
-                chunkMap.SetBlock(xPos, rect.Y, Global.SpriteManager.BuildingWall, false, false);
-                chunkMap.SetBlock(xPos, rect.Y + rect.Height, Global.SpriteManager.BuildingWall, false, false);
+                chunkMap.SetBlock(xPos, rect.Y, BlockType.BuildingWall());
+                chunkMap.SetBlock(xPos, rect.Y + rect.Height, BlockType.BuildingWall());
             }
 
             for (int yPos = rect.Y; yPos < rect.Y + rect.Height + 1; yPos++)
             {
-                chunkMap.SetBlock(rect.X, yPos, Global.SpriteManager.BuildingWall, false, false);
-                chunkMap.SetBlock(rect.X + rect.Width, yPos, Global.SpriteManager.BuildingWall, false, false);
+                chunkMap.SetBlock(rect.X, yPos, BlockType.BuildingWall());
+                chunkMap.SetBlock(rect.X + rect.Width, yPos, BlockType.BuildingWall());
             }
 
             int x, y;
@@ -136,13 +136,13 @@ namespace PostMortem_P1.MapGenSchemas
                     throw new Exception("Invalid direction for building entrance");
             }
 
-            buildingFloor.Add(chunkMap.RemoveBlockAndSetFloor(x, y, Global.SpriteManager.Floor, true, true));
+            buildingFloor.Add(chunkMap.RemoveBlockAndSetFloor(x, y, Global.SpriteManager.Floor));
 
             for (int xPos = rect.X + 1; xPos < rect.X + rect.Width; xPos++)
             {
                 for (int yPos = rect.Y + 1; yPos < rect.Y + rect.Height; yPos++)
                 {
-                    buildingFloor.Add(chunkMap.RemoveBlockAndSetFloor(xPos, yPos, Global.SpriteManager.Floor, true, true));
+                    buildingFloor.Add(chunkMap.RemoveBlockAndSetFloor(xPos, yPos, Global.SpriteManager.Floor));
                 }
             }
 

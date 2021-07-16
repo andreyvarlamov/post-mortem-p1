@@ -45,7 +45,7 @@ namespace PostMortem_P1.Core
             {
                 for (int y = room.Top + 1; y < room.Bottom; y++)
                 {
-                    chunkMap.RemoveBlockAndSetFloor(x, y, floorSprite, true, true);
+                    chunkMap.RemoveBlockAndSetFloor(x, y, floorSprite);
                 }
             }
         }
@@ -57,7 +57,7 @@ namespace PostMortem_P1.Core
         {
             for (int x = Math.Min(xStart, xEnd); x <= Math.Max(xStart, xEnd); x++)
             {
-                chunkMap.RemoveBlockAndSetFloor(x, yPosition, Global.SpriteManager.Floor, true, true);
+                chunkMap.RemoveBlockAndSetFloor(x, yPosition, Global.SpriteManager.Floor);
             }
         }
 
@@ -68,7 +68,7 @@ namespace PostMortem_P1.Core
         {
             for (int y = Math.Min(yStart, yEnd); y <= Math.Max(yStart, yEnd); y++)
             {
-                chunkMap.RemoveBlockAndSetFloor(xPosition, y, Global.SpriteManager.Floor, true, true);
+                chunkMap.RemoveBlockAndSetFloor(xPosition, y, Global.SpriteManager.Floor);
             }
         }
 
@@ -82,38 +82,38 @@ namespace PostMortem_P1.Core
                 {
                     for (int y = position - width / 2; y < position + width / 2 + 1; y++)
                     {
-                        var floor = chunkMap.RemoveBlockAndSetFloor(i, y, Global.SpriteManager.Road, true, true);
+                        var floor = chunkMap.RemoveBlockAndSetFloor(i, y, Global.SpriteManager.Road);
                         road.Add(floor);
                         allRoadTiles.Add(floor);
                     }
 
                     if (!allRoadTiles.Any(tile => tile.X == i && tile.Y == position - width / 2 - 1))
                     {
-                        chunkMap.RemoveBlockAndSetFloor(i, position - width / 2 - 1, Global.SpriteManager.Sidewalk, true, true);
+                        chunkMap.RemoveBlockAndSetFloor(i, position - width / 2 - 1, Global.SpriteManager.Sidewalk);
                     }
 
                     if (!allRoadTiles.Any(tile => tile.X == i && tile.Y == position + width / 2 + 1))
                     {
-                        chunkMap.RemoveBlockAndSetFloor(i, position + width / 2 + 1, Global.SpriteManager.Sidewalk, true, true);
+                        chunkMap.RemoveBlockAndSetFloor(i, position + width / 2 + 1, Global.SpriteManager.Sidewalk);
                     }
                 }
                 else
                 {
                     for (int x = position - width / 2; x < position + width / 2 + 1; x++)
                     {
-                        var floor = chunkMap.RemoveBlockAndSetFloor(x, i, Global.SpriteManager.Road, true, true);
+                        var floor = chunkMap.RemoveBlockAndSetFloor(x, i, Global.SpriteManager.Road);
                         road.Add(floor);
                         allRoadTiles.Add(floor);
                     }
                     
                     if (!allRoadTiles.Any(tile => tile.X == position - width / 2 - 1 && tile.Y == i))
                     {
-                        chunkMap.RemoveBlockAndSetFloor(position - width / 2 - 1, i, Global.SpriteManager.Sidewalk, true, true);
+                        chunkMap.RemoveBlockAndSetFloor(position - width / 2 - 1, i, Global.SpriteManager.Sidewalk);
                     }
 
                     if (!allRoadTiles.Any(tile => tile.X == position + width / 2 + 1 && tile.Y == i))
                     {
-                        chunkMap.RemoveBlockAndSetFloor(position + width / 2 + 1, i, Global.SpriteManager.Sidewalk, true, true);
+                        chunkMap.RemoveBlockAndSetFloor(position + width / 2 + 1, i, Global.SpriteManager.Sidewalk);
                     }
                 }
             }

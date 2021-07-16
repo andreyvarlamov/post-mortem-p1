@@ -24,7 +24,7 @@ namespace PostMortem_P1.MapGenSchemas
         public override ChunkMap CreateMap(int width, int height)
         {
             var chunkMap = base.CreateMap(width, height);
-            chunkMap.InitializeCells(Global.SpriteManager.Grass, null, true);
+            chunkMap.InitializeDefaultTiles(Global.SpriteManager.Grass, null, false);
 
             MapGenHelpers.CreateRoad(chunkMap, _roads, _allRoadsTiles, (_isHorizontal ? height : width) / 2, 5, _isHorizontal);
 
