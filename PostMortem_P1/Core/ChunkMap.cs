@@ -155,10 +155,15 @@ namespace PostMortem_P1.Core
             return this[x, y].IsExplored;
         }
 
+        public bool IsTileWalkable(int x, int y)
+        {
+            return this[x, y].IsTileWalkable;
+        }
+
         public void SetIsWalkable(int x, int y, bool isWalkable)
         {
             Tile tile = this[x, y];
-            SetCellProperties(tile.X, tile.Y, tile.IsTransparent, isWalkable);
+            tile.IsTileWalkable = isWalkable;
         }
 
         public void SetMapForPlayer(Player player)
@@ -206,7 +211,7 @@ namespace PostMortem_P1.Core
                     int x = Global.Random.Next(1, rect.Width - 2) + rect.X;
                     int y = Global.Random.Next(1, rect.Height - 2) + rect.Y;
 
-                    if (IsWalkable(x, y))
+                    if (IsTileWalkable(x, y))
                     {
                         return new RSPoint(x, y);
                     }
@@ -222,7 +227,7 @@ namespace PostMortem_P1.Core
             {
                 for (int y = 1; y <= rect.Height - 2; y++)
                 {
-                    if (IsWalkable(x + rect.X, y + rect.Y))
+                    if (IsTileWalkable(x + rect.X, y + rect.Y))
                     {
                         return true;
                     }

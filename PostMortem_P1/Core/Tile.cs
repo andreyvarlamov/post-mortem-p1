@@ -25,7 +25,8 @@ namespace PostMortem_P1.Core
             }
         }
 
-        public bool IsWalkable
+        // TODO I think hidingthis is the issue
+        public bool IsTileWalkable
         {
             get
             {
@@ -37,7 +38,7 @@ namespace PostMortem_P1.Core
             }
         }
 
-        public bool IsTransparent
+        public bool IsTileTransparent
         {
             get
             {
@@ -48,6 +49,7 @@ namespace PostMortem_P1.Core
                 Block.IsTransparent = value;
             }
         }
+
         public Tile() : base()
         {
 

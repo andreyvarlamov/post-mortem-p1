@@ -19,6 +19,7 @@ namespace PostMortem_P1.Core
             Sprite = sprite;
             IsAir = isAir;
             IsWalkable = isWalkable;
+            IsTransparent = isTransparent;
         }
 
         //public void SetAir(bool isAir)

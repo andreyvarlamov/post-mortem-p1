@@ -49,7 +49,7 @@ namespace PostMortem_P1.MapGenSchemas
                     {
                         int tileNum = Global.Random.Next(building.Count - 1);
                         var tile = building.ElementAt(tileNum);
-                        if (chunkMap.IsWalkable(tile.X, tile.Y))
+                        if (chunkMap.IsTileWalkable(tile.X, tile.Y))
                         {
                             positions.Add(new RSPoint(tile.X, tile.Y));
                         }

@@ -225,7 +225,7 @@ namespace PostMortem_P1.Core
         {
             bool result = (x >= 0 && x < chunkMap.Width &&
                 y >= 0 && y < chunkMap.Height &&
-                chunkMap.IsWalkable(x, y));
+                chunkMap.IsTileWalkable(x, y));
 
             return result;
         }
