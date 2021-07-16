@@ -11,7 +11,7 @@ using PostMortem_P1.Core;
 using PostMortem_P1.Graphics;
 using PostMortem_P1.Systems;
 using PostMortem_P1.Input;
-using PostMortem_P1.MapGenSchemas;
+using PostMortem_P1.Menus;
 
 namespace PostMortem_P1
 {
@@ -19,6 +19,8 @@ namespace PostMortem_P1
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+
+        private Menu _menu;
 
 
         public PostMortem()
@@ -46,6 +48,8 @@ namespace PostMortem_P1
 
             Global.WorldMap = WorldGenerator.GenerateWorld(Global.WorldWidth, Global.WorldHeight, camera);
             Global.WorldMap.SpawnPlayerInWorld(2, 0);
+
+            _menu = new Menu(500, 400, null, _graphics);
         }
 
         protected override void Update(GameTime gameTime)
@@ -78,6 +82,11 @@ namespace PostMortem_P1
 
             _spriteBatch.End();
 
+            _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+
+            _menu.Draw(_spriteBatch);
+
+            _spriteBatch.End();
             base.Draw(gameTime);
         }
     }
