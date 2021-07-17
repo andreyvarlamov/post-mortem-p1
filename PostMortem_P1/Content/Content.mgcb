@@ -73,6 +73,13 @@
 /processorParam:TextureFormat=Color
 /build:grass.png
 
+#begin MainFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:MainFont.spritefont;mainFont.spritefont
+
 #begin player.png
 /importer:TextureImporter
 /processor:TextureProcessor

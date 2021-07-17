@@ -44,12 +44,21 @@ namespace PostMortem_P1
             Global.SpriteManager = new SpriteManager();
             Global.SpriteManager.LoadContent(Content);
 
+            Global.FontManager = new FontManager();
+            Global.FontManager.LoadContent(Content);
+
             Camera camera = new Camera(_graphics.GraphicsDevice.Viewport.Width, _graphics.GraphicsDevice.Viewport.Height);
 
             Global.WorldMap = WorldGenerator.GenerateWorld(Global.WorldWidth, Global.WorldHeight, camera);
             Global.WorldMap.SpawnPlayerInWorld(2, 0);
 
-            _menu = new Menu(300, 400, null, _graphics);
+            List<MenuItem> menuItems = new List<MenuItem>();
+            menuItems.Add(new MenuItem("item 1", null));
+            menuItems.Add(new MenuItem("item 22", null));
+            menuItems.Add(new MenuItem("item 333", null));
+            menuItems.Add(new MenuItem("item 4444", null));
+            menuItems.Add(new MenuItem("item 55555", null));
+            _menu = new Menu(300, 400, menuItems, _graphics);
         }
 
         protected override void Update(GameTime gameTime)

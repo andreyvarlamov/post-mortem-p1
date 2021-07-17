@@ -29,6 +29,7 @@ namespace PostMortem_P1.Core
         public static readonly IRandom Random = new DotNetRandom();
 
         public static SpriteManager SpriteManager { get; set; }
+        public static FontManager FontManager { get; set; }
         public static InputManager InputManager { get; set; }
         public static WorldMap WorldMap { get; set; }
 
