@@ -28,8 +28,8 @@ namespace PostMortem_P1.Menus
             PxWidth = pxWidth;
             PxHeight = pxHeight;
 
-            PxX = (graphics.GraphicsDevice.Viewport.Width / 2) - ( pxWidth / 2);
-            PxY = (graphics.GraphicsDevice.Viewport.Height / 2) - ( pxHeight / 2);
+            PxX = (graphics.GraphicsDevice.Viewport.Width / 2) - (PxWidth / 2);
+            PxY = (graphics.GraphicsDevice.Viewport.Height / 2) - (PxHeight / 2);
 
             Debug.WriteLine($"PxX={PxX}; PxY={PxY}");
 
@@ -38,7 +38,7 @@ namespace PostMortem_P1.Menus
             _canvas = new Texture2D(graphics.GraphicsDevice, PxWidth, PxHeight);
 
             Color[] data = new Color[PxWidth*PxHeight];
-            for (int i = 0; i < data.Length; ++i)
+            for (int i = 0; i < data.Length; i++)
             {
                 data[i] = Color.Red;
             }
@@ -59,7 +59,7 @@ namespace PostMortem_P1.Menus
 
         private void DrawDecoration(SpriteBatch spriteBatch)
         {
-            Vector2 position = new Vector2(PxY, PxY);
+            Vector2 position = new Vector2(PxX, PxY);
             //spriteBatch.Draw(_canvas, position, Color.White);
             spriteBatch.Draw(_canvas, position, null, Color.White, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.Menu);
         }
