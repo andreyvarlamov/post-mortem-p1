@@ -9,9 +9,9 @@ using PostMortem_P1.Menus.Overlays;
 
 namespace PostMortem_P1.Menus.MenuActions
 {
-    public class MenuActionSetBlock : MenuAction
+    public class MenuActionReplaceFloor : MenuAction
     {
-        public MenuActionSetBlock(GraphicsDeviceManager graphics) : base(graphics)
+        public MenuActionReplaceFloor(GraphicsDeviceManager graphics) : base(graphics)
         {
         }
 
@@ -21,7 +21,7 @@ namespace PostMortem_P1.Menus.MenuActions
 
             Tile tile = tileSelectOverlay.GetHighlightedTile();
 
-            Global.WorldMap.CurrentChunkMap.SetBlock(tile, BlockType.Wall());
+            Global.WorldMap.CurrentChunkMap.ReplaceFloor(tile, Global.SpriteManager.Floor);
 
             Global.OverlayManager.ReturnToGame();
 

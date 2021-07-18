@@ -64,13 +64,19 @@ namespace PostMortem_P1
 
 
                 List<MenuItem> menuItems = new List<MenuItem>();
-                MenuActionSetBlock setBlock = new MenuActionSetBlock(_graphics);
-                MenuActionGetSelectedTile getSelectedTile = new MenuActionGetSelectedTile(_graphics, setBlock);
-                menuItems.Add(new MenuItem("Set Block", getSelectedTile));
-                menuItems.Add(new MenuItem("item 22", null));
-                menuItems.Add(new MenuItem("item 333", null));
-                menuItems.Add(new MenuItem("item 4444", null));
-                menuItems.Add(new MenuItem("item 55555", null));
+
+                MenuActionSetBlock getSelectedTileSetBlock = new MenuActionSetBlock(_graphics);
+                MenuActionGetSelectedTile setBlock = new MenuActionGetSelectedTile(_graphics, getSelectedTileSetBlock);
+                menuItems.Add(new MenuItem("Set Block", setBlock));
+
+                MenuActionRemoveBlock getSelectedTileRemoveBlock = new MenuActionRemoveBlock(_graphics);
+                MenuActionGetSelectedTile removeBlock = new MenuActionGetSelectedTile(_graphics, getSelectedTileRemoveBlock);
+                menuItems.Add(new MenuItem("Remove Block", removeBlock));
+
+                MenuActionReplaceFloor getSelectedTileReplaceFloor = new MenuActionReplaceFloor(_graphics);
+                MenuActionGetSelectedTile replaceFloor = new MenuActionGetSelectedTile(_graphics, getSelectedTileReplaceFloor);
+                menuItems.Add(new MenuItem("Replace Floor", replaceFloor));
+
                 MenuOverlay menu = new MenuOverlay(300, 400, menuItems, _graphics);
                 Global.OverlayManager.SetCurrentOverlayAndReset(menu);
             }

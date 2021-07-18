@@ -141,10 +141,21 @@ namespace PostMortem_P1.Core
             return tile;
         }
 
-        public Tile RemoveBlock(int x, int y)
+        public Tile SetBlock(Tile tile, Block block)
         {
-            Tile tile = this[x, y];
+            tile.SetBlock(block);
+            return tile;
+        }
+
+        public Tile RemoveBlock(Tile tile)
+        {
             tile.SetBlock(BlockType.Air());
+            return tile;
+        }
+
+        public Tile ReplaceFloor(Tile tile, Texture2D floorSprite)
+        {
+            tile.SetFloor(floorSprite);
             return tile;
         }
 
