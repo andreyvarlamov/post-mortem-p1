@@ -79,7 +79,9 @@ namespace PostMortem_P1.Menus.Overlays
                 {
 
                     Vector2 cursorPosition = new Vector2(PxX + horizontalOffset - 3, PxY + verticalOffset + lineHeight * i - textHeight / 2 - 1);
-                    var selectionRect = CreateRectangle(textWidth + 3, textHeight + 1, Color.White);
+
+                    var selectionRect = CreateRectangle(textWidth + 3, textHeight + 1, Color.White, this.graphics);
+
                     spriteBatch.Draw(selectionRect, cursorPosition, null, Color.White, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.MenuSelect);
                     spriteBatch.DrawString(Global.FontManager.MainFont, MenuItems[i].Text, textPosition, Color.Black, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.MenuText);
                 }
@@ -89,21 +91,6 @@ namespace PostMortem_P1.Menus.Overlays
                 }
             }
 
-        }
-
-        private Texture2D CreateRectangle(int width, int height, Color color)
-        {
-            Texture2D rectangle = new Texture2D(this.graphics.GraphicsDevice, width, height);
-
-            Color[] data = new Color[width * height];
-            for (int i = 0; i < data.Length; i++)
-            {
-                data[i] = color;
-            }
-
-            rectangle.SetData(data);
-
-            return rectangle;
         }
 
         private Texture2D CreateStaticCanvas()

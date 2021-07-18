@@ -47,5 +47,20 @@ namespace PostMortem_P1.Menus
         public virtual void ProcessFromInput(InputManager inputManager)
         {
         }
+
+        public static Texture2D CreateRectangle(int width, int height, Color color, GraphicsDeviceManager graphics)
+        {
+            Texture2D rectangle = new Texture2D(graphics.GraphicsDevice, width, height);
+
+            Color[] data = new Color[width * height];
+            for (int i = 0; i < data.Length; i++)
+            {
+                data[i] = color;
+            }
+
+            rectangle.SetData(data);
+
+            return rectangle;
+        }
     }
 }

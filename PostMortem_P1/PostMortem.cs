@@ -26,7 +26,7 @@ namespace PostMortem_P1
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            IsMouseVisible = true;
+            IsMouseVisible = false;
         }
 
         protected override void Initialize()
@@ -46,13 +46,17 @@ namespace PostMortem_P1
             Global.FontManager = new FontManager();
             Global.FontManager.LoadContent(Content);
 
-            Global.OverlayManager = new OverlayManager(_graphics);
+            _graphics.PreferredBackBufferWidth = 1280;
+            _graphics.PreferredBackBufferHeight = 720;
+            _graphics.ApplyChanges();
 
-            Camera camera = new Camera(_graphics.GraphicsDevice.Viewport.Width, _graphics.GraphicsDevice.Viewport.Height);
+            Global.OverlayManager = new OverlayManager(_graphics);
+            Global.Hud = new Hud(_graphics, 20, true);
+
+            Camera camera = new Camera(_graphics.GraphicsDevice.Viewport.Width, _graphics.GraphicsDevice.Viewport.Height, Global.Hud);
 
             Global.WorldMap = WorldGenerator.GenerateWorld(Global.WorldWidth, Global.WorldHeight, camera);
             Global.WorldMap.SpawnPlayerInWorld(2, 0);
-
         }
 
         private void ToggleGameMode()
@@ -60,8 +64,6 @@ namespace PostMortem_P1
             if (Global.GameMode == GameMode.Game)
             {
                 Global.GameMode = GameMode.Overlay;
-
-
 
                 List<MenuItem> menuItems = new List<MenuItem>();
 
@@ -130,14 +132,15 @@ namespace PostMortem_P1
 
             _spriteBatch.End();
 
+            _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+
+            Global.Hud.Draw(_spriteBatch);
             if (Global.GameMode == GameMode.Overlay)
             {
-                _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-
                 Global.OverlayManager.Draw(_spriteBatch);
-
-                _spriteBatch.End();
             }
+
+            _spriteBatch.End();
 
             base.Draw(gameTime);
         }

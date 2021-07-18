@@ -6,6 +6,7 @@ using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 using PostMortem_P1.Graphics;
 using PostMortem_P1.Input;
+using PostMortem_P1.Menus.Overlays;
 
 namespace PostMortem_P1.Core
 {
@@ -36,11 +37,11 @@ namespace PostMortem_P1.Core
                     Matrix.CreateTranslation(new Vector3(ViewPortCenter, 0));
             }
         }
-        public Camera(int viewportWidth, int viewportHeight)
+        public Camera(int viewportWidth, int viewportHeight, Hud hud)
         {
             Zoom = 1.0f;
 
-            ViewportWidth = viewportWidth;
+            ViewportWidth = viewportWidth - hud.PxWidth;
             ViewportHeight = viewportHeight;
         }
 
