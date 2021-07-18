@@ -6,6 +6,8 @@ using Microsoft.Xna.Framework.Graphics;
 
 using PostMortem_P1.Input;
 using PostMortem_P1.Systems;
+using PostMortem_P1.Menus;
+using PostMortem_P1.Menus.Overlays;
 
 namespace PostMortem_P1.Core
 {

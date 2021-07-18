@@ -33,5 +33,7 @@ namespace PostMortem_P1.Core
         public static InputManager InputManager { get; set; }
         public static WorldMap WorldMap { get; set; }
 
+        public static GameMode GameMode { get; set; }
+        public static OverlayManager OverlayManager { get; set; }
     }
 }

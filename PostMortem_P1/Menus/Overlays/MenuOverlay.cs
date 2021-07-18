@@ -5,55 +5,58 @@ using System.Diagnostics;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 using PostMortem_P1.Core;
+using PostMortem_P1.Input;
 
-namespace PostMortem_P1.Menus
+namespace PostMortem_P1.Menus.Overlays
 {
-    public class Menu
+    public class MenuOverlay : Overlay
     {
-        public int PxX { get; set; }
-        public int PxY { get; set; }
-        public int PxWidth { get; set; }
-        public int PxHeight { get; set; }
-
-        private int _viewportWidth;
-        private int _viewportHeight;
-
         public List<MenuItem> MenuItems { get; set; }
 
-        public int Selection;
+        private int _selection;
 
-        private Texture2D _canvas;
-
-        private bool _willDrawInMiddle;
-
-        private GraphicsDeviceManager _graphics;
-
-        public Menu(int pxWidth, int pxHeight, List<MenuItem> menuItems, GraphicsDeviceManager graphics)
+        public int Selection
         {
-            _viewportWidth = graphics.GraphicsDevice.Viewport.Width;
-            _viewportHeight = graphics.GraphicsDevice.Viewport.Height;
+            get
+            {
+                return _selection;
+            }
+            set
+            {
+                if (value <= -1)
+                {
+                    _selection = MenuItems.Count - 1;
+                }
+                else if (value >= MenuItems.Count)
+                {
+                    _selection = 0;
+                }
+                else
+                {
+                    _selection = value;
+                }
+            }
+        }
 
+        public MenuOverlay(int pxWidth, int pxHeight, List<MenuItem> menuItems, GraphicsDeviceManager graphics) : base(graphics)
+        {
             PxWidth = pxWidth;
             PxHeight = pxHeight;
 
-            PxX = _viewportWidth / 2 - PxWidth / 2;
-            PxY = _viewportHeight / 2 - PxHeight / 2;
+            PxX = this.viewportWidth / 2 - PxWidth / 2;
+            PxY = this.viewportHeight / 2 - PxHeight / 2;
 
-            Debug.WriteLine($"PxX={PxX}; PxY={PxY}");
-
-            _graphics = graphics;
+            this.canvas = CreateStaticCanvas();
 
             MenuItems = menuItems;
 
-            Selection = 2;
-
-            _canvas = CreateStaticCanvas();
-
+            Selection = 0;
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch)
         {
             DrawDecoration(spriteBatch);
             DrawContent(spriteBatch);
@@ -90,7 +93,7 @@ namespace PostMortem_P1.Menus
 
         private Texture2D CreateRectangle(int width, int height, Color color)
         {
-            Texture2D rectangle = new Texture2D(_graphics.GraphicsDevice, width, height);
+            Texture2D rectangle = new Texture2D(this.graphics.GraphicsDevice, width, height);
 
             Color[] data = new Color[width * height];
             for (int i = 0; i < data.Length; i++)
@@ -105,7 +108,7 @@ namespace PostMortem_P1.Menus
 
         private Texture2D CreateStaticCanvas()
         {
-            Texture2D canvas = new Texture2D(_graphics.GraphicsDevice, PxWidth, PxHeight);
+            Texture2D canvas = new Texture2D(this.graphics.GraphicsDevice, PxWidth, PxHeight);
 
             Color[] data = new Color[PxWidth*PxHeight];
 
@@ -141,12 +144,25 @@ namespace PostMortem_P1.Menus
         {
             Vector2 position = new Vector2(PxX, PxY);
             //spriteBatch.Draw(_canvas, position, Color.White);
-            spriteBatch.Draw(_canvas, position, null, Color.White, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.Menu);
+            spriteBatch.Draw(this.canvas, position, null, Color.White, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.Menu);
         }
 
-        //public void Update(GameTime gameTime)
-        //{
+        public override void ProcessFromInput(InputManager inputManager)
+        {
+            switch (inputManager.IsMove())
+            {
+                case Direction.S:
+                    Selection++;
+                    break;
+                case Direction.N:
+                    Selection--;
+                    break;
+            }
 
-        //}
+            if (inputManager.IsNewKeyPress(Keys.Enter))
+            {
+                MenuItems[Selection].MenuAction.Do();
+            }
+        }
     }
 }

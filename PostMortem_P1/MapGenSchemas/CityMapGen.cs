@@ -28,10 +28,10 @@ namespace PostMortem_P1.MapGenSchemas
             MapGenHelpers.CreateRoad(chunkMap, _roads, _allRoadTiles, Height / 2, 5, true);
             MapGenHelpers.CreateRoad(chunkMap, _roads, _allRoadTiles, Width / 2, 5, false);
 
-            CreateBuilding(chunkMap, GetBuildingRect(eDirection.NW), eDirection.S);
-            CreateBuilding(chunkMap, GetBuildingRect(eDirection.NE), eDirection.W);
-            CreateBuilding(chunkMap, GetBuildingRect(eDirection.SW), eDirection.E);
-            CreateBuilding(chunkMap, GetBuildingRect(eDirection.SE), eDirection.N);
+            CreateBuilding(chunkMap, GetBuildingRect(Direction.NW), Direction.S);
+            CreateBuilding(chunkMap, GetBuildingRect(Direction.NE), Direction.W);
+            CreateBuilding(chunkMap, GetBuildingRect(Direction.SW), Direction.E);
+            CreateBuilding(chunkMap, GetBuildingRect(Direction.SE), Direction.N);
 
             return chunkMap;
         }
@@ -60,31 +60,31 @@ namespace PostMortem_P1.MapGenSchemas
             return positions;
         }
 
-        private RSRectangle GetBuildingRect(eDirection corner)
+        private RSRectangle GetBuildingRect(Direction corner)
         {
             int x, y, width, height;
 
             switch(corner)
             {
-                case eDirection.NW:
+                case Direction.NW:
                     x = 1;
                     y = 1;
                     width = _roads[1].ElementAt(0).X - 3 - x;
                     height = _roads[0].ElementAt(0).Y - 3 - y;
                     break;
-                case eDirection.NE:
+                case Direction.NE:
                     x = _roads[1].ElementAt(4).X + 3;
                     y = 1;
                     width = Width - 2 - x;
                     height = _roads[0].ElementAt(0).Y - 3 - y;
                     break;
-                case eDirection.SW:
+                case Direction.SW:
                     x = 1;
                     y = _roads[0].ElementAt(4).Y + 3;
                     width = _roads[1].ElementAt(0).X - 3 - x;
                     height = Height - 2 - y;
                     break;
-                case eDirection.SE:
+                case Direction.SE:
                     x = _roads[1].ElementAt(4).X + 3;
                     y = _roads[0].ElementAt(4).Y + 3;
                     width = Width - 2 - x;
@@ -97,7 +97,7 @@ namespace PostMortem_P1.MapGenSchemas
             return new RSRectangle(x, y, width, height);
         }
 
-        private void CreateBuilding(ChunkMap chunkMap, RSRectangle rect, eDirection entranceSide)
+        private void CreateBuilding(ChunkMap chunkMap, RSRectangle rect, Direction entranceSide)
         {
             Structure buildingFloor = new Structure();
 
@@ -116,19 +116,19 @@ namespace PostMortem_P1.MapGenSchemas
             int x, y;
             switch (entranceSide)
             {
-                case eDirection.N:
+                case Direction.N:
                     x = Global.Random.Next(rect.X + 1, rect.X + rect.Width - 1);
                     y = rect.Y;
                     break;
-                case eDirection.W:
+                case Direction.W:
                     x = rect.X;
                     y = Global.Random.Next(rect.Y + 1, rect.Y + rect.Height - 1);
                     break;
-                case eDirection.E:
+                case Direction.E:
                     x = rect.X + rect.Width;
                     y = Global.Random.Next(rect.Y + 1, rect.Y + rect.Height - 1);
                     break;
-                case eDirection.S:
+                case Direction.S:
                     x = Global.Random.Next(rect.X + 1, rect.X + rect.Width - 1);
                     y = rect.Y + rect.Height;
                     break;

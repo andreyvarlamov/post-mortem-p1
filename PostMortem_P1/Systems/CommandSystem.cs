@@ -33,40 +33,45 @@ namespace PostMortem_P1.Systems
             IsPlayerTurn = false;
         }
 
-        public bool MovePlayer(eDirection direction)
+        /// <summary>
+        /// processing stops here until an input is made
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <returns></returns>
+        public bool MovePlayer(Direction direction)
         {
             int x = Global.WorldMap.Player.X;
             int y = Global.WorldMap.Player.Y;
 
             switch (direction)
             {
-                case eDirection.SW:
+                case Direction.SW:
                     x--;
                     y++;
                     break;
-                case eDirection.S:
+                case Direction.S:
                     y++;
                     break;
-                case eDirection.SE:
+                case Direction.SE:
                     x++;
                     y++;
                     break;
-                case eDirection.W:
+                case Direction.W:
                     x--;
                     break;
-                case eDirection.Center:
+                case Direction.Center:
                     return true;
-                case eDirection.E:
+                case Direction.E:
                     x++;
                     break;
-                case eDirection.NW:
+                case Direction.NW:
                     x--;
                     y--;
                     break;
-                case eDirection.N:
+                case Direction.N:
                     y--;
                     break;
-                case eDirection.NE:
+                case Direction.NE:
                     x++;
                     y--;
                     break;
