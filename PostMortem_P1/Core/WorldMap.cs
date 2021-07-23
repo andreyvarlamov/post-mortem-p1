@@ -6,6 +6,8 @@ using Microsoft.Xna.Framework.Graphics;
 
 using PostMortem_P1.Input;
 using PostMortem_P1.Systems;
+using PostMortem_P1.Menus;
+using PostMortem_P1.Menus.Overlays;
 
 namespace PostMortem_P1.Core
 {
@@ -61,7 +63,20 @@ namespace PostMortem_P1.Core
                 Player = new Player(CurrentChunkMap.GetSuitablePlayerPosition());
             }
 
+            Player.AddToInventory(ItemType.Apple());
+            Player.AddToInventory(ItemType.Apple());
+            Player.AddToInventory(ItemType.Dirt());
+
             Camera.CenterOn(CurrentChunkMap[Player.X, Player.Y]);
+
+            Global.Hud.SetChunkX(Player.X);
+            Global.Hud.SetChunkY(Player.Y);
+
+            Global.Hud.SetWorldX(PlayerWorldPosX);
+            Global.Hud.SetWorldY(PlayerWorldPosY);
+
+            Global.Hud.SetMaxHealth(Player.MaxHealth);
+            Global.Hud.SetHealth(Player.Health);
 
             Debug.WriteLine($"Initial player location: /n" +
                 $"WORLD: x = {PlayerWorldPosX} y = {PlayerWorldPosY}" +

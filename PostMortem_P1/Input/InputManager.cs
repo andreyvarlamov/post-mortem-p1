@@ -98,47 +98,47 @@ namespace PostMortem_P1.Input
         #endregion
 
         #region Player Movement
-        public eDirection IsMove()
+        public Direction IsMove()
         {
             if (IsDownDelay(Keys.N))
             {
-                return eDirection.SW;
+                return Direction.SW;
             }
             else if (IsDownDelay(Keys.J))
             {
-                return eDirection.S;
+                return Direction.S;
             }
             else if (IsDownDelay(Keys.M))
             {
-                return eDirection.SE;
+                return Direction.SE;
             }
             else if (IsDownDelay(Keys.H))
             {
-                return eDirection.W;
+                return Direction.W;
             }
             else if (IsDownDelay(Keys.OemPeriod))
             {
-                return eDirection.Center;
+                return Direction.Center;
             }
             else if (IsDownDelay(Keys.L))
             {
-                return eDirection.E;
+                return Direction.E;
             }
             else if (IsDownDelay(Keys.Y))
             {
-                return eDirection.NW;
+                return Direction.NW;
             }
             else if (IsDownDelay(Keys.K))
             {
-                return eDirection.N;
+                return Direction.N;
             }
             else if (IsDownDelay(Keys.U))
             {
-                return eDirection.NE;
+                return Direction.NE;
             }
             else
             {
-                return eDirection.None;
+                return Direction.None;
             }
         }
         #endregion

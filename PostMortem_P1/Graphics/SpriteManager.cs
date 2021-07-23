@@ -21,6 +21,7 @@ namespace PostMortem_P1.Graphics
             public const string Bandit = "Bandit";
 
             public const string White = "White";
+            public const string MapCursor = "MapCursor";
         }
 
         public Texture2D BuildingWall { get; private set; }
@@ -36,6 +37,8 @@ namespace PostMortem_P1.Graphics
 
         public Texture2D White { get; private set; }
 
+        public Texture2D MapCursor { get; private set; }
+
         public void LoadContent(ContentManager content)
         {
             BuildingWall = content.Load<Texture2D>(SpriteDictionary.BuildingWall);
@@ -50,6 +53,7 @@ namespace PostMortem_P1.Graphics
             Bandit = content.Load<Texture2D>(SpriteDictionary.Bandit);
 
             White = content.Load<Texture2D>(SpriteDictionary.White);
+            MapCursor = content.Load<Texture2D>(SpriteDictionary.MapCursor);
         }
     }
 }

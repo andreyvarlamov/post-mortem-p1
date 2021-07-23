@@ -3,6 +3,7 @@
 using PostMortem_P1.Graphics;
 using PostMortem_P1.Systems;
 using PostMortem_P1.Input;
+using PostMortem_P1.Menus.Overlays;
 
 namespace PostMortem_P1.Core
 {
@@ -29,8 +30,12 @@ namespace PostMortem_P1.Core
         public static readonly IRandom Random = new DotNetRandom();
 
         public static SpriteManager SpriteManager { get; set; }
+        public static FontManager FontManager { get; set; }
         public static InputManager InputManager { get; set; }
         public static WorldMap WorldMap { get; set; }
 
+        public static GameMode GameMode { get; set; }
+        public static OverlayManager OverlayManager { get; set; }
+        public static Hud Hud { get; set; }
     }
 }

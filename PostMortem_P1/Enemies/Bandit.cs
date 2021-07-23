@@ -8,6 +8,11 @@ namespace PostMortem_P1.Enemies
 {
     public class Bandit : Enemy
     {
+        public Bandit() : base()
+        {
+
+        }
+
         public static Bandit Create(RSPoint position, int level)
         {
             int health = Dice.Roll("10d5");

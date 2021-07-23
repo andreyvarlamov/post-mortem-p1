@@ -5,6 +5,11 @@ namespace PostMortem_P1.Core
 {
     public class Enemy : Actor
     {
+        public Enemy() : base()
+        {
+
+        }
+
         public int? TurnsAlerted { get; set; }
 
         public virtual void PerformAction(CommandSystem commandSystem)

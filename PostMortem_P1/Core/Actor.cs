@@ -13,6 +13,11 @@ namespace PostMortem_P1.Core
 {
     public class Actor : IActor, IDrawable, IScheduleable
     {
+        public Actor()
+        {
+            Inventory = new Inventory();
+        }
+
         #region IActor
         // General stats
         private int _awareness;
@@ -146,6 +151,18 @@ namespace PostMortem_P1.Core
 
         #endregion
 
+        public Inventory Inventory;
+
+        public void AddToInventory(Item item)
+        {
+            Inventory.Items.Add(item);
+
+            if (this is Player)
+            {
+                Global.Hud.SetItems(Inventory.Items);
+            }
+        }
+
         public bool SetPosition(int setX, int setY, ChunkMap movingFromChunk)
         {
             WorldMap worldMap = Global.WorldMap;
@@ -213,6 +230,12 @@ namespace PostMortem_P1.Core
                     worldMap.CurrentChunkMap.UpdatePlayerFieldOfView();
                     worldMap.Camera.CenterOn(worldMap.CurrentChunkMap[X, Y]);
                     Debug.WriteLine($"PLAYER: x{X} y{Y}; X{worldMap.PlayerWorldPosX} Y{worldMap.PlayerWorldPosY}");
+
+                    Global.Hud.SetChunkX(X);
+                    Global.Hud.SetChunkY(Y);
+
+                    Global.Hud.SetWorldX(worldMap.PlayerWorldPosX);
+                    Global.Hud.SetWorldY(worldMap.PlayerWorldPosY);
                 }
 
                 return true;

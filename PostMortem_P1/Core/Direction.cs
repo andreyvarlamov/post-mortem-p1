@@ -1,6 +1,6 @@
 ﻿namespace PostMortem_P1.Core
 {
-    public enum eDirection
+    public enum Direction
     {
         None = 0,
         SW = 1,
