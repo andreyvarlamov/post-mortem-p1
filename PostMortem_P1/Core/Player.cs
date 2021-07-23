@@ -6,7 +6,7 @@ namespace PostMortem_P1.Core
 {
     public class Player : Actor
     {
-        public Player(RSPoint position)
+        public Player(RSPoint position) : base()
         {
             Sprite = Global.SpriteManager.Player;
             X = position.X;

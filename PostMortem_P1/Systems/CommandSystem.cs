@@ -103,6 +103,11 @@ namespace PostMortem_P1.Systems
 
                 Debug.WriteLine($"{attacker.Name} hit {defender.Name} for {damage} and he has {defender.Health} remaining.");
 
+                if (defender is Player)
+                {
+                    Global.Hud.SetHealth(defender.Health);
+                }
+
                 if (defender.Health <= 0)
                 {
                     if (defender is Enemy)
