@@ -22,6 +22,10 @@ namespace PostMortem_P1.Graphics
 
             public const string White = "White";
             public const string MapCursor = "MapCursor";
+            public const string ItemPickup = "ItemPickup";
+            public const string ItemPickupMultiple = "ItemPickupMultiple";
+
+            public const string Apple = "Apple";
         }
 
         public Texture2D BuildingWall { get; private set; }
@@ -36,8 +40,11 @@ namespace PostMortem_P1.Graphics
         public Texture2D Bandit { get; private set; }
 
         public Texture2D White { get; private set; }
-
         public Texture2D MapCursor { get; private set; }
+        public Texture2D ItemPickup { get; private set; }
+        public Texture2D ItemPickupMultiple { get; private set; }
+
+        public Texture2D Apple { get; private set; }
 
         public void LoadContent(ContentManager content)
         {
@@ -54,6 +61,10 @@ namespace PostMortem_P1.Graphics
 
             White = content.Load<Texture2D>(SpriteDictionary.White);
             MapCursor = content.Load<Texture2D>(SpriteDictionary.MapCursor);
+            ItemPickup = content.Load<Texture2D>(SpriteDictionary.ItemPickup);
+            ItemPickupMultiple = content.Load<Texture2D>(SpriteDictionary.ItemPickupMultiple);
+
+            Apple = content.Load<Texture2D>(SpriteDictionary.Apple);
         }
     }
 }

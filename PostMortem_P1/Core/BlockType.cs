@@ -51,5 +51,15 @@ namespace PostMortem_P1.Core
 
             return new Block(blockID, sprite, isAir, isWalkable, isTransparent);
         }
+
+        public static ItemPickup ItemPickup()
+        {
+            int blockID = 4;
+            bool isAir = true;
+            bool isWalkable = true;
+            bool isTransparent = true;
+
+            return new ItemPickup(blockID, isAir, isWalkable, isTransparent);
+        }
     }
 }

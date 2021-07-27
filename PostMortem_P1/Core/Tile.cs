@@ -38,18 +38,6 @@ namespace PostMortem_P1.Core
             }
         }
 
-        public bool IsTileTransparent
-        {
-            get
-            {
-                return Block.IsTransparent;
-            }
-            set
-            {
-                Block.IsTransparent = value;
-            }
-        }
-
         public Tile() : base()
         {
 
@@ -91,6 +79,12 @@ namespace PostMortem_P1.Core
         public void SetBlock(Block block)
         {
             Block = block;
+            IsTransparent = Block.IsTransparent;
+        }
+
+        public void SetItemPickup(ItemPickup itemPickup)
+        {
+            Block = itemPickup;
         }
 
         public void SetFloor(Texture2D floorSprite)

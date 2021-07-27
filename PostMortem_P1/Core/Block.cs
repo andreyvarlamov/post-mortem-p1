@@ -8,7 +8,7 @@ namespace PostMortem_P1.Core
     public class Block
     {
         public int BlockID { get; private set; }
-        public Texture2D Sprite { get; set; }
+        public virtual Texture2D Sprite { get; set; }
         public bool IsAir { get; private set; }
         public bool IsWalkable { get; set; }
         public bool IsTransparent { get; set; }

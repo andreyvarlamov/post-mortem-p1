@@ -25,6 +25,7 @@ namespace PostMortem_P1
         public PostMortem()
         {
             _graphics = new GraphicsDeviceManager(this);
+
             Content.RootDirectory = "Content";
             IsMouseVisible = false;
         }
@@ -39,6 +40,8 @@ namespace PostMortem_P1
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            Global.GraphicsDevice = _graphics.GraphicsDevice;
 
             Global.SpriteManager = new SpriteManager();
             Global.SpriteManager.LoadContent(Content);

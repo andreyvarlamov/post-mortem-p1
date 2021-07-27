@@ -86,8 +86,13 @@ namespace PostMortem_P1.Core
 
                 spriteBatch.Draw(tile.Floor, position, null, tint, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.Floors);
 
-                if (!tile.IsAir)
+                if (tile.Block.Sprite != null)
                 {
+                    if (tile.Block is ItemPickup)
+                    {
+                        ((ItemPickup)tile.Block).UpdateCanvas(spriteBatch);
+                    }
+
                     spriteBatch.Draw(tile.Block.Sprite, position, null, tint, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.Blocks);
                 }
             }
@@ -149,7 +154,10 @@ namespace PostMortem_P1.Core
 
         public Tile RemoveBlock(Tile tile)
         {
-            tile.SetBlock(BlockType.Air());
+            var itemPickup = BlockType.ItemPickup();
+            itemPickup.AddItem(ItemType.Apple());
+            itemPickup.AddItem(ItemType.Apple());
+            tile.SetBlock(itemPickup);
             return tile;
         }
 
