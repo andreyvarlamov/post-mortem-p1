@@ -158,6 +158,9 @@ namespace PostMortem_P1.Core
             itemPickup.AddItem(ItemType.Apple());
             itemPickup.AddItem(ItemType.Apple());
             tile.SetBlock(itemPickup);
+
+            UpdatePlayerFieldOfView();
+
             return tile;
         }
 
