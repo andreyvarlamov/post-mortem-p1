@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Input;
 
 using PostMortem_P1.Core;
 using PostMortem_P1.Input;
+using PostMortem_P1.Menus.MenuActions;
 
 namespace PostMortem_P1.Menus.Overlays
 {
@@ -17,6 +18,10 @@ namespace PostMortem_P1.Menus.Overlays
         public List<MenuItem> MenuItems { get; set; }
 
         private int _selection;
+
+        private bool _isActionable;
+
+        private MenuActionGetItemFromInventory _callerAction;
 
         public int Selection
         {
@@ -41,7 +46,7 @@ namespace PostMortem_P1.Menus.Overlays
             }
         }
 
-        public MenuOverlay(int pxWidth, int pxHeight, List<MenuItem> menuItems, GraphicsDeviceManager graphics) : base(graphics)
+        public MenuOverlay(int pxWidth, int pxHeight, List<MenuItem> menuItems, bool isActionable, MenuActionGetItemFromInventory callerAction, GraphicsDeviceManager graphics) : base(graphics)
         {
             PxWidth = pxWidth;
             PxHeight = pxHeight;
@@ -54,6 +59,9 @@ namespace PostMortem_P1.Menus.Overlays
             MenuItems = menuItems;
 
             Selection = 0;
+
+            _isActionable = isActionable;
+            _callerAction = callerAction;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -148,7 +156,14 @@ namespace PostMortem_P1.Menus.Overlays
 
             if (inputManager.IsNewKeyPress(Keys.Enter))
             {
-                MenuItems[Selection].MenuAction.Do();
+                if (_isActionable)
+                {
+                    MenuItems[Selection].MenuAction.Do();
+                }
+                else
+                {
+                    _callerAction.SetItem(Selection);
+                }
             }
         }
     }

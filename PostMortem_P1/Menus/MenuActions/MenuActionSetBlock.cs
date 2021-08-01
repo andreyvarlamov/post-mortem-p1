@@ -11,15 +11,25 @@ namespace PostMortem_P1.Menus.MenuActions
 {
     public class MenuActionSetBlock : MenuAction
     {
+        private MenuActionGetSelectedTile _tileAction;
+
         public MenuActionSetBlock(GraphicsDeviceManager graphics) : base(graphics)
         {
         }
 
+        public void SetTileAction(MenuActionGetSelectedTile tileAction)
+        {
+            _tileAction = tileAction;
+        }
+
         public override bool Do()
         {
-            TileSelectOverlay tileSelectOverlay = (TileSelectOverlay)Global.OverlayManager.CurrentOverlay;
+            //if (!_tileAction.IsDataSet)
+            //{
+            //    throw new Exception("tile or item action is not ready yet.");
+            //}
 
-            Tile tile = tileSelectOverlay.GetHighlightedTile();
+            Tile tile = _tileAction.SelectedTile;
 
             Global.WorldMap.CurrentChunkMap.SetBlock(tile, BlockType.Wall());
 

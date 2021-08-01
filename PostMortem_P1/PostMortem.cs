@@ -70,19 +70,32 @@ namespace PostMortem_P1
 
                 List<MenuItem> menuItems = new List<MenuItem>();
 
-                MenuActionSetBlock getSelectedTileSetBlock = new MenuActionSetBlock(_graphics);
-                MenuActionGetSelectedTile setBlock = new MenuActionGetSelectedTile(_graphics, getSelectedTileSetBlock);
-                menuItems.Add(new MenuItem("Set Block", setBlock));
+                MenuActionSetBlock setBlock = new MenuActionSetBlock(_graphics);
+                MenuActionGetSelectedTile getSelectedTileSetBlock = new MenuActionGetSelectedTile(_graphics, setBlock, true);
+                setBlock.SetTileAction(getSelectedTileSetBlock);
+                menuItems.Add(new MenuItem("Set Block", getSelectedTileSetBlock));
 
-                MenuActionRemoveBlock getSelectedTileRemoveBlock = new MenuActionRemoveBlock(_graphics);
-                MenuActionGetSelectedTile removeBlock = new MenuActionGetSelectedTile(_graphics, getSelectedTileRemoveBlock);
-                menuItems.Add(new MenuItem("Remove Block", removeBlock));
+                MenuActionRemoveBlock removeBlock = new MenuActionRemoveBlock(_graphics);
+                MenuActionGetSelectedTile getSelectedTileRemoveBlock = new MenuActionGetSelectedTile(_graphics, removeBlock, true);
+                removeBlock.SetTileAction(getSelectedTileRemoveBlock);
+                menuItems.Add(new MenuItem("Remove Block", getSelectedTileRemoveBlock));
 
-                MenuActionReplaceFloor getSelectedTileReplaceFloor = new MenuActionReplaceFloor(_graphics);
-                MenuActionGetSelectedTile replaceFloor = new MenuActionGetSelectedTile(_graphics, getSelectedTileReplaceFloor);
-                menuItems.Add(new MenuItem("Replace Floor", replaceFloor));
+                MenuActionReplaceFloor replaceFloor = new MenuActionReplaceFloor(_graphics);
+                MenuActionGetSelectedTile getSelectedTileReplaceFloor = new MenuActionGetSelectedTile(_graphics, replaceFloor, true);
+                replaceFloor.SetTileAction(getSelectedTileReplaceFloor);
+                menuItems.Add(new MenuItem("Replace Floor", getSelectedTileReplaceFloor));
 
-                MenuOverlay menu = new MenuOverlay(300, 400, menuItems, _graphics);
+                MenuActionDropItem dropItem = new MenuActionDropItem(_graphics);
+                MenuActionGetSelectedTile getSelectedTileDropItem = new MenuActionGetSelectedTile(_graphics, dropItem, true);
+                MenuActionGetItemFromInventory getItemFromInventoryGetSelectedTileDropItem = new MenuActionGetItemFromInventory(_graphics, getSelectedTileDropItem, false);
+                dropItem.SetActions(getSelectedTileDropItem, getItemFromInventoryGetSelectedTileDropItem);
+                menuItems.Add(new MenuItem("Drop Item", getItemFromInventoryGetSelectedTileDropItem));
+
+                //MenuActionActivateBlock getSelectedTileActivateBlock = new MenuActionActivateBlock(_graphics);
+                //MenuActionGetSelectedTile activateBlock = new MenuActionGetSelectedTile(_graphics, getSelectedTileActivateBlock);
+                //menuItems.Add(new MenuItem("Activate Block", activateBlock));
+
+                MenuOverlay menu = new MenuOverlay(300, 400, menuItems, true, null, _graphics);
                 Global.OverlayManager.SetCurrentOverlayAndReset(menu);
             }
             else

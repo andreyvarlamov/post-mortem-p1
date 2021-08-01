@@ -11,19 +11,39 @@ namespace PostMortem_P1.Menus.MenuActions
 {
     public class MenuActionGetSelectedTile : MenuAction
     {
-        private MenuAction _selectAction;
-        public MenuActionGetSelectedTile(GraphicsDeviceManager graphics, MenuAction selectAction) : base(graphics)
+        public bool IsDataSet { get; private set; }
+        public Tile SelectedTile { get; private set; }
+
+        private MenuAction _nextAction;
+
+        private bool _isLastGet;
+
+        public MenuActionGetSelectedTile(GraphicsDeviceManager graphics, MenuAction nextAction, bool isLastGet) : base(graphics)
         {
-            _selectAction = selectAction;
+            _nextAction = nextAction;
+            _isLastGet = isLastGet;
         }
 
         public override bool Do()
         {
-            TileSelectOverlay tileSelectOverlay = new TileSelectOverlay(Global.WorldMap.Player.X, Global.WorldMap.Player.Y, graphics, _selectAction);
+            TileSelectOverlay tileSelectOverlay = new TileSelectOverlay(Global.WorldMap.Player.X, Global.WorldMap.Player.Y, graphics, this);
 
             Global.OverlayManager.SetCurrentOverlay(tileSelectOverlay);
 
             return true;
+        }
+
+        public void SetTile(Tile tile)
+        {
+            SelectedTile = tile;
+            IsDataSet = true;
+
+            if (_isLastGet)
+            {
+                Global.OverlayManager.ReturnToGame();
+            }
+
+            _nextAction.Do();
         }
     }
 }

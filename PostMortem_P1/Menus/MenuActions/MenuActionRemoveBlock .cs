@@ -11,19 +11,27 @@ namespace PostMortem_P1.Menus.MenuActions
 {
     public class MenuActionRemoveBlock : MenuAction
     {
+        private MenuActionGetSelectedTile _tileAction;
+
         public MenuActionRemoveBlock(GraphicsDeviceManager graphics) : base(graphics)
         {
         }
 
+        public void SetTileAction(MenuActionGetSelectedTile tileAction)
+        {
+            _tileAction = tileAction;
+        }
+
         public override bool Do()
         {
-            TileSelectOverlay tileSelectOverlay = (TileSelectOverlay)Global.OverlayManager.CurrentOverlay;
+            if (!_tileAction.IsDataSet)
+            {
+                throw new Exception("tile or item action is not ready yet.");
+            }
 
-            Tile tile = tileSelectOverlay.GetHighlightedTile();
+            Tile tile = _tileAction.SelectedTile;
 
             Global.WorldMap.CurrentChunkMap.RemoveBlock(tile);
-
-            Global.OverlayManager.ReturnToGame();
 
             return true;
         }
