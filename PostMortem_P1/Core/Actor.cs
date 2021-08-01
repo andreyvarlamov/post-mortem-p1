@@ -135,7 +135,7 @@ namespace PostMortem_P1.Core
 
             if (Global.WorldMap.CurrentChunkMap.IsInPlayerFov(X, Y) || Global.Debugging)
             {
-                spriteBatch.Draw(Sprite, new Vector2(X * Sprite.Width, Y * Sprite.Width), null, Color.White, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.Blocks);
+                spriteBatch.Draw(Sprite, new Vector2(X * Sprite.Width, Y * Sprite.Width), null, Color.White, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.Actors);
             }
         }
         #endregion
@@ -156,6 +156,16 @@ namespace PostMortem_P1.Core
         public void AddToInventory(Item item)
         {
             Inventory.Items.Add(item);
+
+            if (this is Player)
+            {
+                Global.Hud.SetItems(Inventory.Items);
+            }
+        }
+
+        public void RemoveFromInventory(Item item)
+        {
+            Inventory.Items.Remove(item);
 
             if (this is Player)
             {

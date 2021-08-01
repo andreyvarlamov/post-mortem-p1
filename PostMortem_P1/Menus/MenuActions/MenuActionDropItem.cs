@@ -51,7 +51,7 @@ namespace PostMortem_P1.Menus.MenuActions
                 return false;
             }
 
-            Global.WorldMap.Player.Inventory.Items.Remove(item);
+            Global.WorldMap.Player.RemoveFromInventory(item);
 
             return true;
         }
