@@ -9,19 +9,12 @@ using PostMortem_P1.Menus.Overlays;
 
 namespace PostMortem_P1.Menus.MenuActions
 {
-    public class MenuActionGetSelectedTile : MenuAction
+    public class MenuActionGetSelectedTile : MenuActionGet
     {
-        public bool IsDataSet { get; private set; }
         public Tile SelectedTile { get; private set; }
 
-        private MenuAction _nextAction;
-
-        private bool _isLastGet;
-
-        public MenuActionGetSelectedTile(GraphicsDeviceManager graphics, MenuAction nextAction, bool isLastGet) : base(graphics)
+        public MenuActionGetSelectedTile(GraphicsDeviceManager graphics, MenuAction nextAction, bool isLastGet) : base(graphics, nextAction, isLastGet)
         {
-            _nextAction = nextAction;
-            _isLastGet = isLastGet;
         }
 
         public override bool Do()
@@ -33,17 +26,22 @@ namespace PostMortem_P1.Menus.MenuActions
             return true;
         }
 
+        public override void SetData(object data)
+        {
+            base.SetData(data);
+        }
+
         public void SetTile(Tile tile)
         {
             SelectedTile = tile;
             IsDataSet = true;
 
-            if (_isLastGet)
+            if (this.isLastGet)
             {
                 Global.OverlayManager.ReturnToGame();
             }
 
-            _nextAction.Do();
+            this.nextAction.Do();
         }
     }
 }

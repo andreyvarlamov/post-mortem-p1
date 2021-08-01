@@ -9,19 +9,12 @@ using PostMortem_P1.Menus.Overlays;
 
 namespace PostMortem_P1.Menus.MenuActions
 {
-    public class MenuActionGetItemFromInventory : MenuAction
+    public class MenuActionGetItemFromInventory : MenuActionGet
     {
-        public bool IsDataSet { get; private set; }
         public Item SelectedItem { get; private set; }
 
-        private MenuAction _nextAction;
-
-        private bool _isLastGet;
-
-        public MenuActionGetItemFromInventory(GraphicsDeviceManager graphics, MenuAction nextAction, bool isLastGet) : base(graphics)
+        public MenuActionGetItemFromInventory(GraphicsDeviceManager graphics, MenuAction nextAction, bool isLastGet) : base(graphics, nextAction, isLastGet)
         {
-            _nextAction = nextAction;
-            _isLastGet = isLastGet;
         }
 
         public override bool Do()
@@ -35,7 +28,7 @@ namespace PostMortem_P1.Menus.MenuActions
 
             MenuOverlay menuOverlay = new MenuOverlay(250, 350, menuItems, false, this, this.graphics);
 
-            Global.OverlayManager.SetCurrentOverlayAndReset(menuOverlay);
+            Global.OverlayManager.SetCurrentOverlay(menuOverlay);
 
             return true;
         }
@@ -45,12 +38,12 @@ namespace PostMortem_P1.Menus.MenuActions
             SelectedItem = Global.WorldMap.Player.Inventory.Items[selection];
             IsDataSet = true;
 
-            if (_isLastGet)
+            if (this.isLastGet)
             {
                 Global.OverlayManager.ReturnToGame();
             }
 
-            _nextAction.Do();
+            this.nextAction.Do();
         }
     }
 }

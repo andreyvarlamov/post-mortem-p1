@@ -76,6 +76,23 @@ namespace PostMortem_P1.Menus.Overlays
             int verticalOffset = 25;
             int lineHeight = 20;
 
+            if (MenuItems.Count == 0)
+            {
+                // Display empty menu message
+                string msg = "Empty menu";
+                Vector2 msgSize = Global.FontManager.MainFont.MeasureString(msg);
+                int msgWidth = (int)msgSize.X;
+                int msgHeight = (int)msgSize.Y;
+
+                Vector2 msgPosition = new Vector2(PxX + horizontalOffset, PxY + verticalOffset - msgHeight / 2);
+                Vector2 msgCursorPosition = new Vector2(PxX + horizontalOffset - 3, PxY + verticalOffset - msgHeight / 2 - 1);
+
+                var selectionRect = CreateRectangle(msgWidth + 3, msgHeight + 1, Color.Salmon, this.graphics);
+
+                spriteBatch.Draw(selectionRect, msgCursorPosition, null, Color.White, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.MenuSelect);
+                spriteBatch.DrawString(Global.FontManager.MainFont, msg, msgPosition, Color.White, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.MenuText);
+            }
+
             for (int i = 0; i < MenuItems.Count; i++)
             {
                 Vector2 textSize = Global.FontManager.MainFont.MeasureString(MenuItems[i].Text);
@@ -154,7 +171,7 @@ namespace PostMortem_P1.Menus.Overlays
                     break;
             }
 
-            if (inputManager.IsNewKeyPress(Keys.Enter))
+            if (inputManager.IsNewKeyPress(Keys.Enter) && MenuItems.Count != 0)
             {
                 if (_isActionable)
                 {
