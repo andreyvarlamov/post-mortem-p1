@@ -25,7 +25,6 @@ namespace PostMortem_P1.Core
             }
         }
 
-        // TODO I think hidingthis is the issue
         public bool IsTileWalkable
         {
             get
