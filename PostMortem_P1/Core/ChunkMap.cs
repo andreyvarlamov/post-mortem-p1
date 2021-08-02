@@ -7,11 +7,12 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 using RogueSharp;
+using RogueSharp.DiceNotation;
 
 using RSRectangle = RogueSharp.Rectangle;
 using RSPoint = RogueSharp.Point;
 
-using PostMortem_P1.Enemies;
+using PostMortem_P1.NPCs;
 using PostMortem_P1.Graphics;
 using PostMortem_P1.Systems;
 
@@ -19,7 +20,7 @@ namespace PostMortem_P1.Core
 {
     public class ChunkMap : Map<Tile>
     {
-        private readonly List<Enemy> _enemies;
+        private readonly List<NPC> _npcs;
 
         private FieldOfView<Tile> _playerFov;
 
@@ -29,7 +30,7 @@ namespace PostMortem_P1.Core
 
         public ChunkMap(MapGenSchema mapGenSchema)
         {
-            _enemies = new List<Enemy>();
+            _npcs = new List<NPC>();
 
             _mapGenSchema = mapGenSchema;
             SchedulingSystem = new SchedulingSystem();
@@ -97,17 +98,17 @@ namespace PostMortem_P1.Core
                 }
             }
 
-            foreach (Enemy enemy in _enemies)
+            foreach (NPC npc in _npcs)
             {
-                enemy.Draw(spriteBatch);
+                npc.Draw(spriteBatch);
             }
         }
 
         public void Update()
         {
-            //_enemies.ForEach(enemy =>
+            //_npcs.ForEach(npc =>
             //{
-            //    enemy.Update();
+            //    npc.Update();
             //});
         }
 
@@ -295,23 +296,23 @@ namespace PostMortem_P1.Core
             SchedulingSystem.Remove(actor);
         }
 
-        public void AddEnemy(Enemy enemy)
+        public void AddNPC(NPC npc)
         {
-            _enemies.Add(enemy);
-            SetIsWalkable(enemy.X, enemy.Y, false);
-            AddActorToSchedulingSystem(enemy);
+            _npcs.Add(npc);
+            SetIsWalkable(npc.X, npc.Y, false);
+            AddActorToSchedulingSystem(npc);
         }
 
-        public void RemoveEnemy(Enemy enemy)
+        public void RemoveNPC(NPC npc)
         {
-            _enemies.Remove(enemy);
-            SetIsWalkable(enemy.X, enemy.Y, true);
-            RemoveActorFromSchedulingSystem(enemy);
+            _npcs.Remove(npc);
+            SetIsWalkable(npc.X, npc.Y, true);
+            RemoveActorFromSchedulingSystem(npc);
         }
 
-        public Enemy GetEnemyAt(int x, int y)
+        public NPC GetNPCAt(int x, int y)
         {
-            return _enemies.FirstOrDefault(enemy => enemy.X == x && enemy.Y == y);
+            return _npcs.FirstOrDefault(npc => npc.X == x && npc.Y == y);
         }
 
         public RSPoint? GetRandomWalkableLocationInRect(RSRectangle rect)
@@ -354,12 +355,26 @@ namespace PostMortem_P1.Core
             return _mapGenSchema.GetSuitablePlayerPosition(this);
         }
 
-        public void PlaceEnemies(int enemiesNum)
+        public void PlaceNPCs(int npcsNum)
         {
-            var positionList = _mapGenSchema.GetSuitableEnemyPositionList(this, enemiesNum);
+            var positionList = _mapGenSchema.GetSuitableNPCPositionList(this, npcsNum);
             foreach (RSPoint position in positionList)
             {
-                AddEnemy(Bandit.Create(position, 1));
+                NPC npc;
+
+                bool isStranger = Dice.Roll("1d2") == 1;
+                //bool isStranger = true;
+
+                if (isStranger)
+                {
+                    npc = Stranger.Create(position, 1);
+                }
+                else
+                {
+                    npc = Bandit.Create(position, 1); 
+                }
+
+                AddNPC(npc);
             }
 
         }

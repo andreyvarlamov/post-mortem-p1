@@ -2,6 +2,7 @@
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 using RogueSharp;
 using RogueSharp.MapCreation;
@@ -139,6 +140,11 @@ namespace PostMortem_P1
                 // Update at an fps
                 Global.WorldMap.Camera.HandleInput(Global.InputManager);
                 Global.WorldMap.Update();
+
+                if (Global.InputManager.IsNewKeyPress(Keys.OemTilde))
+                {
+                    Global.Debugging = !Global.Debugging;
+                }
             }
             else if (Global.GameMode == GameMode.Overlay)
             {

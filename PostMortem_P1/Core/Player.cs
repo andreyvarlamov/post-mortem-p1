@@ -8,19 +8,23 @@ namespace PostMortem_P1.Core
     {
         public Player(RSPoint position) : base()
         {
+            int health = 50;
+            int speed = 10;
+            var damage = Dice.Parse("2d4");
+
             Sprite = Global.SpriteManager.Player;
             X = position.X;
             Y = position.Y;
 
             Awareness = 15;
             Name = "Player";
-            Speed = 10;
+            Speed = speed;
 
             ArmorClass = 15;
             AttackBonus = 1;
-            Damage = Dice.Parse("2d4");
-            Health = 50;
-            MaxHealth = 50;
+            Damage = damage;
+            Health = health;
+            MaxHealth = health;
         }
     }
 }

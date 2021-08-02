@@ -5,6 +5,6 @@ namespace PostMortem_P1.Interfaces
 {
     public interface IBehavior
     {
-        bool Act(Enemy enemy, CommandSystem commandSystem);
+        bool Act(NPC npc, CommandSystem commandSystem);
     }
 }

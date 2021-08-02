@@ -37,7 +37,7 @@ namespace PostMortem_P1.MapGenSchemas
         }
 
 
-        public override List<RSPoint> GetSuitableEnemyPositionList(ChunkMap chunkMap, int num)
+        public override List<RSPoint> GetSuitableNPCPositionList(ChunkMap chunkMap, int num)
         {
             List<RSPoint> positions = new List<RSPoint>();
 

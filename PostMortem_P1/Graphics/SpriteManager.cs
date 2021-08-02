@@ -19,6 +19,7 @@ namespace PostMortem_P1.Graphics
 
             public const string Player = "Player";
             public const string Bandit = "Bandit";
+            public const string Stranger = "Stranger";
 
             public const string White = "White";
             public const string MapCursor = "MapCursor";
@@ -38,6 +39,7 @@ namespace PostMortem_P1.Graphics
 
         public Texture2D Player { get; private set; }
         public Texture2D Bandit { get; private set; }
+        public Texture2D Stranger { get; private set; }
 
         public Texture2D White { get; private set; }
         public Texture2D MapCursor { get; private set; }
@@ -58,6 +60,7 @@ namespace PostMortem_P1.Graphics
 
             Player = content.Load<Texture2D>(SpriteDictionary.Player);
             Bandit = content.Load<Texture2D>(SpriteDictionary.Bandit);
+            Stranger = content.Load<Texture2D>(SpriteDictionary.Stranger);
 
             White = content.Load<Texture2D>(SpriteDictionary.White);
             MapCursor = content.Load<Texture2D>(SpriteDictionary.MapCursor);

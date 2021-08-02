@@ -8,17 +8,16 @@ using RSRectangle = RogueSharp.Rectangle;
 using RSPoint = RogueSharp.Point;
 
 using PostMortem_P1.Core;
-using PostMortem_P1.Enemies;
 
 namespace PostMortem_P1.Systems
 {
     public class MapGenerator
     {
-        public static ChunkMap GenerateMap(MapGenSchema mapGenSchema, int width, int height, int enemiesNum)
+        public static ChunkMap GenerateMap(MapGenSchema mapGenSchema, int width, int height, int npcsNum)
         {
             var chunkMap = mapGenSchema.CreateMap(width, height);
 
-            chunkMap.PlaceEnemies(enemiesNum);
+            chunkMap.PlaceNPCs(npcsNum);
 
             return chunkMap;
         }

@@ -30,7 +30,7 @@ namespace PostMortem_P1.Core
             return new RSPoint(chunkMap.Width / 2, chunkMap.Height / 2);
         }
 
-        public virtual List<RSPoint> GetSuitableEnemyPositionList(ChunkMap chunkMap, int num)
+        public virtual List<RSPoint> GetSuitableNPCPositionList(ChunkMap chunkMap, int num)
         {
             var positions = new List<RSPoint>();
 

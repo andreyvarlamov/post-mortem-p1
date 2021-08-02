@@ -69,7 +69,7 @@ namespace PostMortem_P1.MapGenSchemas
             return new RSPoint(_rooms[0].Center.X, _rooms[0].Center.Y);
         }
 
-        public override List<RSPoint> GetSuitableEnemyPositionList(ChunkMap chunkMap, int num)
+        public override List<RSPoint> GetSuitableNPCPositionList(ChunkMap chunkMap, int num)
         {
             var positionList = new List<RSPoint>();
 
