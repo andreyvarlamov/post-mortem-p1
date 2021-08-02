@@ -70,20 +70,11 @@ namespace PostMortem_P1
 
                 List<MenuItem> menuItems = new List<MenuItem>();
 
-                MenuActionSetBlock setBlock = new MenuActionSetBlock(_graphics);
-                MenuActionGetSelectedTile getSelectedTileSetBlock = new MenuActionGetSelectedTile(_graphics, setBlock, true);
-                setBlock.SetTileAction(getSelectedTileSetBlock);
-                menuItems.Add(new MenuItem("Set Block", getSelectedTileSetBlock));
-
-                MenuActionRemoveBlock removeBlock = new MenuActionRemoveBlock(_graphics);
-                MenuActionGetSelectedTile getSelectedTileRemoveBlock = new MenuActionGetSelectedTile(_graphics, removeBlock, true);
-                removeBlock.SetTileAction(getSelectedTileRemoveBlock);
-                menuItems.Add(new MenuItem("Remove Block", getSelectedTileRemoveBlock));
-
-                MenuActionReplaceFloor replaceFloor = new MenuActionReplaceFloor(_graphics);
-                MenuActionGetSelectedTile getSelectedTileReplaceFloor = new MenuActionGetSelectedTile(_graphics, replaceFloor, true);
-                replaceFloor.SetTileAction(getSelectedTileReplaceFloor);
-                menuItems.Add(new MenuItem("Replace Floor", getSelectedTileReplaceFloor));
+                MenuActionBuildBlock buildBlock = new MenuActionBuildBlock(_graphics);
+                MenuActionGetSelectedTile getSelectedTileBuildBlock = new MenuActionGetSelectedTile(_graphics, buildBlock, true);
+                MenuActionGetItemFromInventory getItemFromInventoryGetSelectedTileBuildBlock = new MenuActionGetItemFromInventory(_graphics, getSelectedTileBuildBlock, false, Global.WorldMap.Player.Inventory);
+                buildBlock.SetActions(getSelectedTileBuildBlock, getItemFromInventoryGetSelectedTileBuildBlock);
+                menuItems.Add(new MenuItem("Build Block", getItemFromInventoryGetSelectedTileBuildBlock));
 
                 MenuActionDropItem dropItem = new MenuActionDropItem(_graphics);
                 MenuActionGetSelectedTile getSelectedTileDropItem = new MenuActionGetSelectedTile(_graphics, dropItem, true);
@@ -100,6 +91,23 @@ namespace PostMortem_P1
                 //MenuActionActivateBlock getSelectedTileActivateBlock = new MenuActionActivateBlock(_graphics);
                 //MenuActionGetSelectedTile activateBlock = new MenuActionGetSelectedTile(_graphics, getSelectedTileActivateBlock);
                 //menuItems.Add(new MenuItem("Activate Block", activateBlock));
+
+                #region Debug actions
+                MenuActionSetBlock setBlock = new MenuActionSetBlock(_graphics);
+                MenuActionGetSelectedTile getSelectedTileSetBlock = new MenuActionGetSelectedTile(_graphics, setBlock, true);
+                setBlock.SetTileAction(getSelectedTileSetBlock);
+                menuItems.Add(new MenuItem("[D] Set Block", getSelectedTileSetBlock));
+
+                MenuActionRemoveBlock removeBlock = new MenuActionRemoveBlock(_graphics);
+                MenuActionGetSelectedTile getSelectedTileRemoveBlock = new MenuActionGetSelectedTile(_graphics, removeBlock, true);
+                removeBlock.SetTileAction(getSelectedTileRemoveBlock);
+                menuItems.Add(new MenuItem("[D] Remove Block", getSelectedTileRemoveBlock));
+
+                MenuActionReplaceFloor replaceFloor = new MenuActionReplaceFloor(_graphics);
+                MenuActionGetSelectedTile getSelectedTileReplaceFloor = new MenuActionGetSelectedTile(_graphics, replaceFloor, true);
+                replaceFloor.SetTileAction(getSelectedTileReplaceFloor);
+                menuItems.Add(new MenuItem("[D] Replace Floor", getSelectedTileReplaceFloor));
+                #endregion
 
                 MenuOverlay menu = new MenuOverlay(300, 400, menuItems, true, null, _graphics);
                 Global.OverlayManager.SetCurrentOverlayAndReset(menu);

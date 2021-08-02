@@ -8,12 +8,12 @@ using PostMortem_P1.Core;
 
 namespace PostMortem_P1.Menus.MenuActions
 {
-    public class MenuActionDropItem : MenuAction
+    public class MenuActionBuildBlock : MenuAction
     {
         private MenuActionGetSelectedTile _tileAction;
         private MenuActionGetItemFromInventory _itemAction;
 
-        public MenuActionDropItem(GraphicsDeviceManager graphics) : base(graphics)
+        public MenuActionBuildBlock(GraphicsDeviceManager graphics) : base(graphics)
         {
         }
 
@@ -25,7 +25,7 @@ namespace PostMortem_P1.Menus.MenuActions
 
         public override bool Do()
         {
-            if (!_tileAction.IsDataSet || !_itemAction.IsDataSet)
+            if  (!_tileAction.IsDataSet || !_itemAction.IsDataSet)
             {
                 throw new Exception("tile or item action is not ready yet.");
             }
@@ -33,9 +33,16 @@ namespace PostMortem_P1.Menus.MenuActions
             Tile tile = _tileAction.SelectedTile;
             Item item = _itemAction.SelectedItem;
 
-            Global.WorldMap.CurrentChunkMap.DropItemOnTile(tile, item);
+            if (item.BlockVersionID.HasValue)
+            {
+                Global.WorldMap.CurrentChunkMap.SetBlock(tile, BlockType.GetByID(item.BlockVersionID.Value));
 
-            Global.WorldMap.Player.RemoveFromInventory(item);
+                Global.WorldMap.Player.RemoveFromInventory(item);
+            }
+            else
+            {
+                return false;
+            }
 
             return true;
         }

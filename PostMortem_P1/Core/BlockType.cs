@@ -10,60 +10,88 @@ namespace PostMortem_P1.Core
     {
         public static Block Air()
         {
-            int blockID = 0;
+            int blockID = (int)eBlockIDs.Air;
             Texture2D sprite = null;
             bool isAir = true;
             bool isWalkable = true;
             bool isTransparent = true;
-            Item itemVersion = null;
+            int? itemVersionID = null;
 
-            return new Block(blockID, sprite, isAir, isWalkable, isTransparent, itemVersion);
+            return new Block(blockID, sprite, isAir, isWalkable, isTransparent, itemVersionID);
         }
 
         public static Block Dirt()
         {
-            int blockID = 1;
+            int blockID = (int)eBlockIDs.Dirt;
             Texture2D sprite = Global.SpriteManager.Dirt;
             bool isAir = false;
             bool isWalkable = false;
             bool isTransparent = false;
-            Item itemVersion = ItemType.Dirt();
+            int? itemVersionID = (int)ItemType.eItemIDs.Dirt;
 
-            return new Block(blockID, sprite, isAir, isWalkable, isTransparent, itemVersion);
+            return new Block(blockID, sprite, isAir, isWalkable, isTransparent, itemVersionID);
         }
 
         public static Block BuildingWall()
         {
-            int blockID = 2;
+            int blockID = (int)eBlockIDs.BuildingWall;
             Texture2D sprite = Global.SpriteManager.BuildingWall;
             bool isAir = false;
             bool isWalkable = false;
             bool isTransparent = false;
-            Item itemVersion = ItemType.BuildingWall();
+            int? itemVersionID = (int)ItemType.eItemIDs.BuildingWall;
 
-            return new Block(blockID, sprite, isAir, isWalkable, isTransparent, itemVersion);
+            return new Block(blockID, sprite, isAir, isWalkable, isTransparent, itemVersionID);
         }
 
         public static Block Wall()
         {
-            int blockID = 3;
+            int blockID = (int)eBlockIDs.Wall;
             Texture2D sprite = Global.SpriteManager.Wall;
             bool isAir = false;
             bool isWalkable = false;
             bool isTransparent = false;
-            Item itemVersion = ItemType.Wall();
+            int? itemVersionID = (int)ItemType.eItemIDs.Wall;
 
-            return new Block(blockID, sprite, isAir, isWalkable, isTransparent, itemVersion);
+            return new Block(blockID, sprite, isAir, isWalkable, isTransparent, itemVersionID);
         }
 
         public static ItemPickup ItemPickup()
         {
-            int blockID = 4;
+            int blockID = (int)eBlockIDs.ItemPickup;
             bool isAir = true;
             bool isWalkable = true;
             bool isTransparent = true;
 
             return new ItemPickup(blockID, isAir, isWalkable, isTransparent);
+        }
+
+        public static Block GetByID(int blockIDInt)
+        {
+            eBlockIDs blockID = (eBlockIDs)blockIDInt;
+            switch(blockID)
+            {
+                case eBlockIDs.ItemPickup:
+                    return ItemPickup();
+                case eBlockIDs.Air:
+                    return Air();
+                case eBlockIDs.Dirt:
+                    return Dirt();
+                case eBlockIDs.BuildingWall:
+                    return BuildingWall();
+                case eBlockIDs.Wall:
+                    return Wall();
+                default:
+                    return null;
+            }
+        }
+        public enum eBlockIDs
+        {
+            ItemPickup = -1,
+            Air = 0,
+            Dirt = 1,
+            BuildingWall = 2,
+            Wall = 3,
         }
     }
 }

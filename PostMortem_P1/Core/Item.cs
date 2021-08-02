@@ -12,11 +12,14 @@ namespace PostMortem_P1.Core
         public string Name { get; set; }
         public Texture2D Sprite { get; set; }
 
-        public Item(int itemID, string name, Texture2D sprite)
+        public int? BlockVersionID { get; private set; }
+
+        public Item(int itemID, string name, Texture2D sprite, int? blockVersionID)
         {
             ItemID = itemID;
             Name = name;
             Sprite = sprite;
+            BlockVersionID = blockVersionID;
         }
     }
 }

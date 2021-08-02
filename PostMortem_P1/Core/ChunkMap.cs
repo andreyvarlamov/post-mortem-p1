@@ -162,10 +162,10 @@ namespace PostMortem_P1.Core
             }
             else
             {
-                if (block.HasItemVersion)
+                if (block.ItemVersionID.HasValue)
                 {
                     var itemPickup = BlockType.ItemPickup();
-                    itemPickup.AddItem(block.ItemVersion);
+                    itemPickup.AddItem(ItemType.GetByID(block.ItemVersionID.Value));
                     tile.SetBlock(itemPickup);
                 }
                 else
@@ -225,8 +225,6 @@ namespace PostMortem_P1.Core
         public Tile RemoveItemFromItemPickup(Tile tile, Item item)
         {
             bool isLastItem = ((ItemPickup)tile.Block).RemoveItem(item);
-
-            Debug.WriteLine($"removing item from item pickup, isLastItem={isLastItem}");
 
             if (isLastItem)
             {

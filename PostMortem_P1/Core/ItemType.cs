@@ -10,38 +10,69 @@ namespace PostMortem_P1.Core
     {
         public static Item Dirt()
         {
-            int itemID = 1;
+            int itemID = (int)eItemIDs.Dirt;
             string name = "Dirt";
             Texture2D sprite = Global.SpriteManager.Dirt;
+            int? blockVersionID = (int)BlockType.eBlockIDs.Dirt;
 
-            return new Item(itemID, name, sprite);
+            return new Item(itemID, name, sprite, blockVersionID);
         }
 
         public static Item BuildingWall()
         {
-            int itemID = 2;
+            int itemID = (int)eItemIDs.BuildingWall;
             string name = "Building Wall";
             Texture2D sprite = Global.SpriteManager.BuildingWall;
+            int? blockVersionID = (int)BlockType.eBlockIDs.BuildingWall;
 
-            return new Item(itemID, name, sprite);
+            return new Item(itemID, name, sprite, blockVersionID);
         }
 
         public static Item Wall()
         {
-            int itemID = 3;
+            int itemID = (int)eItemIDs.Wall;
             string name = "Wall";
             Texture2D sprite = Global.SpriteManager.Wall;
+            int? blockVersionID = (int)BlockType.eBlockIDs.Wall;
 
-            return new Item(itemID, name, sprite);
+            return new Item(itemID, name, sprite, blockVersionID);
         }
 
         public static Item Apple()
         {
-            int itemID = 4;
+            int itemID = (int)eItemIDs.Apple;
             string name = "Apple";
             Texture2D sprite = Global.SpriteManager.Apple;
+            int? blockVersionID = null;
 
-            return new Item(itemID, name, sprite);
+            return new Item(itemID, name, sprite, blockVersionID);
+        }
+
+        public static Item GetByID(int itemIDInt)
+        {
+            eItemIDs itemID = (eItemIDs)itemIDInt;
+            switch (itemID)
+            {
+                case eItemIDs.Dirt:
+                    return Dirt();
+                case eItemIDs.BuildingWall:
+                    return BuildingWall();
+                case eItemIDs.Wall:
+                    return Wall();
+                case eItemIDs.Apple:
+                    return Apple();
+                default:
+                    return null;
+            }
+        }
+
+        public enum eItemIDs
+        {
+            None = 0,
+            Dirt = 1,
+            BuildingWall = 2,
+            Wall = 3,
+            Apple = 4
         }
     }
 }
