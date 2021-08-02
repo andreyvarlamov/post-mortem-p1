@@ -62,5 +62,39 @@ namespace PostMortem_P1.Menus
 
             return rectangle;
         }
+
+        protected Texture2D CreateStaticCanvas()
+        {
+            Texture2D canvas = new Texture2D(this.graphics.GraphicsDevice, PxWidth, PxHeight);
+
+            Color[] data = new Color[PxWidth*PxHeight];
+
+            int borderOffset = 8;
+            int borderWidth = 1;
+
+            for (int y = 0; y < PxHeight; y++)
+            {
+                for (int x = 0; x < PxWidth; x++)
+                {
+                    if (((x > borderOffset && x <= borderOffset + borderWidth) ||
+                        (x > PxWidth - borderOffset - borderWidth - 1 && x <= PxWidth - borderOffset) ||
+                        (y > borderOffset && y <= borderOffset + borderWidth) ||
+                        (y > PxHeight - borderOffset - borderWidth - 1 && y <= PxHeight - borderOffset)) &&
+                        (x > borderOffset && x <= PxWidth - borderOffset && y > borderOffset && y <= PxHeight - borderOffset))
+                    {
+                        data[y * PxWidth + x] = Color.White;
+                    }
+                    else
+                    {
+                        data[y * PxWidth + x] = Color.Black;
+                    }
+                }
+            }
+
+            canvas.SetData(data);
+
+            return canvas;
+
+        }
     }
 }

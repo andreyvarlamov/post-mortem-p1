@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Diagnostics;
 
 using Microsoft.Xna.Framework;
 
 using PostMortem_P1.Core;
 using PostMortem_P1.Menus.Overlays;
+using PostMortem_P1.Models;
 
 namespace PostMortem_P1.Menus.MenuActions
 {
-    public class MenuActionReplaceFloor : MenuAction
+    public class MenuActionInspectTile : MenuAction
     {
         private MenuActionGetSelectedTile _tileAction;
 
-        public MenuActionReplaceFloor(GraphicsDeviceManager graphics) : base(graphics)
+        public MenuActionInspectTile(GraphicsDeviceManager graphics) : base(graphics)
         {
         }
 
@@ -26,7 +28,11 @@ namespace PostMortem_P1.Menus.MenuActions
         {
             Tile tile = _tileAction.GetSelectedTile();
 
-            Global.WorldMap.CurrentChunkMap.ReplaceFloor(tile, FloorType.Floor());
+            InspectTileModel inspectTileModel = Global.WorldMap.CurrentChunkMap.InspectTile(tile);
+
+            MenuInspectTile menuInspectTile = new MenuInspectTile(300, 500, inspectTileModel, this.graphics);
+
+            Global.OverlayManager.SetCurrentOverlay(menuInspectTile);
 
             return true;
         }

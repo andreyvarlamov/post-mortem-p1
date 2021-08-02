@@ -24,7 +24,7 @@ namespace PostMortem_P1.MapGenSchemas
         public override ChunkMap CreateMap(int width, int height)
         {
             var chunkMap = base.CreateMap(width, height);
-            chunkMap.InitializeDefaultTiles(Global.SpriteManager.Grass, null, false);
+            chunkMap.InitializeDefaultTiles(FloorType.Grass(), null, false);
             MapGenHelpers.CreateRoad(chunkMap, _roads, _allRoadTiles, Height / 2, 5, true);
             MapGenHelpers.CreateRoad(chunkMap, _roads, _allRoadTiles, Width / 2, 5, false);
 
@@ -136,13 +136,13 @@ namespace PostMortem_P1.MapGenSchemas
                     throw new Exception("Invalid direction for building entrance");
             }
 
-            buildingFloor.Add(chunkMap.RemoveBlockAndSetFloor(x, y, Global.SpriteManager.Floor));
+            buildingFloor.Add(chunkMap.RemoveBlockAndSetFloor(x, y, FloorType.Floor()));
 
             for (int xPos = rect.X + 1; xPos < rect.X + rect.Width; xPos++)
             {
                 for (int yPos = rect.Y + 1; yPos < rect.Y + rect.Height; yPos++)
                 {
-                    buildingFloor.Add(chunkMap.RemoveBlockAndSetFloor(xPos, yPos, Global.SpriteManager.Floor));
+                    buildingFloor.Add(chunkMap.RemoveBlockAndSetFloor(xPos, yPos, FloorType.Floor()));
                 }
             }
 

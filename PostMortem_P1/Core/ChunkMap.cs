@@ -15,6 +15,7 @@ using RSPoint = RogueSharp.Point;
 using PostMortem_P1.NPCs;
 using PostMortem_P1.Graphics;
 using PostMortem_P1.Systems;
+using PostMortem_P1.Models;
 
 namespace PostMortem_P1.Core
 {
@@ -38,7 +39,7 @@ namespace PostMortem_P1.Core
             _playerFov = new FieldOfView<Tile>(this);
         }
 
-        public void InitializeDefaultTiles(Texture2D floorSprite, Block block, bool isBlocks)
+        public void InitializeDefaultTiles(Floor floor, Block block, bool isBlocks)
         {
             for (int x = 0; x < Width; x++)
             {
@@ -55,11 +56,11 @@ namespace PostMortem_P1.Core
                     }
                     else
                     {
-                        if (floorSprite == null)
+                        if (floor == null)
                         {
-                            throw new Exception("No floor sprite has been passed, while isBlocks=false.");
+                            throw new Exception("No floor instance has been passed, while isBlocks=false.");
                         }
-                        this[x, y] = new Tile(x, y, floorSprite);
+                        this[x, y] = new Tile(x, y, floor);
                     }
                 }
             }
@@ -85,7 +86,7 @@ namespace PostMortem_P1.Core
 
                 var position = new Vector2(tile.X * SpriteManager.SpriteSize, tile.Y * SpriteManager.SpriteSize);
 
-                spriteBatch.Draw(tile.Floor, position, null, tint, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.Floors);
+                spriteBatch.Draw(tile.Floor.Sprite, position, null, tint, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.Floors);
 
                 if (tile.Block.Sprite != null)
                 {
@@ -148,11 +149,11 @@ namespace PostMortem_P1.Core
             return tile;
         }
 
-        public Tile RemoveBlockAndSetFloor(int x, int y, Texture2D floorSprite)
+        public Tile RemoveBlockAndSetFloor(int x, int y, Floor floor)
         {
 
             Tile tile = this[x, y];
-            tile.SetFloor(floorSprite);
+            tile.SetFloor(floor);
             tile.SetBlock(BlockType.Air());
 
             return tile;
@@ -257,10 +258,26 @@ namespace PostMortem_P1.Core
             }
         }
 
-        public Tile ReplaceFloor(Tile tile, Texture2D floorSprite)
+        public Tile ReplaceFloor(Tile tile, Floor floor)
         {
-            tile.SetFloor(floorSprite);
+            tile.SetFloor(floor);
             return tile;
+        }
+
+        public InspectTileModel InspectTile(Tile tile)
+        {
+            Actor actor;
+            Player player = Global.WorldMap.Player;
+            if (tile.X == player.X && tile.Y == player.Y)
+            {
+                actor = player;
+            }
+            else
+            {
+                actor = GetNPCAt(tile.X, tile.Y);
+            }
+
+            return InspectTileModel.Get(tile, actor);
         }
 
         public bool IsExplored(int x, int y)

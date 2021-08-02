@@ -15,7 +15,7 @@ namespace PostMortem_P1.Core
 
         public Block Block { get; private set; }
 
-        public Texture2D Floor { get; private set; }
+        public Floor Floor { get; private set; }
 
         public bool IsAir
         {
@@ -25,7 +25,6 @@ namespace PostMortem_P1.Core
             }
         }
 
-        // TODO I think hidingthis is the issue
         public bool IsTileWalkable
         {
             get
@@ -46,28 +45,28 @@ namespace PostMortem_P1.Core
         public Tile(int x, int y) : base(x, y, false, false)
         {
             IsExplored = false;
-            SetFloor(Global.SpriteManager.Dirt);
+            SetFloor(FloorType.Dirt());
             SetBlock(BlockType.Air());
         }
 
-        public Tile(int x, int y, Texture2D floorSprite, Block block) : base(x, y, false, false)
+        public Tile(int x, int y, Floor floor, Block block) : base(x, y, false, false)
         {
             IsExplored = false;
-            SetFloor(floorSprite);
+            SetFloor(floor);
             SetBlock(block);
         }
 
         public Tile(int x, int y, Block block) : base (x, y, false, false)
         {
             IsExplored = false;
-            SetFloor(Global.SpriteManager.Dirt);
+            SetFloor(FloorType.Dirt());
             SetBlock(block);
         }
 
-        public Tile(int x, int y, Texture2D floorSprite) : base(x, y, true, true)
+        public Tile(int x, int y, Floor floor) : base(x, y, true, true)
         {
             IsExplored = false;
-            SetFloor(floorSprite);
+            SetFloor(floor);
             SetBlock(BlockType.Air());
         }
 
@@ -87,9 +86,9 @@ namespace PostMortem_P1.Core
             Block = itemPickup;
         }
 
-        public void SetFloor(Texture2D floorSprite)
+        public void SetFloor(Floor floor)
         {
-            Floor = floorSprite;
+            Floor = floor;
         }
     }
 }

@@ -114,6 +114,11 @@ namespace PostMortem_P1
                 MenuActionGetItemFromAllItems getItemFromAllItemsAddItemToPlayer = new MenuActionGetItemFromAllItems(_graphics, addItemToPlayer, true);
                 addItemToPlayer.SetItemAction(getItemFromAllItemsAddItemToPlayer);
                 menuItems.Add(new MenuItem("[D] Add Item to Player", getItemFromAllItemsAddItemToPlayer));
+
+                MenuActionInspectTile inspectTile = new MenuActionInspectTile(_graphics);
+                MenuActionGetSelectedTile getSelectedTileInspectTile = new MenuActionGetSelectedTile(_graphics, inspectTile, false);
+                inspectTile.SetTileAction(getSelectedTileInspectTile);
+                menuItems.Add(new MenuItem("[D] Inspect Tile", getSelectedTileInspectTile));
                 #endregion
 
                 MenuOverlay menu = new MenuOverlay(300, 400, menuItems, true, null, _graphics);
