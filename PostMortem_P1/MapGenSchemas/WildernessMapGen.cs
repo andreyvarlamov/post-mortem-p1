@@ -26,13 +26,13 @@ namespace PostMortem_P1.MapGenSchemas
         {
             var chunkMap = base.CreateMap(width, height);
 
-            chunkMap.InitializeDefaultTiles(Global.SpriteManager.Grass, null, false);
+            chunkMap.InitializeDefaultTiles(FloorType.Grass(), null, false);
 
             _dirtPatches = MapGenHelpers.GenerateNonIntersectingRects(Width, Height, _maxDirtPatches, _dirtPatchMaxSize, _dirtPatchMinSize);
 
             foreach(RSRectangle dirtPatch in _dirtPatches)
             {
-                MapGenHelpers.CreateRoom(chunkMap, dirtPatch, Global.SpriteManager.Dirt);
+                MapGenHelpers.CreateRoom(chunkMap, dirtPatch, FloorType.Dirt());
             }
 
             return chunkMap;

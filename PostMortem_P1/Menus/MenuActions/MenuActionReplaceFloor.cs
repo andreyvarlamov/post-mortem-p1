@@ -26,7 +26,7 @@ namespace PostMortem_P1.Menus.MenuActions
         {
             Tile tile = _tileAction.GetSelectedTile();
 
-            Global.WorldMap.CurrentChunkMap.ReplaceFloor(tile, Global.SpriteManager.Floor);
+            Global.WorldMap.CurrentChunkMap.ReplaceFloor(tile, FloorType.Floor());
 
             return true;
         }
