@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Diagnostics;
 
 using Microsoft.Xna.Framework;
 
@@ -13,18 +14,24 @@ namespace PostMortem_P1.Menus.MenuActions
     {
         public Item SelectedItem { get; private set; }
 
-        public MenuActionGetItemFromInventory(GraphicsDeviceManager graphics, MenuAction nextAction, bool isLastGet) : base(graphics, nextAction, isLastGet)
+        private Inventory _inventory;
+
+        public MenuActionGetItemFromInventory(GraphicsDeviceManager graphics, MenuAction nextAction, bool isLastGet, Inventory inventory) : base(graphics, nextAction, isLastGet)
         {
+            _inventory = inventory;
         }
 
         public override bool Do()
         {
             var menuItems = new List<MenuItem>();
 
-            Global.WorldMap.Player.Inventory.Items.ForEach(item =>
+            if (_inventory != null)
             {
-                menuItems.Add(new MenuItem(item.Name, null));
-            });
+                _inventory.Items.ForEach(item =>
+                {
+                    menuItems.Add(new MenuItem(item.Name, null));
+                });
+            }
 
             MenuOverlay menuOverlay = new MenuOverlay(250, 350, menuItems, false, this, this.graphics);
 
@@ -33,9 +40,18 @@ namespace PostMortem_P1.Menus.MenuActions
             return true;
         }
 
+        /// <summary>
+        /// Set inventory dynamically (if it was not available at the time of creation of the main menu)
+        /// </summary>
+        /// <param name="inventory"></param>
+        public void SetInventory(Inventory inventory)
+        {
+            _inventory = inventory;
+        }
+
         public void SetItem(int selection)
         {
-            SelectedItem = Global.WorldMap.Player.Inventory.Items[selection];
+            SelectedItem = _inventory.Items[selection];
             IsDataSet = true;
 
             if (this.isLastGet)

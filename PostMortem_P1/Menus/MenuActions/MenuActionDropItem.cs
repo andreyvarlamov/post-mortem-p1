@@ -33,23 +33,7 @@ namespace PostMortem_P1.Menus.MenuActions
             Tile tile = _tileAction.SelectedTile;
             Item item = _itemAction.SelectedItem;
 
-            if (tile.Block is ItemPickup)
-            {
-                ((ItemPickup)tile.Block).AddItem(item);
-            }
-            else if (tile.Block.IsAir)
-            {
-                var itemPickup = BlockType.ItemPickup();
-
-                itemPickup.AddItem(item);
-
-                var currentChunkMap = Global.WorldMap.CurrentChunkMap;
-                currentChunkMap.SetBlock(tile, itemPickup);
-            }
-            else
-            {
-                return false;
-            }
+            Global.WorldMap.CurrentChunkMap.DropItemOnTile(tile, item);
 
             Global.WorldMap.Player.RemoveFromInventory(item);
 

@@ -152,15 +152,20 @@ namespace PostMortem_P1.Core
             return tile;
         }
 
-        public Tile RemoveBlock(Tile tile)
+        public Tile RemoveAndDropBlock(Tile tile)
         {
             var itemPickup = BlockType.ItemPickup();
-            itemPickup.AddItem(ItemType.Apple());
             itemPickup.AddItem(ItemType.Apple());
             tile.SetBlock(itemPickup);
 
             UpdatePlayerFieldOfView();
 
+            return tile;
+        }
+
+        public Tile RemoveBlock(Tile tile)
+        {
+            tile.SetBlock(BlockType.Air());
             return tile;
         }
 
@@ -177,6 +182,54 @@ namespace PostMortem_P1.Core
             tile.SetBlock(BlockType.Air());
             tile.SetFloor(floorSprite);
             return tile;
+        }
+
+        public Tile DropItemOnTile(Tile tile, Item item)
+        {
+            if (tile.Block is ItemPickup)
+            {
+                ((ItemPickup)tile.Block).AddItem(item);
+            }
+            else if (tile.Block.IsAir)
+            {
+                var itemPickup = BlockType.ItemPickup();
+
+                itemPickup.AddItem(item);
+
+                SetBlock(tile, itemPickup);
+            }
+            else
+            {
+                return null;
+            }
+
+            return tile;
+        }
+
+        public Tile RemoveItemFromItemPickup(Tile tile, Item item)
+        {
+            bool isLastItem = ((ItemPickup)tile.Block).RemoveItem(item);
+
+            Debug.WriteLine($"removing item from item pickup, isLastItem={isLastItem}");
+
+            if (isLastItem)
+            {
+                RemoveBlock(tile);
+            }
+
+            return tile;
+        }
+
+        public Inventory GetItemPickupInventory(Tile tile)
+        {
+            if (tile.Block is ItemPickup)
+            {
+                return ((ItemPickup)tile.Block).Inventory;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public bool IsExplored(int x, int y)

@@ -87,9 +87,15 @@ namespace PostMortem_P1
 
                 MenuActionDropItem dropItem = new MenuActionDropItem(_graphics);
                 MenuActionGetSelectedTile getSelectedTileDropItem = new MenuActionGetSelectedTile(_graphics, dropItem, true);
-                MenuActionGetItemFromInventory getItemFromInventoryGetSelectedTileDropItem = new MenuActionGetItemFromInventory(_graphics, getSelectedTileDropItem, false);
+                MenuActionGetItemFromInventory getItemFromInventoryGetSelectedTileDropItem = new MenuActionGetItemFromInventory(_graphics, getSelectedTileDropItem, false, Global.WorldMap.Player.Inventory);
                 dropItem.SetActions(getSelectedTileDropItem, getItemFromInventoryGetSelectedTileDropItem);
                 menuItems.Add(new MenuItem("Drop Item", getItemFromInventoryGetSelectedTileDropItem));
+
+                MenuActionPickupItem pickupItem = new MenuActionPickupItem(_graphics);
+                MenuActionGetItemFromInventory getItemFromInventoryPickupItem = new MenuActionGetItemFromInventory(_graphics, pickupItem, true, null);
+                MenuActionGetSelectedTile getSelectedTileGetItemFromInventoryPickupItem = new MenuActionGetSelectedTile(_graphics, pickupItem, false);
+                pickupItem.SetActions(getSelectedTileGetItemFromInventoryPickupItem, getItemFromInventoryPickupItem);
+                menuItems.Add(new MenuItem("Pick up Item", getSelectedTileGetItemFromInventoryPickupItem));
 
                 //MenuActionActivateBlock getSelectedTileActivateBlock = new MenuActionActivateBlock(_graphics);
                 //MenuActionGetSelectedTile activateBlock = new MenuActionGetSelectedTile(_graphics, getSelectedTileActivateBlock);

@@ -58,6 +58,7 @@ namespace PostMortem_P1.Menus.Overlays
 
             MenuItems = menuItems;
 
+            //_selection = 0;
             Selection = 0;
 
             _isActionable = isActionable;

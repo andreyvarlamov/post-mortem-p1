@@ -31,7 +31,7 @@ namespace PostMortem_P1.Menus.MenuActions
 
             Tile tile = _tileAction.SelectedTile;
 
-            Global.WorldMap.CurrentChunkMap.RemoveBlock(tile);
+            Global.WorldMap.CurrentChunkMap.RemoveAndDropBlock(tile);
 
             return true;
         }
