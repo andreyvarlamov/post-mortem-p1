@@ -12,8 +12,6 @@ namespace PostMortem_P1.Menus.MenuActions
 {
     public class MenuActionGetItemFromInventory : MenuActionGet
     {
-        public Item SelectedItem { get; private set; }
-
         private Inventory _inventory;
 
         public MenuActionGetItemFromInventory(GraphicsDeviceManager graphics, MenuAction nextAction, bool isLastGet, Inventory inventory) : base(graphics, nextAction, isLastGet)
@@ -49,17 +47,16 @@ namespace PostMortem_P1.Menus.MenuActions
             _inventory = inventory;
         }
 
-        public void SetItem(int selection)
+        public Item GetSelectedItem()
         {
-            SelectedItem = _inventory.Items[selection];
-            IsDataSet = true;
-
-            if (this.isLastGet)
+            if (IsDataSet)
             {
-                Global.OverlayManager.ReturnToGame();
+                return _inventory.Items[SelectedIndex];
             }
-
-            this.nextAction.Do();
+            else
+            {
+                return null;
+            }
         }
     }
 }

@@ -139,6 +139,7 @@ namespace PostMortem_P1.Core
             this[x, y].SetExplored(isExplored);
         }
 
+        #region Map editing for map gen
         public Tile SetBlock(int x, int y, Block block)
         {
             Tile tile = this[x, y];
@@ -146,9 +147,41 @@ namespace PostMortem_P1.Core
             return tile;
         }
 
-        public Tile SetBlock(Tile tile, Block block)
+        public Tile RemoveBlockAndSetFloor(int x, int y, Texture2D floorSprite)
+        {
+
+            Tile tile = this[x, y];
+            tile.SetFloor(floorSprite);
+            tile.SetBlock(BlockType.Air());
+
+            return tile;
+        }
+        #endregion
+
+        public Tile SetBlockAndUpdateFov(Tile tile, Block block)
         {
             tile.SetBlock(block);
+            UpdatePlayerFieldOfView();
+            return tile;
+        }
+
+        public bool BuildBlock(Tile tile, Block block)
+        {
+            if (tile.Block.IsAir && !(tile.Block is ItemPickup))
+            {
+                SetBlockAndUpdateFov(tile, block);
+            }
+            else
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public Tile RemoveBlock(Tile tile)
+        {
+            SetBlockAndUpdateFov(tile, BlockType.Air());
             return tile;
         }
 
@@ -166,41 +199,18 @@ namespace PostMortem_P1.Core
                 {
                     var itemPickup = BlockType.ItemPickup();
                     itemPickup.AddItem(ItemType.GetByID(block.ItemVersionID.Value));
-                    tile.SetBlock(itemPickup);
+                    SetBlockAndUpdateFov(tile, itemPickup);
                 }
                 else
                 {
                     RemoveBlock(tile);
                 }
 
-                UpdatePlayerFieldOfView();
-
                 return tile;
             }
         }
 
-        public Tile RemoveBlock(Tile tile)
-        {
-            tile.SetBlock(BlockType.Air());
-            return tile;
-        }
-
-        public Tile ReplaceFloor(Tile tile, Texture2D floorSprite)
-        {
-            tile.SetFloor(floorSprite);
-            return tile;
-        }
-
-        public Tile RemoveBlockAndSetFloor(int x, int y, Texture2D floorSprite)
-        {
-
-            Tile tile = this[x, y];
-            tile.SetBlock(BlockType.Air());
-            tile.SetFloor(floorSprite);
-            return tile;
-        }
-
-        public Tile DropItemOnTile(Tile tile, Item item)
+        public bool DropItemOnTile(Tile tile, Item item)
         {
             if (tile.Block is ItemPickup)
             {
@@ -212,14 +222,14 @@ namespace PostMortem_P1.Core
 
                 itemPickup.AddItem(item);
 
-                SetBlock(tile, itemPickup);
+                SetBlockAndUpdateFov(tile, itemPickup);
             }
             else
             {
-                return null;
+                return false;
             }
 
-            return tile;
+            return true;
         }
 
         public Tile RemoveItemFromItemPickup(Tile tile, Item item)
@@ -244,6 +254,12 @@ namespace PostMortem_P1.Core
             {
                 return null;
             }
+        }
+
+        public Tile ReplaceFloor(Tile tile, Texture2D floorSprite)
+        {
+            tile.SetFloor(floorSprite);
+            return tile;
         }
 
         public bool IsExplored(int x, int y)

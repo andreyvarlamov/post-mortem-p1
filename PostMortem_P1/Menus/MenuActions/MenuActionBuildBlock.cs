@@ -30,14 +30,20 @@ namespace PostMortem_P1.Menus.MenuActions
                 throw new Exception("tile or item action is not ready yet.");
             }
 
-            Tile tile = _tileAction.SelectedTile;
-            Item item = _itemAction.SelectedItem;
+            Tile tile = _tileAction.GetSelectedTile();
+            Item item = _itemAction.GetSelectedItem();
 
             if (item.BlockVersionID.HasValue)
             {
-                Global.WorldMap.CurrentChunkMap.SetBlock(tile, BlockType.GetByID(item.BlockVersionID.Value));
+                if (Global.WorldMap.CurrentChunkMap.BuildBlock(tile, BlockType.GetByID(item.BlockVersionID.Value)))
+                {
+                    Global.WorldMap.Player.RemoveFromInventory(item);
+                }
+                else
+                {
+                    return false;
+                }
 
-                Global.WorldMap.Player.RemoveFromInventory(item);
             }
             else
             {

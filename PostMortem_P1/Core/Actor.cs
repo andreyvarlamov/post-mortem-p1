@@ -239,7 +239,6 @@ namespace PostMortem_P1.Core
                 {
                     worldMap.CurrentChunkMap.UpdatePlayerFieldOfView();
                     worldMap.Camera.CenterOn(worldMap.CurrentChunkMap[X, Y]);
-                    Debug.WriteLine($"PLAYER: x{X} y{Y}; X{worldMap.PlayerWorldPosX} Y{worldMap.PlayerWorldPosY}");
 
                     Global.Hud.SetChunkX(X);
                     Global.Hud.SetChunkY(Y);

@@ -29,7 +29,7 @@ namespace PostMortem_P1.Menus.MenuActions
                 throw new Exception("tile or item action is not ready yet.");
             }
 
-            Tile tile = _tileAction.SelectedTile;
+            Tile tile = _tileAction.GetSelectedTile();
 
             Global.WorldMap.CurrentChunkMap.RemoveAndDropBlock(tile);
 

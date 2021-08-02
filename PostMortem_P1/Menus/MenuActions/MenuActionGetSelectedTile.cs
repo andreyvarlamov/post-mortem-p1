@@ -11,7 +11,7 @@ namespace PostMortem_P1.Menus.MenuActions
 {
     public class MenuActionGetSelectedTile : MenuActionGet
     {
-        public Tile SelectedTile { get; private set; }
+        private Tile _selectedTile;
 
         public MenuActionGetSelectedTile(GraphicsDeviceManager graphics, MenuAction nextAction, bool isLastGet) : base(graphics, nextAction, isLastGet)
         {
@@ -26,14 +26,9 @@ namespace PostMortem_P1.Menus.MenuActions
             return true;
         }
 
-        public override void SetData(object data)
-        {
-            base.SetData(data);
-        }
-
         public void SetTile(Tile tile)
         {
-            SelectedTile = tile;
+            _selectedTile = tile;
             IsDataSet = true;
 
             if (this.isLastGet)
@@ -42,6 +37,18 @@ namespace PostMortem_P1.Menus.MenuActions
             }
 
             this.nextAction.Do();
+        }
+
+        public Tile GetSelectedTile()
+        {
+            if (IsDataSet)
+            {
+                return _selectedTile;
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }

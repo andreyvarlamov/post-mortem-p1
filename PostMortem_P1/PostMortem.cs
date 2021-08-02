@@ -95,8 +95,9 @@ namespace PostMortem_P1
                 #region Debug actions
                 MenuActionSetBlock setBlock = new MenuActionSetBlock(_graphics);
                 MenuActionGetSelectedTile getSelectedTileSetBlock = new MenuActionGetSelectedTile(_graphics, setBlock, true);
-                setBlock.SetTileAction(getSelectedTileSetBlock);
-                menuItems.Add(new MenuItem("[D] Set Block", getSelectedTileSetBlock));
+                MenuActionGetBlockFromAllBlocks getBlockFromAllBlocksGetSelectedSetBlock = new MenuActionGetBlockFromAllBlocks(_graphics, getSelectedTileSetBlock, false);
+                setBlock.SetActions(getSelectedTileSetBlock, getBlockFromAllBlocksGetSelectedSetBlock);
+                menuItems.Add(new MenuItem("[D] Set Block", getBlockFromAllBlocksGetSelectedSetBlock));
 
                 MenuActionRemoveBlock removeBlock = new MenuActionRemoveBlock(_graphics);
                 MenuActionGetSelectedTile getSelectedTileRemoveBlock = new MenuActionGetSelectedTile(_graphics, removeBlock, true);

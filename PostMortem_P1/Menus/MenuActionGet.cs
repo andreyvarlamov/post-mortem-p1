@@ -11,11 +11,12 @@ namespace PostMortem_P1.Menus
     public class MenuActionGet : MenuAction
     {
         public bool IsDataSet { get; protected set; }
-        public object data { get; protected set; }
+        //public object data { get; protected set; }
 
         protected MenuAction nextAction;
 
         protected bool isLastGet;
+        public int SelectedIndex;
 
         public MenuActionGet(GraphicsDeviceManager graphics, MenuAction nextAction, bool isLastGet) : base(graphics)
         {
@@ -28,9 +29,22 @@ namespace PostMortem_P1.Menus
             return true;
         }
 
-        public virtual void SetData(object data)
+        //public virtual void SetData(object data)
+        //{
+        //    this.data = data;
+        //    IsDataSet = true;
+
+        //    if (isLastGet)
+        //    {
+        //        Global.OverlayManager.ReturnToGame();
+        //    }
+
+        //    nextAction.Do();
+        //}
+
+        public virtual void SetSelectedIndex(int index)
         {
-            this.data = data;
+            SelectedIndex = index;
             IsDataSet = true;
 
             if (isLastGet)

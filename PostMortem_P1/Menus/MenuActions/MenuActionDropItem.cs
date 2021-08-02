@@ -30,12 +30,13 @@ namespace PostMortem_P1.Menus.MenuActions
                 throw new Exception("tile or item action is not ready yet.");
             }
 
-            Tile tile = _tileAction.SelectedTile;
-            Item item = _itemAction.SelectedItem;
+            Tile tile = _tileAction.GetSelectedTile();
+            Item item = _itemAction.GetSelectedItem();
 
-            Global.WorldMap.CurrentChunkMap.DropItemOnTile(tile, item);
-
-            Global.WorldMap.Player.RemoveFromInventory(item);
+            if (Global.WorldMap.CurrentChunkMap.DropItemOnTile(tile, item))
+            {
+                Global.WorldMap.Player.RemoveFromInventory(item);
+            }
 
             return true;
         }

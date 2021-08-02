@@ -21,7 +21,7 @@ namespace PostMortem_P1.Menus.Overlays
 
         private bool _isActionable;
 
-        private MenuActionGetItemFromInventory _callerAction;
+        private MenuActionGet _callerAction;
 
         public int Selection
         {
@@ -46,7 +46,7 @@ namespace PostMortem_P1.Menus.Overlays
             }
         }
 
-        public MenuOverlay(int pxWidth, int pxHeight, List<MenuItem> menuItems, bool isActionable, MenuActionGetItemFromInventory callerAction, GraphicsDeviceManager graphics) : base(graphics)
+        public MenuOverlay(int pxWidth, int pxHeight, List<MenuItem> menuItems, bool isActionable, MenuActionGet callerAction, GraphicsDeviceManager graphics) : base(graphics)
         {
             PxWidth = pxWidth;
             PxHeight = pxHeight;
@@ -180,7 +180,7 @@ namespace PostMortem_P1.Menus.Overlays
                 }
                 else
                 {
-                    _callerAction.SetItem(Selection);
+                    _callerAction.SetSelectedIndex(Selection);
                 }
             }
         }

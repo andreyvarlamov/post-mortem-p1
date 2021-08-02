@@ -33,7 +33,7 @@ namespace PostMortem_P1.Menus.MenuActions
                 throw new Exception("tile action is not ready yet.");
             }
 
-            Tile tile = _tileAction.SelectedTile;
+            Tile tile = _tileAction.GetSelectedTile();
 
             if (!_isItemSelected)
             {
@@ -58,7 +58,7 @@ namespace PostMortem_P1.Menus.MenuActions
                     throw new Exception("item action is not ready yet.");
                 }
 
-                Item item = _itemAction.SelectedItem;
+                Item item = _itemAction.GetSelectedItem();
 
                 Global.WorldMap.CurrentChunkMap.RemoveItemFromItemPickup(tile, item);
 

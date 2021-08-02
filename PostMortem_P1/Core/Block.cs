@@ -8,6 +8,7 @@ namespace PostMortem_P1.Core
     public class Block
     {
         public int BlockID { get; private set; }
+        public string Name { get; private set; }
         public virtual Texture2D Sprite { get; set; }
         public bool IsAir { get; private set; }
         public bool IsWalkable { get; set; }
@@ -15,9 +16,10 @@ namespace PostMortem_P1.Core
 
         public int? ItemVersionID { get; private set; }
 
-        public Block(int blockID, Texture2D sprite, bool isAir, bool isWalkable, bool isTransparent, int? itemVersionID)
+        public Block(int blockID, string name, Texture2D sprite, bool isAir, bool isWalkable, bool isTransparent, int? itemVersionID)
         {
             BlockID = blockID;
+            Name = name;
             Sprite = sprite;
             IsAir = isAir;
             IsWalkable = isWalkable;
