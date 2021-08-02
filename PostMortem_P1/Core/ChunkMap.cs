@@ -266,7 +266,18 @@ namespace PostMortem_P1.Core
 
         public InspectTileModel InspectTile(Tile tile)
         {
-            throw new NotImplementedException();
+            Actor actor;
+            Player player = Global.WorldMap.Player;
+            if (tile.X == player.X && tile.Y == player.Y)
+            {
+                actor = player;
+            }
+            else
+            {
+                actor = GetNPCAt(tile.X, tile.Y);
+            }
+
+            return InspectTileModel.Get(tile, actor);
         }
 
         public bool IsExplored(int x, int y)

@@ -54,15 +54,15 @@ namespace PostMortem_P1.Menus.Overlays
             float healthPercent = 0.0f;
             if (_maxHealth != 0)
             {
-                healthPercent = (float)_health / _maxHealth;
+                healthPercent = _health / (float)_maxHealth;
             }
 
             Color healthColor;
-            if (healthPercent > 90.0f)
+            if (healthPercent > 0.9f)
             {
                 healthColor = Color.Green;
             }
-            else if (healthPercent  > 25.0f && healthPercent <= 90.0f)
+            else if (healthPercent  > 0.25f && healthPercent <= 0.9f)
             {
                 healthColor = Color.Yellow;
             }
