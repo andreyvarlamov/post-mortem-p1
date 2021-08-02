@@ -115,11 +115,7 @@ namespace PostMortem_P1
             // Updated at an fps
             Global.InputManager.Update(gameTime);
 
-            if (Global.InputManager.IsExitGame())
-            {
-                Exit();
-            }
-            else if (Global.InputManager.IsSpace())
+            if (Global.InputManager.IsSpace())
             {
                 ToggleGameMode();
             }

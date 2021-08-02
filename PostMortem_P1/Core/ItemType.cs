@@ -17,9 +17,27 @@ namespace PostMortem_P1.Core
             return new Item(itemID, name, sprite);
         }
 
-        public static Item Apple()
+        public static Item BuildingWall()
         {
             int itemID = 2;
+            string name = "Building Wall";
+            Texture2D sprite = Global.SpriteManager.BuildingWall;
+
+            return new Item(itemID, name, sprite);
+        }
+
+        public static Item Wall()
+        {
+            int itemID = 3;
+            string name = "Wall";
+            Texture2D sprite = Global.SpriteManager.Wall;
+
+            return new Item(itemID, name, sprite);
+        }
+
+        public static Item Apple()
+        {
+            int itemID = 4;
             string name = "Apple";
             Texture2D sprite = Global.SpriteManager.Apple;
 

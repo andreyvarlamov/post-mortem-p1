@@ -154,13 +154,29 @@ namespace PostMortem_P1.Core
 
         public Tile RemoveAndDropBlock(Tile tile)
         {
-            var itemPickup = BlockType.ItemPickup();
-            itemPickup.AddItem(ItemType.Apple());
-            tile.SetBlock(itemPickup);
+            Block block = tile.Block;
 
-            UpdatePlayerFieldOfView();
+            if (block is ItemPickup || block.IsAir)
+            {
+                return null;
+            }
+            else
+            {
+                if (block.HasItemVersion)
+                {
+                    var itemPickup = BlockType.ItemPickup();
+                    itemPickup.AddItem(block.ItemVersion);
+                    tile.SetBlock(itemPickup);
+                }
+                else
+                {
+                    RemoveBlock(tile);
+                }
 
-            return tile;
+                UpdatePlayerFieldOfView();
+
+                return tile;
+            }
         }
 
         public Tile RemoveBlock(Tile tile)

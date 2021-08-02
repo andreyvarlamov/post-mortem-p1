@@ -15,8 +15,9 @@ namespace PostMortem_P1.Core
             bool isAir = true;
             bool isWalkable = true;
             bool isTransparent = true;
+            Item itemVersion = null;
 
-            return new Block(blockID, sprite, isAir, isWalkable, isTransparent);
+            return new Block(blockID, sprite, isAir, isWalkable, isTransparent, itemVersion);
         }
 
         public static Block Dirt()
@@ -26,8 +27,9 @@ namespace PostMortem_P1.Core
             bool isAir = false;
             bool isWalkable = false;
             bool isTransparent = false;
+            Item itemVersion = ItemType.Dirt();
 
-            return new Block(blockID, sprite, isAir, isWalkable, isTransparent);
+            return new Block(blockID, sprite, isAir, isWalkable, isTransparent, itemVersion);
         }
 
         public static Block BuildingWall()
@@ -37,8 +39,9 @@ namespace PostMortem_P1.Core
             bool isAir = false;
             bool isWalkable = false;
             bool isTransparent = false;
+            Item itemVersion = ItemType.BuildingWall();
 
-            return new Block(blockID, sprite, isAir, isWalkable, isTransparent);
+            return new Block(blockID, sprite, isAir, isWalkable, isTransparent, itemVersion);
         }
 
         public static Block Wall()
@@ -48,8 +51,9 @@ namespace PostMortem_P1.Core
             bool isAir = false;
             bool isWalkable = false;
             bool isTransparent = false;
+            Item itemVersion = ItemType.Wall();
 
-            return new Block(blockID, sprite, isAir, isWalkable, isTransparent);
+            return new Block(blockID, sprite, isAir, isWalkable, isTransparent, itemVersion);
         }
 
         public static ItemPickup ItemPickup()

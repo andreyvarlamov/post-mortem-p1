@@ -52,6 +52,12 @@ namespace PostMortem_P1.Systems
                 Global.WorldMap.Camera.CenterOn(Global.WorldMap.CurrentChunkMap[Global.WorldMap.Player.X, Global.WorldMap.Player.Y]);
             }
 
+            if (inputManager.IsNewKeyPress(Keys.Escape))
+            {
+                ReturnToGame();
+                return;
+            }
+
             CurrentOverlay.ProcessFromInput(inputManager);
         }
 
