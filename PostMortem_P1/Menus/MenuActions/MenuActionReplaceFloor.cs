@@ -11,19 +11,22 @@ namespace PostMortem_P1.Menus.MenuActions
 {
     public class MenuActionReplaceFloor : MenuAction
     {
+        private MenuActionGetSelectedTile _tileAction;
+
         public MenuActionReplaceFloor(GraphicsDeviceManager graphics) : base(graphics)
         {
         }
 
+        public void SetTileAction(MenuActionGetSelectedTile tileAction)
+        {
+            _tileAction = tileAction;
+        }
+
         public override bool Do()
         {
-            TileSelectOverlay tileSelectOverlay = (TileSelectOverlay)Global.OverlayManager.CurrentOverlay;
-
-            Tile tile = tileSelectOverlay.GetHighlightedTile();
+            Tile tile = _tileAction.GetSelectedTile();
 
             Global.WorldMap.CurrentChunkMap.ReplaceFloor(tile, Global.SpriteManager.Floor);
-
-            Global.OverlayManager.ReturnToGame();
 
             return true;
         }

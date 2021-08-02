@@ -86,8 +86,13 @@ namespace PostMortem_P1.Core
 
                 spriteBatch.Draw(tile.Floor, position, null, tint, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.Floors);
 
-                if (!tile.IsAir)
+                if (tile.Block.Sprite != null)
                 {
+                    if (tile.Block is ItemPickup)
+                    {
+                        ((ItemPickup)tile.Block).UpdateCanvas(spriteBatch);
+                    }
+
                     spriteBatch.Draw(tile.Block.Sprite, position, null, tint, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.Blocks);
                 }
             }
@@ -134,6 +139,7 @@ namespace PostMortem_P1.Core
             this[x, y].SetExplored(isExplored);
         }
 
+        #region Map editing for map gen
         public Tile SetBlock(int x, int y, Block block)
         {
             Tile tile = this[x, y];
@@ -141,29 +147,117 @@ namespace PostMortem_P1.Core
             return tile;
         }
 
-        public Tile SetBlock(Tile tile, Block block)
-        {
-            tile.SetBlock(block);
-            return tile;
-        }
-
-        public Tile RemoveBlock(Tile tile)
-        {
-            tile.SetBlock(BlockType.Air());
-            return tile;
-        }
-
-        public Tile ReplaceFloor(Tile tile, Texture2D floorSprite)
-        {
-            tile.SetFloor(floorSprite);
-            return tile;
-        }
-
         public Tile RemoveBlockAndSetFloor(int x, int y, Texture2D floorSprite)
         {
 
             Tile tile = this[x, y];
+            tile.SetFloor(floorSprite);
             tile.SetBlock(BlockType.Air());
+
+            return tile;
+        }
+        #endregion
+
+        public Tile SetBlockAndUpdateFov(Tile tile, Block block)
+        {
+            tile.SetBlock(block);
+            UpdatePlayerFieldOfView();
+            return tile;
+        }
+
+        public bool BuildBlock(Tile tile, Block block)
+        {
+            if (tile.Block.IsAir && !(tile.Block is ItemPickup))
+            {
+                SetBlockAndUpdateFov(tile, block);
+            }
+            else
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public Tile RemoveBlock(Tile tile)
+        {
+            SetBlockAndUpdateFov(tile, BlockType.Air());
+            return tile;
+        }
+
+        public Tile RemoveAndDropBlock(Tile tile)
+        {
+            Block block = tile.Block;
+
+            if (block is ItemPickup || block.IsAir)
+            {
+                return null;
+            }
+            else
+            {
+                if (block.ItemVersionID.HasValue)
+                {
+                    var itemPickup = BlockType.ItemPickup();
+                    itemPickup.AddItem(ItemType.GetByID(block.ItemVersionID.Value));
+                    SetBlockAndUpdateFov(tile, itemPickup);
+                }
+                else
+                {
+                    RemoveBlock(tile);
+                }
+
+                return tile;
+            }
+        }
+
+        public bool DropItemOnTile(Tile tile, Item item)
+        {
+            if (tile.Block is ItemPickup)
+            {
+                ((ItemPickup)tile.Block).AddItem(item);
+            }
+            else if (tile.Block.IsAir)
+            {
+                var itemPickup = BlockType.ItemPickup();
+
+                itemPickup.AddItem(item);
+
+                SetBlockAndUpdateFov(tile, itemPickup);
+            }
+            else
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public Tile RemoveItemFromItemPickup(Tile tile, Item item)
+        {
+            bool isLastItem = ((ItemPickup)tile.Block).RemoveItem(item);
+
+            if (isLastItem)
+            {
+                RemoveBlock(tile);
+            }
+
+            return tile;
+        }
+
+        public Inventory GetItemPickupInventory(Tile tile)
+        {
+            if (tile.Block is ItemPickup)
+            {
+                return ((ItemPickup)tile.Block).Inventory;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public Tile ReplaceFloor(Tile tile, Texture2D floorSprite)
+        {
             tile.SetFloor(floorSprite);
             return tile;
         }

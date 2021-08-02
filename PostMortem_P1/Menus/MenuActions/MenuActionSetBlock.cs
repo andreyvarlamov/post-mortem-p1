@@ -11,17 +11,25 @@ namespace PostMortem_P1.Menus.MenuActions
 {
     public class MenuActionSetBlock : MenuAction
     {
+        private MenuActionGetSelectedTile _tileAction;
+        private MenuActionGetBlockFromAllBlocks _blockAction;
+
         public MenuActionSetBlock(GraphicsDeviceManager graphics) : base(graphics)
         {
         }
 
+        public void SetActions(MenuActionGetSelectedTile tileAction, MenuActionGetBlockFromAllBlocks blockAction)
+        {
+            _tileAction = tileAction;
+            _blockAction = blockAction;
+        }
+
         public override bool Do()
         {
-            TileSelectOverlay tileSelectOverlay = (TileSelectOverlay)Global.OverlayManager.CurrentOverlay;
+            Tile tile = _tileAction.GetSelectedTile();
+            Block block = _blockAction.GetSelectedBlock();
 
-            Tile tile = tileSelectOverlay.GetHighlightedTile();
-
-            Global.WorldMap.CurrentChunkMap.SetBlock(tile, BlockType.Wall());
+            Global.WorldMap.CurrentChunkMap.SetBlockAndUpdateFov(tile, block);
 
             Global.OverlayManager.ReturnToGame();
 

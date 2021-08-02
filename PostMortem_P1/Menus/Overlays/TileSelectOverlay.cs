@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Input;
 using PostMortem_P1.Core;
 using PostMortem_P1.Graphics;
 using PostMortem_P1.Input;
+using PostMortem_P1.Menus.MenuActions;
 
 namespace PostMortem_P1.Menus.Overlays
 {
@@ -19,16 +20,16 @@ namespace PostMortem_P1.Menus.Overlays
 
         private Tile _currentSelectedTile;
 
-        private MenuAction _selectAction;
+        private MenuActionGetSelectedTile _callerAction;
 
-        public TileSelectOverlay(int originTileX, int originTileY, GraphicsDeviceManager graphics, MenuAction selectAction) : base (graphics)
+        public TileSelectOverlay(int originTileX, int originTileY, GraphicsDeviceManager graphics, MenuActionGetSelectedTile callerAction) : base (graphics)
         {
             _tileX = originTileX;
             _tileY = originTileY;
 
             _currentSelectedTile = Global.WorldMap.CurrentChunkMap[_tileX, _tileY];
 
-            _selectAction = selectAction;
+            _callerAction = callerAction;
         }
 
         public override void DrawThroughWorldCamera(SpriteBatch spriteBatch)
@@ -81,13 +82,8 @@ namespace PostMortem_P1.Menus.Overlays
 
             if (inputManager.IsNewKeyPress(Keys.Enter))
             {
-                _selectAction.Do();
+                _callerAction.SetTile(_currentSelectedTile);
             }
-        }
-
-        public Tile GetHighlightedTile()
-        {
-            return _currentSelectedTile;
         }
     }
 }

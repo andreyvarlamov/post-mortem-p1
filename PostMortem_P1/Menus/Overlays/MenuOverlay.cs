@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Input;
 
 using PostMortem_P1.Core;
 using PostMortem_P1.Input;
+using PostMortem_P1.Menus.MenuActions;
 
 namespace PostMortem_P1.Menus.Overlays
 {
@@ -17,6 +18,10 @@ namespace PostMortem_P1.Menus.Overlays
         public List<MenuItem> MenuItems { get; set; }
 
         private int _selection;
+
+        private bool _isActionable;
+
+        private MenuActionGet _callerAction;
 
         public int Selection
         {
@@ -41,7 +46,7 @@ namespace PostMortem_P1.Menus.Overlays
             }
         }
 
-        public MenuOverlay(int pxWidth, int pxHeight, List<MenuItem> menuItems, GraphicsDeviceManager graphics) : base(graphics)
+        public MenuOverlay(int pxWidth, int pxHeight, List<MenuItem> menuItems, bool isActionable, MenuActionGet callerAction, GraphicsDeviceManager graphics) : base(graphics)
         {
             PxWidth = pxWidth;
             PxHeight = pxHeight;
@@ -53,7 +58,11 @@ namespace PostMortem_P1.Menus.Overlays
 
             MenuItems = menuItems;
 
+            //_selection = 0;
             Selection = 0;
+
+            _isActionable = isActionable;
+            _callerAction = callerAction;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -67,6 +76,23 @@ namespace PostMortem_P1.Menus.Overlays
             int horizontalOffset = 25;
             int verticalOffset = 25;
             int lineHeight = 20;
+
+            if (MenuItems.Count == 0)
+            {
+                // Display empty menu message
+                string msg = "Empty menu";
+                Vector2 msgSize = Global.FontManager.MainFont.MeasureString(msg);
+                int msgWidth = (int)msgSize.X;
+                int msgHeight = (int)msgSize.Y;
+
+                Vector2 msgPosition = new Vector2(PxX + horizontalOffset, PxY + verticalOffset - msgHeight / 2);
+                Vector2 msgCursorPosition = new Vector2(PxX + horizontalOffset - 3, PxY + verticalOffset - msgHeight / 2 - 1);
+
+                var selectionRect = CreateRectangle(msgWidth + 3, msgHeight + 1, Color.Salmon, this.graphics);
+
+                spriteBatch.Draw(selectionRect, msgCursorPosition, null, Color.White, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.MenuSelect);
+                spriteBatch.DrawString(Global.FontManager.MainFont, msg, msgPosition, Color.White, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.MenuText);
+            }
 
             for (int i = 0; i < MenuItems.Count; i++)
             {
@@ -146,9 +172,16 @@ namespace PostMortem_P1.Menus.Overlays
                     break;
             }
 
-            if (inputManager.IsNewKeyPress(Keys.Enter))
+            if (inputManager.IsNewKeyPress(Keys.Enter) && MenuItems.Count != 0)
             {
-                MenuItems[Selection].MenuAction.Do();
+                if (_isActionable)
+                {
+                    MenuItems[Selection].MenuAction.Do();
+                }
+                else
+                {
+                    _callerAction.SetSelectedIndex(Selection);
+                }
             }
         }
     }

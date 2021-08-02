@@ -25,6 +25,7 @@ namespace PostMortem_P1
         public PostMortem()
         {
             _graphics = new GraphicsDeviceManager(this);
+
             Content.RootDirectory = "Content";
             IsMouseVisible = false;
         }
@@ -39,6 +40,8 @@ namespace PostMortem_P1
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            Global.GraphicsDevice = _graphics.GraphicsDevice;
 
             Global.SpriteManager = new SpriteManager();
             Global.SpriteManager.LoadContent(Content);
@@ -67,19 +70,52 @@ namespace PostMortem_P1
 
                 List<MenuItem> menuItems = new List<MenuItem>();
 
-                MenuActionSetBlock getSelectedTileSetBlock = new MenuActionSetBlock(_graphics);
-                MenuActionGetSelectedTile setBlock = new MenuActionGetSelectedTile(_graphics, getSelectedTileSetBlock);
-                menuItems.Add(new MenuItem("Set Block", setBlock));
+                MenuActionBuildBlock buildBlock = new MenuActionBuildBlock(_graphics);
+                MenuActionGetSelectedTile getSelectedTileBuildBlock = new MenuActionGetSelectedTile(_graphics, buildBlock, true);
+                MenuActionGetItemFromInventory getItemFromInventoryGetSelectedTileBuildBlock = new MenuActionGetItemFromInventory(_graphics, getSelectedTileBuildBlock, false, Global.WorldMap.Player.Inventory);
+                buildBlock.SetActions(getSelectedTileBuildBlock, getItemFromInventoryGetSelectedTileBuildBlock);
+                menuItems.Add(new MenuItem("Build Block", getItemFromInventoryGetSelectedTileBuildBlock));
 
-                MenuActionRemoveBlock getSelectedTileRemoveBlock = new MenuActionRemoveBlock(_graphics);
-                MenuActionGetSelectedTile removeBlock = new MenuActionGetSelectedTile(_graphics, getSelectedTileRemoveBlock);
-                menuItems.Add(new MenuItem("Remove Block", removeBlock));
+                MenuActionDropItem dropItem = new MenuActionDropItem(_graphics);
+                MenuActionGetSelectedTile getSelectedTileDropItem = new MenuActionGetSelectedTile(_graphics, dropItem, true);
+                MenuActionGetItemFromInventory getItemFromInventoryGetSelectedTileDropItem = new MenuActionGetItemFromInventory(_graphics, getSelectedTileDropItem, false, Global.WorldMap.Player.Inventory);
+                dropItem.SetActions(getSelectedTileDropItem, getItemFromInventoryGetSelectedTileDropItem);
+                menuItems.Add(new MenuItem("Drop Item", getItemFromInventoryGetSelectedTileDropItem));
 
-                MenuActionReplaceFloor getSelectedTileReplaceFloor = new MenuActionReplaceFloor(_graphics);
-                MenuActionGetSelectedTile replaceFloor = new MenuActionGetSelectedTile(_graphics, getSelectedTileReplaceFloor);
-                menuItems.Add(new MenuItem("Replace Floor", replaceFloor));
+                MenuActionPickupItem pickupItem = new MenuActionPickupItem(_graphics);
+                MenuActionGetItemFromInventory getItemFromInventoryPickupItem = new MenuActionGetItemFromInventory(_graphics, pickupItem, true, null);
+                MenuActionGetSelectedTile getSelectedTileGetItemFromInventoryPickupItem = new MenuActionGetSelectedTile(_graphics, pickupItem, false);
+                pickupItem.SetActions(getSelectedTileGetItemFromInventoryPickupItem, getItemFromInventoryPickupItem);
+                menuItems.Add(new MenuItem("Pick up Item", getSelectedTileGetItemFromInventoryPickupItem));
 
-                MenuOverlay menu = new MenuOverlay(300, 400, menuItems, _graphics);
+                //MenuActionActivateBlock getSelectedTileActivateBlock = new MenuActionActivateBlock(_graphics);
+                //MenuActionGetSelectedTile activateBlock = new MenuActionGetSelectedTile(_graphics, getSelectedTileActivateBlock);
+                //menuItems.Add(new MenuItem("Activate Block", activateBlock));
+
+                #region Debug actions
+                MenuActionSetBlock setBlock = new MenuActionSetBlock(_graphics);
+                MenuActionGetSelectedTile getSelectedTileSetBlock = new MenuActionGetSelectedTile(_graphics, setBlock, true);
+                MenuActionGetBlockFromAllBlocks getBlockFromAllBlocksGetSelectedSetBlock = new MenuActionGetBlockFromAllBlocks(_graphics, getSelectedTileSetBlock, false);
+                setBlock.SetActions(getSelectedTileSetBlock, getBlockFromAllBlocksGetSelectedSetBlock);
+                menuItems.Add(new MenuItem("[D] Set Block", getBlockFromAllBlocksGetSelectedSetBlock));
+
+                MenuActionRemoveBlock removeBlock = new MenuActionRemoveBlock(_graphics);
+                MenuActionGetSelectedTile getSelectedTileRemoveBlock = new MenuActionGetSelectedTile(_graphics, removeBlock, true);
+                removeBlock.SetTileAction(getSelectedTileRemoveBlock);
+                menuItems.Add(new MenuItem("[D] Remove Block", getSelectedTileRemoveBlock));
+
+                MenuActionReplaceFloor replaceFloor = new MenuActionReplaceFloor(_graphics);
+                MenuActionGetSelectedTile getSelectedTileReplaceFloor = new MenuActionGetSelectedTile(_graphics, replaceFloor, true);
+                replaceFloor.SetTileAction(getSelectedTileReplaceFloor);
+                menuItems.Add(new MenuItem("[D] Replace Floor", getSelectedTileReplaceFloor));
+
+                MenuActionAddItemToPlayer addItemToPlayer = new MenuActionAddItemToPlayer(_graphics);
+                MenuActionGetItemFromAllItems getItemFromAllItemsAddItemToPlayer = new MenuActionGetItemFromAllItems(_graphics, addItemToPlayer, true);
+                addItemToPlayer.SetItemAction(getItemFromAllItemsAddItemToPlayer);
+                menuItems.Add(new MenuItem("[D] Add Item to Player", getItemFromAllItemsAddItemToPlayer));
+                #endregion
+
+                MenuOverlay menu = new MenuOverlay(300, 400, menuItems, true, null, _graphics);
                 Global.OverlayManager.SetCurrentOverlayAndReset(menu);
             }
             else
@@ -93,11 +129,7 @@ namespace PostMortem_P1
             // Updated at an fps
             Global.InputManager.Update(gameTime);
 
-            if (Global.InputManager.IsExitGame())
-            {
-                Exit();
-            }
-            else if (Global.InputManager.IsSpace())
+            if (Global.InputManager.IsSpace())
             {
                 ToggleGameMode();
             }

@@ -1,4 +1,7 @@
-﻿using RogueSharp.Random;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+
+using RogueSharp.Random;
 
 using PostMortem_P1.Graphics;
 using PostMortem_P1.Systems;
@@ -26,7 +29,7 @@ namespace PostMortem_P1.Core
         #endregion
 
         public static bool Debugging = false;
-        
+
         public static readonly IRandom Random = new DotNetRandom();
 
         public static SpriteManager SpriteManager { get; set; }
@@ -37,5 +40,6 @@ namespace PostMortem_P1.Core
         public static GameMode GameMode { get; set; }
         public static OverlayManager OverlayManager { get; set; }
         public static Hud Hud { get; set; }
+        public static GraphicsDevice GraphicsDevice { get; set; }
     }
 }
