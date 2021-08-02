@@ -17,7 +17,6 @@ namespace PostMortem_P1.Menus.MenuActions
         public MenuActionGetBlockFromAllBlocks(GraphicsDeviceManager graphics, MenuAction nextAction, bool isLastGet) : base(graphics, nextAction, isLastGet)
         {
             _allBlockIDs = BlockType.GetAllBlockIDs();
-            Debug.WriteLine($"_allBlockIDs = {JsonSerializer.Serialize(_allBlockIDs)}");
         }
 
         public override bool Do()
@@ -43,7 +42,7 @@ namespace PostMortem_P1.Menus.MenuActions
             }
             else
             {
-                return null;
+                throw new Exception("Data not set for MenuActionGetBlockFromAllBlocks");
             }
         }
     }

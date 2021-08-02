@@ -108,6 +108,11 @@ namespace PostMortem_P1
                 MenuActionGetSelectedTile getSelectedTileReplaceFloor = new MenuActionGetSelectedTile(_graphics, replaceFloor, true);
                 replaceFloor.SetTileAction(getSelectedTileReplaceFloor);
                 menuItems.Add(new MenuItem("[D] Replace Floor", getSelectedTileReplaceFloor));
+
+                MenuActionAddItemToPlayer addItemToPlayer = new MenuActionAddItemToPlayer(_graphics);
+                MenuActionGetItemFromAllItems getItemFromAllItemsAddItemToPlayer = new MenuActionGetItemFromAllItems(_graphics, addItemToPlayer, true);
+                addItemToPlayer.SetItemAction(getItemFromAllItemsAddItemToPlayer);
+                menuItems.Add(new MenuItem("[D] Add Item to Player", getItemFromAllItemsAddItemToPlayer));
                 #endregion
 
                 MenuOverlay menu = new MenuOverlay(300, 400, menuItems, true, null, _graphics);

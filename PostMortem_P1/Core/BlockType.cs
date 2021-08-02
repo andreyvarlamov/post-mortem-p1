@@ -92,7 +92,7 @@ namespace PostMortem_P1.Core
 
         public static List<int> GetAllBlockIDs()
         {
-            var values =  (int[])Enum.GetValues(typeof(BlockType.eBlockIDs));
+            var values =  (int[])Enum.GetValues(typeof(eBlockIDs));
             List<int> blockIDs = new List<int>();
             foreach(int value in values)
             {

@@ -55,7 +55,7 @@ namespace PostMortem_P1.Menus.MenuActions
             }
             else
             {
-                return null;
+                throw new Exception("Data not set for MenuActionGetItemFromInventory");
             }
         }
     }

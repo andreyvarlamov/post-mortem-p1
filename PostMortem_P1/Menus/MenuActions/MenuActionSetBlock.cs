@@ -26,11 +26,6 @@ namespace PostMortem_P1.Menus.MenuActions
 
         public override bool Do()
         {
-            if (!_tileAction.IsDataSet || !_blockAction.IsDataSet)
-            {
-                throw new Exception("tile or block action is not ready yet.");
-            }
-
             Tile tile = _tileAction.GetSelectedTile();
             Block block = _blockAction.GetSelectedBlock();
 

@@ -63,10 +63,6 @@ namespace PostMortem_P1.Core
                 Player = new Player(CurrentChunkMap.GetSuitablePlayerPosition());
             }
 
-            Player.AddToInventory(ItemType.Apple());
-            Player.AddToInventory(ItemType.Apple());
-            Player.AddToInventory(ItemType.Dirt());
-
             Camera.CenterOn(CurrentChunkMap[Player.X, Player.Y]);
 
             Global.Hud.SetChunkX(Player.X);

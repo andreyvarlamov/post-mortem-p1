@@ -65,6 +65,20 @@ namespace PostMortem_P1.Core
                     return null;
             }
         }
+        public static List<int> GetAllItemIDs()
+        {
+            var values =  (int[])Enum.GetValues(typeof(eItemIDs));
+            List<int> itemIDs = new List<int>();
+            foreach(int value in values)
+            {
+                if (value > 0)
+                {
+                    itemIDs.Add(value);
+                }
+            }
+
+            return itemIDs;
+        }
 
         public enum eItemIDs
         {

@@ -28,11 +28,6 @@ namespace PostMortem_P1.Menus.MenuActions
 
         public override bool Do()
         {
-            if (!_tileAction.IsDataSet)
-            {
-                throw new Exception("tile action is not ready yet.");
-            }
-
             Tile tile = _tileAction.GetSelectedTile();
 
             if (!_isItemSelected)
@@ -53,11 +48,6 @@ namespace PostMortem_P1.Menus.MenuActions
             else
             {
                 // Tile and item were selected, pick up item
-                if (!_itemAction.IsDataSet)
-                {
-                    throw new Exception("item action is not ready yet.");
-                }
-
                 Item item = _itemAction.GetSelectedItem();
 
                 Global.WorldMap.CurrentChunkMap.RemoveItemFromItemPickup(tile, item);
