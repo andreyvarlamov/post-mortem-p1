@@ -22,7 +22,7 @@ namespace PostMortem_P1.Systems
             }
             else
             {
-                ActivateEnemies(Global.WorldMap.CurrentChunkMap.SchedulingSystem);
+                ActivateNPCs(Global.WorldMap.CurrentChunkMap.SchedulingSystem);
             }
         }
 
@@ -84,10 +84,10 @@ namespace PostMortem_P1.Systems
                 return true;
             }
 
-            Enemy enemy = Global.WorldMap.CurrentChunkMap.GetEnemyAt(x, y);
-            if (enemy != null)
+            NPC npc = Global.WorldMap.CurrentChunkMap.GetNPCAt(x, y);
+            if (npc != null)
             {
-                Attack(Global.WorldMap.Player, enemy);
+                Attack(Global.WorldMap.Player, npc);
                 return true;
             }
 
@@ -110,9 +110,9 @@ namespace PostMortem_P1.Systems
 
                 if (defender.Health <= 0)
                 {
-                    if (defender is Enemy)
+                    if (defender is NPC)
                     {
-                        Global.WorldMap.CurrentChunkMap.RemoveEnemy(defender as Enemy);
+                        Global.WorldMap.CurrentChunkMap.RemoveNPC(defender as NPC);
                     }
 
                     Debug.WriteLine($"{attacker.Name} killed {defender.Name}.");
@@ -124,7 +124,7 @@ namespace PostMortem_P1.Systems
             }
         }
 
-        public void ActivateEnemies(SchedulingSystem schedulingSystem)
+        public void ActivateNPCs(SchedulingSystem schedulingSystem)
         {
             IScheduleable scheduleable = schedulingSystem.Get();
 
@@ -135,23 +135,31 @@ namespace PostMortem_P1.Systems
             }
             else
             {
-                if (scheduleable is Enemy enemy)
+                if (scheduleable is NPC npc)
                 {
-                    enemy.PerformAction(this);
-                    schedulingSystem.Add(enemy);
+                    npc.PerformAction(this);
+                    schedulingSystem.Add(npc);
                 }
 
-                ActivateEnemies(schedulingSystem);
+                ActivateNPCs(schedulingSystem);
             }
         }
 
-        public void MoveEnemy(Enemy enemy, Tile tile)
+        public void MoveNPC(NPC npc, Tile tile)
         {
-            if (!enemy.SetPosition(tile.X, tile.Y, null))
+            if (!npc.SetPosition(tile.X, tile.Y, null))
             {
                 if (Global.WorldMap.Player.X == tile.X && Global.WorldMap.Player.Y == tile.Y)
                 {
-                    Attack(enemy, Global.WorldMap.Player);
+                    // Only attack when trying to move to tile with player, if at low dispositon
+                    // Prevent walking behavior that try to walk into player by mistake from attacking
+                    // TODO: Think about maybe not doing this check
+                    // I think only when attacking, will AI walk into a player (it's a non walkable tile otherwise)
+                    // But they could target player with certain behavior (e.g. drunk), then an attack could be interesting
+                    if (npc.Disposition < 0)
+                    {
+                        Attack(npc, Global.WorldMap.Player);
+                    }
                 }
             }
         }

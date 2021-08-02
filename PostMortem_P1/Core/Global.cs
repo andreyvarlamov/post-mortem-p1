@@ -14,7 +14,7 @@ namespace PostMortem_P1.Core
     {
         None = 0,
         PlayerTurn = 1,
-        EnemyTurn = 2,
+        NPCTurn = 2,
         Debugging = 3
     }
 

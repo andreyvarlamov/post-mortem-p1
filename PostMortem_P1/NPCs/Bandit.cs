@@ -4,18 +4,20 @@ using PostMortem_P1.Core;
 
 using RSPoint = RogueSharp.Point;
 
-namespace PostMortem_P1.Enemies
+namespace PostMortem_P1.NPCs
 {
-    public class Bandit : Enemy
+    public class Bandit : NPC
     {
         public Bandit() : base()
         {
-
         }
 
         public static Bandit Create(RSPoint position, int level)
         {
             int health = Dice.Roll("10d5");
+            int speed = Dice.Roll("1d4") + 8;
+            var damage = Dice.Parse("1d3");
+
             return new Bandit
             {
                 Sprite = Global.SpriteManager.Bandit,
@@ -24,13 +26,15 @@ namespace PostMortem_P1.Enemies
 
                 Awareness = 10,
                 Name = "Bandit",
-                Speed = Dice.Roll("1d4") + 8,
+                Speed = speed,
 
                 ArmorClass = 10,
                 AttackBonus = 0,
-                Damage = Dice.Parse("1d3"),
+                Damage = damage,
                 Health = health,
-                MaxHealth = health
+                MaxHealth = health,
+
+                Disposition = -100
             };
         }
     }
