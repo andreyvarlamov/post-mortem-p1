@@ -159,7 +159,7 @@ namespace PostMortem_P1.Menus.Overlays
                 ColoredParagraph name = new ColoredString($"NAME: {InspectTileModel.Actor.Name}", Color.White) + new ColoredString("", Color.White);
                 ColoredParagraph speed = new ColoredString($"SPEED: {InspectTileModel.Actor.Speed}", Color.White) + new ColoredString("", Color.White);
                 ColoredParagraph armorClass = new ColoredString($"ARMOR CLASS: {InspectTileModel.Actor.ArmorClass}", Color.White) + new ColoredString("", Color.White);
-                ColoredParagraph attackBonus = new ColoredString($"ARMOR CLASS: {InspectTileModel.Actor.ArmorClass}", Color.White) + new ColoredString("", Color.White);
+                ColoredParagraph attackBonus = new ColoredString($"ATTACK BONUS: {InspectTileModel.Actor.AttackBonus}", Color.White) + new ColoredString("", Color.White);
                 ColoredParagraph damage = new ColoredString($"DAMAGE: {InspectTileModel.Actor.Damage}", Color.White) + new ColoredString("", Color.White);
 
                 float healthPercent = 0.0f;
