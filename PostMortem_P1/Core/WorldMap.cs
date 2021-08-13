@@ -25,6 +25,8 @@ namespace PostMortem_P1.Core
 
         private ChunkMap[,] _chunkMaps;
 
+        public SchedulingSystem SchedulingSystem { get; set; }
+
         public ChunkMap CurrentChunkMap
         {
             get
@@ -79,6 +81,7 @@ namespace PostMortem_P1.Core
                 $"CHUNK: x = {Player.X} y = {Player.Y}");
 
             CurrentChunkMap.SetMapForPlayer(Player);
+            SchedulingSystem.Add(Player);
         }
 
         public bool SetPlayerWorldPosition(int xWorld, int yWorld)
@@ -114,11 +117,16 @@ namespace PostMortem_P1.Core
                 {
                     ChunkMap prevChunkMap = CurrentChunkMap;
 
+                    prevChunkMap.Scheduleables = SchedulingSystem.PopScheduleables();
+
                     PlayerWorldPosX = xWorld;
                     PlayerWorldPosY = yWorld;
 
-                    prevChunkMap.RemoveActorFromSchedulingSystem(Player);
-                    CurrentChunkMap.AddActorToSchedulingSystem(Player);
+                    SchedulingSystem.AddMultipleDelayed(CurrentChunkMap.Scheduleables);
+
+                    // prevChunkMap.RemoveActorFromSchedulingSystem(Player);
+                    // CurrentChunkMap.AddActorToSchedulingSystem(Player);
+                    // Save current scheduleables to the scheduleables in the world chunk
                     return Global.WorldMap.Player.SetPosition(xChunk, yChunk, prevChunkMap);
                 }
             }

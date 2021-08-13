@@ -16,6 +16,7 @@ using PostMortem_P1.NPCs;
 using PostMortem_P1.Graphics;
 using PostMortem_P1.Systems;
 using PostMortem_P1.Models;
+using PostMortem_P1.Interfaces;
 
 namespace PostMortem_P1.Core
 {
@@ -27,14 +28,13 @@ namespace PostMortem_P1.Core
 
         private MapGenSchema _mapGenSchema;
 
-        public SchedulingSystem SchedulingSystem;
+        public SortedDictionary<long, List<IScheduleable>> Scheduleables;
 
         public ChunkMap(MapGenSchema mapGenSchema)
         {
             _npcs = new List<NPC>();
 
             _mapGenSchema = mapGenSchema;
-            SchedulingSystem = new SchedulingSystem();
 
             _playerFov = new FieldOfView<Tile>(this);
         }
@@ -300,18 +300,17 @@ namespace PostMortem_P1.Core
         {
             SetIsWalkable(player.X, player.Y, false);
             UpdatePlayerFieldOfView();
-            AddActorToSchedulingSystem(player);
         }
 
-        public void AddActorToSchedulingSystem(Actor actor)
-        {
-            SchedulingSystem.Add(actor);
-        }
+        //public void AddActorToSchedulingSystem(Actor actor)
+        //{
+        //    SchedulingSystem.Add(actor);
+        //}
 
-        public void RemoveActorFromSchedulingSystem(Actor actor)
-        {
-            SchedulingSystem.Remove(actor);
-        }
+        //public void RemoveActorFromSchedulingSystem(Actor actor)
+        //{
+        //    SchedulingSystem.Remove(actor);
+        //}
 
         public void AddNPC(NPC npc)
         {

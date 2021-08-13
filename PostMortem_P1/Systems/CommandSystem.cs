@@ -22,7 +22,7 @@ namespace PostMortem_P1.Systems
             }
             else
             {
-                ActivateNPCs(Global.WorldMap.CurrentChunkMap.SchedulingSystem);
+                ActivateNPCs(Global.WorldMap.SchedulingSystem);
             }
         }
 

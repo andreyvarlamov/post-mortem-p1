@@ -15,7 +15,7 @@ namespace PostMortem_P1.NPCs
         public static Stranger Create(RSPoint position, int level)
         {
             int health = Dice.Roll("10d6");
-            int speed = Dice.Roll("1d4") + 8;
+            int speed = Dice.Roll("3d10") + 80;
             var damage = Dice.Parse("2d4");
 
             return new Stranger

@@ -141,7 +141,7 @@ namespace PostMortem_P1.Core
         #endregion
 
         #region IScheduleable
-        public int Time
+        public long Time
         {
             get
             {
