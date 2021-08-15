@@ -309,9 +309,15 @@ namespace PostMortem_P1.Core
             tile.IsTileWalkable = isWalkable;
         }
 
+        /// <summary>
+        /// Set map for player's initial spawn
+        /// </summary>
+        /// <param name="player"></param>
         public void SetMapForPlayer(Player player)
         {
+            InitializeScheduleables();
             SetIsWalkable(player.X, player.Y, false);
+
             UpdatePlayerFieldOfView();
         }
 

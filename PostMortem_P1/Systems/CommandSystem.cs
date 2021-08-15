@@ -112,7 +112,7 @@ namespace PostMortem_P1.Systems
                 {
                     if (defender is NPC)
                     {
-                        Global.WorldMap.CurrentChunkMap.RemoveNPC(defender as NPC);
+                        Global.WorldMap.RemoveNPCFromCurrentChunk(defender as NPC);
                     }
 
                     Debug.WriteLine($"{attacker.Name} killed {defender.Name}.");

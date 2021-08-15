@@ -35,7 +35,14 @@ namespace PostMortem_P1.Core
 
         public void AddList(long ticks, List<IScheduleable> scheduleables)
         {
-            _scheduleables.Add(ticks, scheduleables);
+            if (_scheduleables.ContainsKey(ticks))
+            {
+                _scheduleables[ticks].AddRange(scheduleables);
+            }
+            else
+            {
+                _scheduleables.Add(ticks, scheduleables);
+            }
         }
 
         public void Remove(IScheduleable scheduleable)

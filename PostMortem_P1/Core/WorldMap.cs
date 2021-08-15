@@ -83,6 +83,7 @@ namespace PostMortem_P1.Core
 
             CurrentChunkMap.SetMapForPlayer(Player);
             SchedulingSystem.AddNext(Player);
+            SchedulingSystem.AddMultipleDelayed(CurrentChunkMap.Scheduleables);
         }
 
         public bool SetPlayerWorldPosition(int xWorld, int yWorld)
@@ -130,14 +131,17 @@ namespace PostMortem_P1.Core
 
                     SchedulingSystem.AddMultipleDelayed(CurrentChunkMap.Scheduleables);
 
-                    // prevChunkMap.RemoveActorFromSchedulingSystem(Player);
-                    // CurrentChunkMap.AddActorToSchedulingSystem(Player);
-                    // Save current scheduleables to the scheduleables in the world chunk
                     return Global.WorldMap.Player.SetPosition(xChunk, yChunk, prevChunkMap);
                 }
             }
 
             return false;
+        }
+
+        public void RemoveNPCFromCurrentChunk(NPC npc)
+        {
+            CurrentChunkMap.RemoveNPC(npc);
+            SchedulingSystem.Remove(npc);
         }
         
         public void Draw(SpriteBatch spriteBatch)
