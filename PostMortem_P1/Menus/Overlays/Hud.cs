@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics;
-
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
 using PostMortem_P1.Core;
+using System;
+using System.Collections.Generic;
 
 namespace PostMortem_P1.Menus.Overlays
 {
@@ -20,6 +16,8 @@ namespace PostMortem_P1.Menus.Overlays
         private int _chunkY;
         private int _worldX;
         private int _worldY;
+        private float _turns;
+        private DateTime _dateTime;
 
         private List<Item> _items;
 
@@ -41,6 +39,8 @@ namespace PostMortem_P1.Menus.Overlays
             _chunkY = 0;
             _worldX = 0;
             _worldY = 0;
+            _turns = 0.0f;
+            _dateTime = new DateTime();
 
             _items = new List<Item>();
 
@@ -77,11 +77,18 @@ namespace PostMortem_P1.Menus.Overlays
             ColoredParagraph chunkPosition = new ColoredString($"CHUNK: X={_chunkX} Y={_chunkY}", Color.White) + new ColoredString("", Color.White);
             ColoredParagraph worldPosition = new ColoredString($"WORLD: X={_worldX} Y={_worldY}", Color.White) + new ColoredString("", Color.White);
 
+            ColoredParagraph turns = new ColoredString($"TURNS: {_turns.ToString("0.00")}", Color.White) + new ColoredString("", Color.White);
+            ColoredParagraph dateTime = new ColoredString($"DATE: {_dateTime.ToString("G")}", Color.White) + new ColoredString("", Color.White);
+
             _coloredParagraphs.Add(healthColPar);
             _coloredParagraphs.Add(spacer);
 
             _coloredParagraphs.Add(chunkPosition);
             _coloredParagraphs.Add(worldPosition);
+            _coloredParagraphs.Add(spacer);
+
+            _coloredParagraphs.Add(turns);
+            _coloredParagraphs.Add(dateTime);
             _coloredParagraphs.Add(spacer);
 
             _coloredParagraphs.Add(new ColoredString("PLAYER ITEMS: ", Color.Blue) + new ColoredString("", Color.White));
@@ -141,6 +148,18 @@ namespace PostMortem_P1.Menus.Overlays
         public void SetWorldY(int worldY)
         {
             _worldY = worldY;
+            UpdateText();
+        }
+
+        public void SetTurns(float turns)
+        {
+            _turns = turns;
+            UpdateText();
+        }
+
+        public void SetDateTime(DateTime dateTime)
+        {
+            _dateTime = dateTime;
             UpdateText();
         }
 

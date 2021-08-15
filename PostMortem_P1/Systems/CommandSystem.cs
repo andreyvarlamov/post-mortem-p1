@@ -130,6 +130,8 @@ namespace PostMortem_P1.Systems
 
             if (scheduleable is Player)
             {
+                Global.Hud.SetTurns(schedulingSystem.GetTimeTurns());
+                Global.Hud.SetDateTime(schedulingSystem.GetDateTime());
                 IsPlayerTurn = true;
                 schedulingSystem.AddNext(Global.WorldMap.Player);
             }

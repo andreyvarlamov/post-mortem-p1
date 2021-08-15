@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-using PostMortem_P1.Core;
+﻿using PostMortem_P1.Core;
 using PostMortem_P1.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace PostMortem_P1.Systems
 {
@@ -63,6 +63,12 @@ namespace PostMortem_P1.Systems
         public float GetTimeTurns()
         {
             return _totalTicks / 100.0f;
+        }
+
+        public DateTime GetDateTime()
+        {
+            DateTime startDateTime = DateTime.Parse("3000-01-01 08:00");
+            return startDateTime.AddSeconds(GetTimeTurns());
         }
 
         public void Clear()

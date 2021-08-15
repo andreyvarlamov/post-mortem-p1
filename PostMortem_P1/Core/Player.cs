@@ -9,7 +9,8 @@ namespace PostMortem_P1.Core
         public Player(RSPoint position) : base()
         {
             int health = 50;
-            int speed = 100;
+            // Slightly faster than average (95/100 seconds per move)
+            int speed = 95;
             var damage = Dice.Parse("2d4");
 
             Sprite = Global.SpriteManager.Player;
