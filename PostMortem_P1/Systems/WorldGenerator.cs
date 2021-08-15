@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-using PostMortem_P1.Core;
+﻿using PostMortem_P1.Core;
 using PostMortem_P1.MapGenSchemas;
 
 namespace PostMortem_P1.Systems

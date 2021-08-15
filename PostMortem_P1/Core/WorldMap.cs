@@ -47,6 +47,7 @@ namespace PostMortem_P1.Core
             _chunkMaps = new ChunkMap[Width, Height];
 
             CommandSystem = new CommandSystem();
+            SchedulingSystem = new SchedulingSystem();
         }
 
         public ChunkMap this[int x, int y]
@@ -81,7 +82,7 @@ namespace PostMortem_P1.Core
                 $"CHUNK: x = {Player.X} y = {Player.Y}");
 
             CurrentChunkMap.SetMapForPlayer(Player);
-            SchedulingSystem.Add(Player);
+            SchedulingSystem.AddNext(Player);
         }
 
         public bool SetPlayerWorldPosition(int xWorld, int yWorld)
@@ -121,6 +122,11 @@ namespace PostMortem_P1.Core
 
                     PlayerWorldPosX = xWorld;
                     PlayerWorldPosY = yWorld;
+
+                    if (CurrentChunkMap.Scheduleables == null)
+                    {
+                        CurrentChunkMap.InitializeScheduleables();
+                    }
 
                     SchedulingSystem.AddMultipleDelayed(CurrentChunkMap.Scheduleables);
 

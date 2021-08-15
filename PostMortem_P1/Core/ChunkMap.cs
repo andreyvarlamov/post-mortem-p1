@@ -28,7 +28,7 @@ namespace PostMortem_P1.Core
 
         private MapGenSchema _mapGenSchema;
 
-        public SortedDictionary<long, List<IScheduleable>> Scheduleables;
+        public ScheduleableDictionary Scheduleables;
 
         public ChunkMap(MapGenSchema mapGenSchema)
         {
@@ -63,6 +63,19 @@ namespace PostMortem_P1.Core
                         this[x, y] = new Tile(x, y, floor);
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// If a map is being loaded for the first time, scheduleables need to be added from pre genned NPCs
+        /// </summary>
+        public void InitializeScheduleables()
+        {
+            Scheduleables = new ScheduleableDictionary();
+
+            foreach (var npc in _npcs)
+            {
+                Scheduleables.AddScheduleable(npc.Time, npc);
             }
         }
 
@@ -113,7 +126,7 @@ namespace PostMortem_P1.Core
             //});
         }
 
-               public bool IsInPlayerFov(int x, int y)
+        public bool IsInPlayerFov(int x, int y)
         {
             return _playerFov.IsInFov(x, y);
         }
@@ -316,14 +329,12 @@ namespace PostMortem_P1.Core
         {
             _npcs.Add(npc);
             SetIsWalkable(npc.X, npc.Y, false);
-            AddActorToSchedulingSystem(npc);
         }
 
         public void RemoveNPC(NPC npc)
         {
             _npcs.Remove(npc);
             SetIsWalkable(npc.X, npc.Y, true);
-            RemoveActorFromSchedulingSystem(npc);
         }
 
         public NPC GetNPCAt(int x, int y)

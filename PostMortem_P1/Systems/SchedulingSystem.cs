@@ -9,95 +9,49 @@ namespace PostMortem_P1.Systems
     public class SchedulingSystem
     {
         private long _totalTicks;
-        private readonly SortedDictionary<long, List<IScheduleable>> _scheduleables;
+        private ScheduleableDictionary _scheduleables;
 
         public SchedulingSystem()
         {
             _totalTicks = 0;
-            _scheduleables = new SortedDictionary<long, List<IScheduleable>>();
+            _scheduleables = new ScheduleableDictionary();
         }
 
-        public void Add(IScheduleable scheduleable)
+        public void AddNext(IScheduleable scheduleable)
         {
             long key = _totalTicks + scheduleable.Time;
-            if (!_scheduleables.ContainsKey(key))
-            {
-                _scheduleables.Add(key, new List<IScheduleable>());
-            }
-            _scheduleables[key].Add(scheduleable);
+            _scheduleables.AddScheduleable(key, scheduleable);
         }
 
-        public void AddMultipleDelayed(SortedDictionary<long, List<IScheduleable>> scheduleables)
+        public void AddMultipleDelayed(ScheduleableDictionary scheduleables)
         {
-            foreach(KeyValuePair<long, List<IScheduleable>> kvp in scheduleables)
+            foreach(KeyValuePair<long, List<IScheduleable>> kvp in scheduleables.GetDictionary())
             {
-                _scheduleables.Add(kvp.Key + _totalTicks, kvp.Value);
+                _scheduleables.AddList(kvp.Key + _totalTicks, kvp.Value);
             }
+            scheduleables.Clear();
         }
 
         /// <summary>
         /// Remove current scheduleables and return them as list with key being offset from current totalTicks
         /// </summary>
         /// <returns>dictionary</returns>
-        public SortedDictionary<long, List<IScheduleable>> PopScheduleables()
+        public ScheduleableDictionary PopScheduleables()
         {
-            SortedDictionary<long, List<IScheduleable>> scheduleables = new SortedDictionary<long, List<IScheduleable>>();
-            for(int i = _scheduleables.Count - 1; i >= 0; i--)
-            {
-                KeyValuePair<long, List<IScheduleable>> kvp = _scheduleables.ElementAt(i);
-
-                // If a player is in this list of scheduleables, keep only player
-                IScheduleable player = kvp.Value.FirstOrDefault(s => s is Player);
-
-                if (player != null)
-                {
-                    var scheduleablesNoPlayer = new List<IScheduleable>(kvp.Value);
-                    scheduleablesNoPlayer.RemoveAll(s => s is Player);
-                    scheduleables.Add(kvp.Key - _totalTicks, scheduleablesNoPlayer);
-
-                    _scheduleables.Remove(kvp.Key);
-                    var newList = new List<IScheduleable>();
-                    newList.Add(player);
-                    _scheduleables.Add(kvp.Key, newList);
-                }
-                else
-                {
-                    scheduleables.Add(kvp.Key - _totalTicks, kvp.Value);
-                    _scheduleables.Remove(kvp.Key);
-                }
-            }
-            return scheduleables;
+            return _scheduleables.PopScheduleables(_totalTicks);
         }
 
         public void Remove(IScheduleable scheduleable)
         {
-            KeyValuePair<long, List<IScheduleable>> scheduleableListFound = new KeyValuePair<long, List<IScheduleable>>(-1, null);
-
-            foreach (var scheduleablesList in _scheduleables)
-            {
-                if (scheduleablesList.Value.Contains(scheduleable))
-                {
-                    scheduleableListFound = scheduleablesList;
-                    break;
-                }
-            }
-
-            if (scheduleableListFound.Value != null)
-            {
-                scheduleableListFound.Value.Remove(scheduleable);
-                if (scheduleableListFound.Value.Count <= 0)
-                {
-                    _scheduleables.Remove(scheduleableListFound.Key);
-                }
-            }
+            _scheduleables.Remove(scheduleable);
         }
 
-        public IScheduleable Get()
+        public IScheduleable PopFirst()
         {
-            var firstScheduleableGroup = _scheduleables.First();
-            var firstScheduleable = firstScheduleableGroup.Value.First();
+            var scheduleableGroupKvp = _scheduleables.GetFirst();
+            var firstScheduleable = scheduleableGroupKvp.Value.First();
             Remove(firstScheduleable);
-            _totalTicks = firstScheduleableGroup.Key;
+            _totalTicks = scheduleableGroupKvp.Key;
             return firstScheduleable;
         }
 
