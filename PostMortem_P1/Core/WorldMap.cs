@@ -25,6 +25,8 @@ namespace PostMortem_P1.Core
 
         private ChunkMap[,] _chunkMaps;
 
+        public SchedulingSystem SchedulingSystem { get; set; }
+
         public ChunkMap CurrentChunkMap
         {
             get
@@ -45,6 +47,7 @@ namespace PostMortem_P1.Core
             _chunkMaps = new ChunkMap[Width, Height];
 
             CommandSystem = new CommandSystem();
+            SchedulingSystem = new SchedulingSystem();
         }
 
         public ChunkMap this[int x, int y]
@@ -79,6 +82,8 @@ namespace PostMortem_P1.Core
                 $"CHUNK: x = {Player.X} y = {Player.Y}");
 
             CurrentChunkMap.SetMapForPlayer(Player);
+            SchedulingSystem.AddNext(Player);
+            SchedulingSystem.AddMultipleDelayed(CurrentChunkMap.Scheduleables);
         }
 
         public bool SetPlayerWorldPosition(int xWorld, int yWorld)
@@ -114,16 +119,31 @@ namespace PostMortem_P1.Core
                 {
                     ChunkMap prevChunkMap = CurrentChunkMap;
 
+                    prevChunkMap.Scheduleables = SchedulingSystem.PopScheduleables();
+                    prevChunkMap.SleepConstructBlocks(SchedulingSystem.GetTimeTicks());
+
                     PlayerWorldPosX = xWorld;
                     PlayerWorldPosY = yWorld;
 
-                    prevChunkMap.RemoveActorFromSchedulingSystem(Player);
-                    CurrentChunkMap.AddActorToSchedulingSystem(Player);
+                    if (CurrentChunkMap.Scheduleables == null)
+                    {
+                        CurrentChunkMap.InitializeScheduleables();
+                    }
+
+                    SchedulingSystem.AddMultipleDelayed(CurrentChunkMap.Scheduleables);
+                    CurrentChunkMap.WakeUpConstructBlocks(SchedulingSystem.GetTimeTicks());
+
                     return Global.WorldMap.Player.SetPosition(xChunk, yChunk, prevChunkMap);
                 }
             }
 
             return false;
+        }
+
+        public void RemoveNPCFromCurrentChunk(NPC npc)
+        {
+            CurrentChunkMap.RemoveNPC(npc);
+            SchedulingSystem.Remove(npc);
         }
         
         public void Draw(SpriteBatch spriteBatch)

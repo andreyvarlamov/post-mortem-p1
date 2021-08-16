@@ -1,71 +1,79 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
+﻿using PostMortem_P1.Core;
 using PostMortem_P1.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace PostMortem_P1.Systems
 {
     public class SchedulingSystem
     {
-        private int _time;
-        private readonly SortedDictionary<int, List<IScheduleable>> _scheduleables;
+        private long _totalTicks;
+        private ScheduleableDictionary _scheduleables;
 
         public SchedulingSystem()
         {
-            _time = 0;
-            _scheduleables = new SortedDictionary<int, List<IScheduleable>>();
+            _totalTicks = 0;
+            _scheduleables = new ScheduleableDictionary();
         }
 
-        public void Add(IScheduleable scheduleable)
+        public void AddNext(IScheduleable scheduleable)
         {
-            int key = _time + scheduleable.Time;
-            if (!_scheduleables.ContainsKey(key))
+            long key = _totalTicks + scheduleable.Time;
+            _scheduleables.AddScheduleable(key, scheduleable);
+        }
+
+        public void AddMultipleDelayed(ScheduleableDictionary scheduleables)
+        {
+            foreach(KeyValuePair<long, List<IScheduleable>> kvp in scheduleables.GetDictionary())
             {
-                _scheduleables.Add(key, new List<IScheduleable>());
+                _scheduleables.AddList(kvp.Key + _totalTicks, kvp.Value);
             }
-            _scheduleables[key].Add(scheduleable);
+            scheduleables.Clear();
+        }
+
+        /// <summary>
+        /// Remove current scheduleables and return them as list with key being offset from current totalTicks
+        /// </summary>
+        /// <returns>dictionary</returns>
+        public ScheduleableDictionary PopScheduleables()
+        {
+            return _scheduleables.PopScheduleables(_totalTicks);
         }
 
         public void Remove(IScheduleable scheduleable)
         {
-            KeyValuePair<int, List<IScheduleable>> scheduleableListFound = new KeyValuePair<int, List<IScheduleable>>(-1, null);
-
-            foreach (var scheduleablesList in _scheduleables)
-            {
-                if (scheduleablesList.Value.Contains(scheduleable))
-                {
-                    scheduleableListFound = scheduleablesList;
-                    break;
-                }
-            }
-
-            if (scheduleableListFound.Value != null)
-            {
-                scheduleableListFound.Value.Remove(scheduleable);
-                if (scheduleableListFound.Value.Count <= 0)
-                {
-                    _scheduleables.Remove(scheduleableListFound.Key);
-                }
-            }
+            _scheduleables.Remove(scheduleable);
         }
 
-        public IScheduleable Get()
+        public IScheduleable PopFirst()
         {
-            var firstScheduleableGroup = _scheduleables.First();
-            var firstScheduleable = firstScheduleableGroup.Value.First();
+            var scheduleableGroupKvp = _scheduleables.GetFirst();
+            var firstScheduleable = scheduleableGroupKvp.Value.First();
             Remove(firstScheduleable);
-            _time = firstScheduleableGroup.Key;
+            _totalTicks = scheduleableGroupKvp.Key;
             return firstScheduleable;
         }
 
-        public int GetTime()
+        public long GetTimeTicks()
         {
-            return _time;
+            return _totalTicks;
+        }
+
+        public float GetTimeTurns()
+        {
+            return _totalTicks / 100.0f;
+        }
+
+        public DateTime GetDateTime()
+        {
+            DateTime startDateTime = DateTime.Parse("3000-01-01 08:00");
+            return startDateTime.AddSeconds(GetTimeTurns());
         }
 
         public void Clear()
         {
-            _time = 0;
+            _totalTicks = 0;
             _scheduleables.Clear();
         }
     }

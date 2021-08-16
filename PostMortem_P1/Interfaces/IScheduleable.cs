@@ -6,6 +6,6 @@ namespace PostMortem_P1.Interfaces
 {
     public interface IScheduleable
     {
-        int Time { get; }
+        long Time { get; }
     }
 }

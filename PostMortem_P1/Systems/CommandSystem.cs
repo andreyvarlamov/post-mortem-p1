@@ -22,7 +22,7 @@ namespace PostMortem_P1.Systems
             }
             else
             {
-                ActivateNPCs(Global.WorldMap.CurrentChunkMap.SchedulingSystem);
+                ActivateNPCs(Global.WorldMap.SchedulingSystem);
             }
         }
 
@@ -112,7 +112,7 @@ namespace PostMortem_P1.Systems
                 {
                     if (defender is NPC)
                     {
-                        Global.WorldMap.CurrentChunkMap.RemoveNPC(defender as NPC);
+                        Global.WorldMap.RemoveNPCFromCurrentChunk(defender as NPC);
                     }
 
                     Debug.WriteLine($"{attacker.Name} killed {defender.Name}.");
@@ -126,19 +126,21 @@ namespace PostMortem_P1.Systems
 
         public void ActivateNPCs(SchedulingSystem schedulingSystem)
         {
-            IScheduleable scheduleable = schedulingSystem.Get();
+            IScheduleable scheduleable = schedulingSystem.PopFirst();
 
             if (scheduleable is Player)
             {
+                Global.Hud.SetTurns(schedulingSystem.GetTimeTurns());
+                Global.Hud.SetDateTime(schedulingSystem.GetDateTime());
                 IsPlayerTurn = true;
-                schedulingSystem.Add(Global.WorldMap.Player);
+                schedulingSystem.AddNext(Global.WorldMap.Player);
             }
             else
             {
                 if (scheduleable is NPC npc)
                 {
                     npc.PerformAction(this);
-                    schedulingSystem.Add(npc);
+                    schedulingSystem.AddNext(npc);
                 }
 
                 ActivateNPCs(schedulingSystem);

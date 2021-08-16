@@ -14,27 +14,28 @@ using RSPoint = RogueSharp.Point;
 
 using PostMortem_P1.NPCs;
 using PostMortem_P1.Graphics;
-using PostMortem_P1.Systems;
 using PostMortem_P1.Models;
+using PostMortem_P1.Blocks;
 
 namespace PostMortem_P1.Core
 {
     public class ChunkMap : Map<Tile>
     {
         private readonly List<NPC> _npcs;
+        private readonly List<ConstructBlock> _constructBlocks;
 
         private FieldOfView<Tile> _playerFov;
 
         private MapGenSchema _mapGenSchema;
 
-        public SchedulingSystem SchedulingSystem;
+        public ScheduleableDictionary Scheduleables;
 
         public ChunkMap(MapGenSchema mapGenSchema)
         {
             _npcs = new List<NPC>();
+            _constructBlocks = new List<ConstructBlock>();
 
             _mapGenSchema = mapGenSchema;
-            SchedulingSystem = new SchedulingSystem();
 
             _playerFov = new FieldOfView<Tile>(this);
         }
@@ -63,6 +64,24 @@ namespace PostMortem_P1.Core
                         this[x, y] = new Tile(x, y, floor);
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// If a map is being loaded for the first time, scheduleables need to be added from pre genned NPCs
+        /// </summary>
+        public void InitializeScheduleables()
+        {
+            Scheduleables = new ScheduleableDictionary();
+
+            foreach (var npc in _npcs)
+            {
+                Scheduleables.AddScheduleable(npc.Time, npc);
+            }
+
+            foreach (var block in _constructBlocks)
+            {
+                Scheduleables.AddScheduleable(block.Time, block);
             }
         }
 
@@ -113,7 +132,7 @@ namespace PostMortem_P1.Core
             //});
         }
 
-               public bool IsInPlayerFov(int x, int y)
+        public bool IsInPlayerFov(int x, int y)
         {
             return _playerFov.IsInFov(x, y);
         }
@@ -169,9 +188,18 @@ namespace PostMortem_P1.Core
 
         public bool BuildBlock(Tile tile, Block block)
         {
-            if (tile.Block.IsAir && !(tile.Block is ItemPickup))
+            if (tile.Block.IsAir && !(tile.Block is ItemPickup) && !(tile.Block is ConstructBlock))
             {
-                SetBlockAndUpdateFov(tile, block);
+                if (block.BuildTime.HasValue)
+                {
+                    ConstructBlock constructBlock = BlockType.ConstructBlock(block, tile.X, tile.Y);
+                    SetBlockAndUpdateFov(tile, constructBlock);
+                    Global.WorldMap.SchedulingSystem.AddNext(constructBlock);
+                }
+                else
+                {
+                    SetBlockAndUpdateFov(tile, block);
+                }
             }
             else
             {
@@ -296,35 +324,38 @@ namespace PostMortem_P1.Core
             tile.IsTileWalkable = isWalkable;
         }
 
+        /// <summary>
+        /// Set map for player's initial spawn
+        /// </summary>
+        /// <param name="player"></param>
         public void SetMapForPlayer(Player player)
         {
+            InitializeScheduleables();
             SetIsWalkable(player.X, player.Y, false);
+
             UpdatePlayerFieldOfView();
-            AddActorToSchedulingSystem(player);
         }
 
-        public void AddActorToSchedulingSystem(Actor actor)
-        {
-            SchedulingSystem.Add(actor);
-        }
+        //public void AddActorToSchedulingSystem(Actor actor)
+        //{
+        //    SchedulingSystem.Add(actor);
+        //}
 
-        public void RemoveActorFromSchedulingSystem(Actor actor)
-        {
-            SchedulingSystem.Remove(actor);
-        }
+        //public void RemoveActorFromSchedulingSystem(Actor actor)
+        //{
+        //    SchedulingSystem.Remove(actor);
+        //}
 
         public void AddNPC(NPC npc)
         {
             _npcs.Add(npc);
             SetIsWalkable(npc.X, npc.Y, false);
-            AddActorToSchedulingSystem(npc);
         }
 
         public void RemoveNPC(NPC npc)
         {
             _npcs.Remove(npc);
             SetIsWalkable(npc.X, npc.Y, true);
-            RemoveActorFromSchedulingSystem(npc);
         }
 
         public NPC GetNPCAt(int x, int y)
@@ -394,6 +425,45 @@ namespace PostMortem_P1.Core
                 AddNPC(npc);
             }
 
+        }
+
+        public void ReplaceConstructBlocks()
+        {
+            foreach(var b in _constructBlocks)
+            {
+                if (b.ReadyToBeChanged)
+                {
+                    SetBlockAndUpdateFov(this[b.X, b.Y], b.ChangeInto);
+                }
+            }
+        }
+
+        public void WakeUpConstructBlocks(long ticksReloadedAt)
+        {
+            foreach(var b in _constructBlocks)
+            {
+                if (b.WillWakeUp)
+                {
+                    if(!b.WakeUp(ticksReloadedAt))
+                    {
+                        Global.WorldMap.SchedulingSystem.AddNext(b);
+                    }
+                }
+            }
+
+            ReplaceConstructBlocks();
+        }
+
+        public void SleepConstructBlocks(long ticksUnloadedAt)
+        {
+            foreach(var b in _constructBlocks)
+            {
+                if (b.WillWakeUp)
+                {
+                    b.TicksUnloadedAt = ticksUnloadedAt;
+                    Global.WorldMap.SchedulingSystem.Remove(b);
+                }
+            }
         }
     }
 }

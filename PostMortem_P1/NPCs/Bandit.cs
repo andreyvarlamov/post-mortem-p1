@@ -15,7 +15,7 @@ namespace PostMortem_P1.NPCs
         public static Bandit Create(RSPoint position, int level)
         {
             int health = Dice.Roll("10d5");
-            int speed = Dice.Roll("1d4") + 8;
+            int speed = Dice.Roll("3d10") + 80;
             var damage = Dice.Parse("1d3");
 
             return new Bandit
