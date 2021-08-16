@@ -34,6 +34,11 @@ namespace PostMortem_P1.Core
         {
 
         }
+
+        public virtual void PerformAction()
+        {
+
+        }
         #endregion
     }
 }

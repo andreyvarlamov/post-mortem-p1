@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-
 using Microsoft.Xna.Framework.Graphics;
+using PostMortem_P1.Blocks;
 
 namespace PostMortem_P1.Core
 {
@@ -70,6 +69,13 @@ namespace PostMortem_P1.Core
             return new ItemPickup(blockID, isAir, isWalkable, isTransparent);
         }
 
+        public static ConstructBlock ConstructBlock(Block block, int turnsTillBuilt)
+        {
+            int blockID = (int)eBlockIDs.ConstructBlock;
+
+            return new ConstructBlock(blockID, turnsTillBuilt, block);
+        }
+
         public static Block GetByID(int blockIDInt)
         {
             eBlockIDs blockID = (eBlockIDs)blockIDInt;
@@ -107,6 +113,7 @@ namespace PostMortem_P1.Core
 
         public enum eBlockIDs
         {
+            ConstructBlock = -2,
             ItemPickup = -1,
             Air = 0,
             Dirt = 1,
