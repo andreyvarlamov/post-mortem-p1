@@ -8,6 +8,6 @@ namespace PostMortem_P1.Interfaces
     {
         bool WillWakeUp { get; }
         long TicksUnloadedAt { get; set; }
-        void WakeUp(long ticksReloadedAt);
+        bool WakeUp(long ticksReloadedAt);
     }
 }

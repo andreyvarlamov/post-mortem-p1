@@ -14,15 +14,15 @@ using RSPoint = RogueSharp.Point;
 
 using PostMortem_P1.NPCs;
 using PostMortem_P1.Graphics;
-using PostMortem_P1.Systems;
 using PostMortem_P1.Models;
-using PostMortem_P1.Interfaces;
+using PostMortem_P1.Blocks;
 
 namespace PostMortem_P1.Core
 {
     public class ChunkMap : Map<Tile>
     {
         private readonly List<NPC> _npcs;
+        private readonly List<ConstructBlock> _constructBlocks;
 
         private FieldOfView<Tile> _playerFov;
 
@@ -33,6 +33,7 @@ namespace PostMortem_P1.Core
         public ChunkMap(MapGenSchema mapGenSchema)
         {
             _npcs = new List<NPC>();
+            _constructBlocks = new List<ConstructBlock>();
 
             _mapGenSchema = mapGenSchema;
 
@@ -76,6 +77,11 @@ namespace PostMortem_P1.Core
             foreach (var npc in _npcs)
             {
                 Scheduleables.AddScheduleable(npc.Time, npc);
+            }
+
+            foreach (var block in _constructBlocks)
+            {
+                Scheduleables.AddScheduleable(block.Time, block);
             }
         }
 
@@ -182,9 +188,18 @@ namespace PostMortem_P1.Core
 
         public bool BuildBlock(Tile tile, Block block)
         {
-            if (tile.Block.IsAir && !(tile.Block is ItemPickup))
+            if (tile.Block.IsAir && !(tile.Block is ItemPickup) && !(tile.Block is ConstructBlock))
             {
-                SetBlockAndUpdateFov(tile, block);
+                if (block.BuildTime.HasValue)
+                {
+                    ConstructBlock constructBlock = BlockType.ConstructBlock(block, tile.X, tile.Y);
+                    SetBlockAndUpdateFov(tile, constructBlock);
+                    Global.WorldMap.SchedulingSystem.AddNext(constructBlock);
+                }
+                else
+                {
+                    SetBlockAndUpdateFov(tile, block);
+                }
             }
             else
             {
@@ -410,6 +425,45 @@ namespace PostMortem_P1.Core
                 AddNPC(npc);
             }
 
+        }
+
+        public void ReplaceConstructBlocks()
+        {
+            foreach(var b in _constructBlocks)
+            {
+                if (b.ReadyToBeChanged)
+                {
+                    SetBlockAndUpdateFov(this[b.X, b.Y], b.ChangeInto);
+                }
+            }
+        }
+
+        public void WakeUpConstructBlocks(long ticksReloadedAt)
+        {
+            foreach(var b in _constructBlocks)
+            {
+                if (b.WillWakeUp)
+                {
+                    if(!b.WakeUp(ticksReloadedAt))
+                    {
+                        Global.WorldMap.SchedulingSystem.AddNext(b);
+                    }
+                }
+            }
+
+            ReplaceConstructBlocks();
+        }
+
+        public void SleepConstructBlocks(long ticksUnloadedAt)
+        {
+            foreach(var b in _constructBlocks)
+            {
+                if (b.WillWakeUp)
+                {
+                    b.TicksUnloadedAt = ticksUnloadedAt;
+                    Global.WorldMap.SchedulingSystem.Remove(b);
+                }
+            }
         }
     }
 }

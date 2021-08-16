@@ -6,9 +6,9 @@ namespace PostMortem_P1.Core
     public class WakeableBlock : Block, IWakeable
     {
         #region IWakeable
-        public long Time { get; }
+        public virtual long Time { get; }
 
-        public bool WillWakeUp
+        public virtual bool WillWakeUp
         {
             get
             {
@@ -21,18 +21,22 @@ namespace PostMortem_P1.Core
         }
 
         public long TicksUnloadedAt { get; set; }
-        public virtual void WakeUp(long ticksReloadedAt)
+        public virtual bool WakeUp(long ticksReloadedAt)
         {
-
+            return false;
         }
         #endregion
 
         #region WakeableBlock
-        public WakeableBlock(int blockID, string name, Texture2D sprite, bool isAir,
-            bool isWalkable, bool isTransparent, int? itemVersionID) :
-            base(blockID, name, sprite, isAir, isWalkable, isTransparent, itemVersionID)
-        {
+        public int X { get; set; }
+        public int Y { get; set; }
 
+        public WakeableBlock(int blockID, string name, Texture2D sprite, bool isAir,
+            bool isWalkable, bool isTransparent, int? itemVersionID, int? buildTime, int x, int y) :
+            base(blockID, name, sprite, isAir, isWalkable, isTransparent, itemVersionID, buildTime)
+        {
+            X = x;
+            Y = y;
         }
 
         public virtual void PerformAction()

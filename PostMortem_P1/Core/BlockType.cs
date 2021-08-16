@@ -16,8 +16,9 @@ namespace PostMortem_P1.Core
             bool isWalkable = true;
             bool isTransparent = true;
             int? itemVersionID = null;
+            int? buildTime = null;
 
-            return new Block(blockID, name, sprite, isAir, isWalkable, isTransparent, itemVersionID);
+            return new Block(blockID, name, sprite, isAir, isWalkable, isTransparent, itemVersionID, buildTime);
         }
 
         public static Block Dirt()
@@ -29,8 +30,9 @@ namespace PostMortem_P1.Core
             bool isWalkable = false;
             bool isTransparent = false;
             int? itemVersionID = (int)ItemType.eItemIDs.Dirt;
+            int? buildTime = 5;
 
-            return new Block(blockID, name, sprite, isAir, isWalkable, isTransparent, itemVersionID);
+            return new Block(blockID, name, sprite, isAir, isWalkable, isTransparent, itemVersionID, buildTime);
         }
 
         public static Block BuildingWall()
@@ -42,8 +44,9 @@ namespace PostMortem_P1.Core
             bool isWalkable = false;
             bool isTransparent = false;
             int? itemVersionID = (int)ItemType.eItemIDs.BuildingWall;
+            int? buildTime = 10;
 
-            return new Block(blockID, name, sprite, isAir, isWalkable, isTransparent, itemVersionID);
+            return new Block(blockID, name, sprite, isAir, isWalkable, isTransparent, itemVersionID, buildTime);
         }
 
         public static Block Wall()
@@ -55,8 +58,9 @@ namespace PostMortem_P1.Core
             bool isWalkable = false;
             bool isTransparent = false;
             int? itemVersionID = (int)ItemType.eItemIDs.Wall;
+            int? buildTime = 10;
 
-            return new Block(blockID, name, sprite, isAir, isWalkable, isTransparent, itemVersionID);
+            return new Block(blockID, name, sprite, isAir, isWalkable, isTransparent, itemVersionID, buildTime);
         }
 
         public static ItemPickup ItemPickup()
@@ -69,11 +73,11 @@ namespace PostMortem_P1.Core
             return new ItemPickup(blockID, isAir, isWalkable, isTransparent);
         }
 
-        public static ConstructBlock ConstructBlock(Block block, int turnsTillBuilt)
+        public static ConstructBlock ConstructBlock(Block block, int x, int y)
         {
             int blockID = (int)eBlockIDs.ConstructBlock;
 
-            return new ConstructBlock(blockID, turnsTillBuilt, block);
+            return new ConstructBlock(blockID, block, x, y);
         }
 
         public static Block GetByID(int blockIDInt)

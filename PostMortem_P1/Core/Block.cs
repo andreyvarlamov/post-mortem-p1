@@ -16,8 +16,9 @@ namespace PostMortem_P1.Core
         public bool IsTransparent { get; set; }
 
         public int? ItemVersionID { get; private set; }
+        public int? BuildTime { get; private set; }
 
-        public Block(int blockID, string name, Texture2D sprite, bool isAir, bool isWalkable, bool isTransparent, int? itemVersionID)
+        public Block(int blockID, string name, Texture2D sprite, bool isAir, bool isWalkable, bool isTransparent, int? itemVersionID, int? buildTime)
         {
             BlockID = blockID;
             Name = name;
@@ -26,6 +27,7 @@ namespace PostMortem_P1.Core
             IsWalkable = isWalkable;
             IsTransparent = isTransparent;
             ItemVersionID = itemVersionID;
+            BuildTime = buildTime;
         }
 
         //public void SetAir(bool isAir)

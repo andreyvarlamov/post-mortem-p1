@@ -9,20 +9,49 @@ namespace PostMortem_P1.Blocks
         public int TurnsTillBuilt { get; set; }
         public Block ChangeInto { get; set; }
         public bool ReadyToBeChanged { get; set; }
-        public ConstructBlock(int blockID, int turnsTillBuilt, Block changeInto) :
+        public ConstructBlock(int blockID, Block changeInto, int x, int y) :
             base(blockID, GetConstructName(changeInto), GetConstructSprite(changeInto),
-                true, true, true, null)
+                true, true, true, null, null, x, y)
         {
-            TurnsTillBuilt = turnsTillBuilt;
+            TurnsTillBuilt = changeInto.BuildTime.Value;
             ChangeInto = changeInto;
             ReadyToBeChanged = false;
         }
 
-        public override void WakeUp(long ticksReloadedAt)
+        public override long Time
         {
-            if (ticksReloadedAt - TicksUnloadedAt >= TurnsTillBuilt)
+            get
+            {
+                if (!ReadyToBeChanged)
+                {
+                    return TurnsTillBuilt;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+        }
+
+        public override bool WakeUp(long ticksReloadedAt)
+        {
+            if (ticksReloadedAt - TicksUnloadedAt >= (long) TurnsTillBuilt * 100)
             {
                 PerformAction();
+                return true;
+            }
+            else
+            {
+                TurnsTillBuilt -= (int)(ticksReloadedAt - TicksUnloadedAt) / 100;
+                return false;
+            }
+        }
+
+        public override bool WillWakeUp
+        {
+            get
+            {
+                return !ReadyToBeChanged;
             }
         }
 

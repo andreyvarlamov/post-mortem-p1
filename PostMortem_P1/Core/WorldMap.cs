@@ -120,6 +120,7 @@ namespace PostMortem_P1.Core
                     ChunkMap prevChunkMap = CurrentChunkMap;
 
                     prevChunkMap.Scheduleables = SchedulingSystem.PopScheduleables();
+                    prevChunkMap.SleepConstructBlocks(SchedulingSystem.GetTimeTicks());
 
                     PlayerWorldPosX = xWorld;
                     PlayerWorldPosY = yWorld;
@@ -130,6 +131,7 @@ namespace PostMortem_P1.Core
                     }
 
                     SchedulingSystem.AddMultipleDelayed(CurrentChunkMap.Scheduleables);
+                    CurrentChunkMap.WakeUpConstructBlocks(SchedulingSystem.GetTimeTicks());
 
                     return Global.WorldMap.Player.SetPosition(xChunk, yChunk, prevChunkMap);
                 }

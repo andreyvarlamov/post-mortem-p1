@@ -31,7 +31,7 @@ namespace PostMortem_P1.Core
 
         private bool _toUpdateCanvas;
 
-        public ItemPickup(int blockID, bool isAir, bool isWalkable, bool isTransparent) : base(blockID, "Item Pickup", null, isAir, isWalkable, isTransparent, null)
+        public ItemPickup(int blockID, bool isAir, bool isWalkable, bool isTransparent) : base(blockID, "Item Pickup", null, isAir, isWalkable, isTransparent, null, null)
         {
             Inventory = new Inventory();
 
