@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Input;
 using PostMortem_P1.Core;
 using PostMortem_P1.Input;
 using PostMortem_P1.Models;
+using PostMortem_P1.Blocks;
 
 namespace PostMortem_P1.Menus.Overlays
 {
@@ -147,6 +148,42 @@ namespace PostMortem_P1.Menus.Overlays
                         _coloredParagraphs.Add(itemParagraph);
                     }
                 }
+
+                if (InspectTileModel.Tile.ConstructBlock != null)
+                {
+                    ColoredParagraph block = new ColoredString("CONSTRUCT BLOCK:", Color.White) + new ColoredString("", Color.White);
+                    ColoredParagraph blockID = new ColoredString($"ID: {InspectTileModel.Tile.ConstructBlock.ID}", Color.White) + new ColoredString("", Color.White);
+                    ColoredParagraph blockName = new ColoredString($"Name: {InspectTileModel.Tile.ConstructBlock.Name}", Color.White) + new ColoredString("", Color.White);
+                    List<ColoredString> blockModifierStrings = new List<ColoredString>();
+                    if (InspectTileModel.Tile.ConstructBlock.IsAir)
+                    {
+                        blockModifierStrings.Add(new ColoredString("A", Color.BlueViolet));
+                    }
+                    if (InspectTileModel.Tile.ConstructBlock.IsWalkable)
+                    {
+                        blockModifierStrings.Add(new ColoredString("W", Color.GreenYellow));
+                    }
+                    if (InspectTileModel.Tile.IsTransparent)
+                    {
+                        blockModifierStrings.Add(new ColoredString("T", Color.White));
+                    }
+                    ColoredParagraph blockModifiers = new ColoredParagraph(blockModifierStrings);
+
+                    ColoredParagraph turnsTillBuilt = new ColoredString($"TURNS TILL BUILT: {InspectTileModel.Tile.ConstructBlock.TurnsTillBuilt}", Color.White) + new ColoredString("", Color.White);
+                    bool isReady = InspectTileModel.Tile.ConstructBlock.ReadyToBeChanged;
+                    ColoredString readyString = isReady ? new ColoredString("YES", Color.Green) : new ColoredString("NO", Color.Red);
+                    ColoredParagraph readyToBeChanged = new ColoredString("READY:", Color.White) + readyString;
+                    ColoredParagraph changeInto = new ColoredString($"CHANGE INTO: {InspectTileModel.Tile.ConstructBlock.ChangeInto}", Color.White) + new ColoredString("", Color.White);
+
+
+                    _coloredParagraphs.Add(block);
+                    _coloredParagraphs.Add(blockID);
+                    _coloredParagraphs.Add(blockName);
+                    _coloredParagraphs.Add(blockModifiers);
+                    _coloredParagraphs.Add(turnsTillBuilt);
+                    _coloredParagraphs.Add(readyToBeChanged);
+                    _coloredParagraphs.Add(changeInto);
+                }
             }
 
             if (InspectTileModel.Actor != null)
@@ -234,7 +271,7 @@ namespace PostMortem_P1.Menus.Overlays
 
         private void DrawContent(SpriteBatch spriteBatch)
         {
-            for (int i = 0; i < _maxLines; i++)
+            for (int i = 0; i < Math.Min(_maxLines, _coloredParagraphs.Count); i++)
             {
                 Vector2 colParPosition = new Vector2(PxX + _horizontalOffset, PxY + _verticalOffset + i * _lineHeight);
                 _coloredParagraphs[i + _viewCursor].DrawParagraph(spriteBatch, Global.FontManager.MainFont, colParPosition, LayerDepth.MenuText);

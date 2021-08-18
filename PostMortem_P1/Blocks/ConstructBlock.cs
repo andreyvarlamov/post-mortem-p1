@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Diagnostics;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PostMortem_P1.Core;
 
@@ -35,14 +36,15 @@ namespace PostMortem_P1.Blocks
 
         public override bool WakeUp(long ticksReloadedAt)
         {
-            if (ticksReloadedAt - TicksUnloadedAt >= (long) TurnsTillBuilt * 100)
+            Debug.WriteLine($"ConstructBlock.WakeUp. {ticksReloadedAt} - {TicksUnloadedAt} ");
+            if ((ticksReloadedAt - TicksUnloadedAt) >= (long) TurnsTillBuilt * 100)
             {
                 PerformAction();
                 return true;
             }
             else
             {
-                TurnsTillBuilt -= (int)(ticksReloadedAt - TicksUnloadedAt) / 100;
+                TurnsTillBuilt -= (int)((ticksReloadedAt - TicksUnloadedAt) / 100);
                 return false;
             }
         }
@@ -62,14 +64,39 @@ namespace PostMortem_P1.Blocks
 
         public static Texture2D GetConstructSprite(Block block)
         {
-            Texture2D sprite = block.Sprite;
+            Texture2D sprite = new Texture2D(Global.GraphicsDevice, block.Sprite.Width, block.Sprite.Height);
+
             Color[] data = new Color[sprite.Width * sprite.Height];
-            sprite.GetData<Color>(data);
+            block.Sprite.GetData<Color>(data);
             for (int i = 0; i < data.Length; i++)
             {
-                int increaseBy = 20;
-                int newB = data[i].B + increaseBy;
-                int newA = data[i].A - increaseBy;
+                int rDec = 50;
+                int gDec = 50;
+                int bInc = 50;
+                int aDec = 100;
+
+                int newR = data[i].R - rDec;
+                int newG = data[i].G - gDec;
+                int newB = data[i].B + bInc;
+                int newA = data[i].A - aDec;
+
+                if (newR < 0)
+                {
+                    data[i].R = 0;
+                }
+                else
+                {
+                    data[i].R = (byte)newR;
+                }
+
+                if (newG < 0)
+                {
+                    data[i].G = 0;
+                }
+                else
+                {
+                    data[i].G = (byte)newG;
+                }
 
                 if (newB > 255)
                 {
@@ -90,6 +117,7 @@ namespace PostMortem_P1.Blocks
                 }
             }
             sprite.SetData<Color>(data);
+
             return sprite;
         }
 

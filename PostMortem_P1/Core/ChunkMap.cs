@@ -194,6 +194,7 @@ namespace PostMortem_P1.Core
                 {
                     ConstructBlock constructBlock = BlockType.ConstructBlock(block, tile.X, tile.Y);
                     SetBlockAndUpdateFov(tile, constructBlock);
+                    _constructBlocks.Add(constructBlock);
                     Global.WorldMap.SchedulingSystem.AddNext(constructBlock);
                 }
                 else
@@ -431,6 +432,7 @@ namespace PostMortem_P1.Core
         {
             foreach(var b in _constructBlocks)
             {
+                Debug.WriteLine($"ChunkMap.ReplaceConstructBlocks: Updating block: {b.Name}");
                 if (b.ReadyToBeChanged)
                 {
                     SetBlockAndUpdateFov(this[b.X, b.Y], b.ChangeInto);
@@ -460,8 +462,11 @@ namespace PostMortem_P1.Core
             {
                 if (b.WillWakeUp)
                 {
+                    var schedulingSystem = Global.WorldMap.SchedulingSystem;
+
                     b.TicksUnloadedAt = ticksUnloadedAt;
-                    Global.WorldMap.SchedulingSystem.Remove(b);
+                    b.TurnsTillBuilt = (int)((schedulingSystem.GetNextScheduleableTime(b) - ticksUnloadedAt) / 100);
+                    schedulingSystem.Remove(b);
                 }
             }
         }

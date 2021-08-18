@@ -55,6 +55,18 @@ namespace PostMortem_P1.Systems
             return firstScheduleable;
         }
 
+        public long GetNextScheduleableTime(IScheduleable scheduleable)
+        {
+            var kvp = _scheduleables.GetSchGroupBySch(scheduleable);
+
+            if (kvp.Key == -1)
+            {
+                throw new Exception("Scheduleable not found");
+            }
+
+            return kvp.Key;
+        }
+
         public long GetTimeTicks()
         {
             return _totalTicks;

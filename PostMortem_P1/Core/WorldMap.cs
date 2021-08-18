@@ -119,8 +119,8 @@ namespace PostMortem_P1.Core
                 {
                     ChunkMap prevChunkMap = CurrentChunkMap;
 
-                    prevChunkMap.Scheduleables = SchedulingSystem.PopScheduleables();
                     prevChunkMap.SleepConstructBlocks(SchedulingSystem.GetTimeTicks());
+                    prevChunkMap.Scheduleables = SchedulingSystem.PopScheduleables();
 
                     PlayerWorldPosX = xWorld;
                     PlayerWorldPosY = yWorld;
@@ -131,6 +131,7 @@ namespace PostMortem_P1.Core
                     }
 
                     SchedulingSystem.AddMultipleDelayed(CurrentChunkMap.Scheduleables);
+                    Debug.WriteLine("WorldMap.SetPlayerWorldPosition: Will call WakeUpConstructBlock");
                     CurrentChunkMap.WakeUpConstructBlocks(SchedulingSystem.GetTimeTicks());
 
                     return Global.WorldMap.Player.SetPosition(xChunk, yChunk, prevChunkMap);

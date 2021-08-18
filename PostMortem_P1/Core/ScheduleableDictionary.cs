@@ -47,16 +47,7 @@ namespace PostMortem_P1.Core
 
         public void Remove(IScheduleable scheduleable)
         {
-            KeyValuePair<long, List<IScheduleable>> scheduleableListFound = new KeyValuePair<long, List<IScheduleable>>(-1, null);
-
-            foreach (var scheduleablesList in _scheduleables)
-            {
-                if (scheduleablesList.Value.Contains(scheduleable))
-                {
-                    scheduleableListFound = scheduleablesList;
-                    break;
-                }
-            }
+            KeyValuePair<long, List<IScheduleable>> scheduleableListFound = GetSchGroupBySch(scheduleable);
 
             if (scheduleableListFound.Value != null)
             {
@@ -101,6 +92,22 @@ namespace PostMortem_P1.Core
         public void Clear()
         {
             _scheduleables.Clear();
+        }
+
+        public KeyValuePair<long, List<IScheduleable>> GetSchGroupBySch(IScheduleable scheduleable)
+        {
+            KeyValuePair<long, List<IScheduleable>> scheduleableListFound = new KeyValuePair<long, List<IScheduleable>>(-1, null);
+
+            foreach (var scheduleablesList in _scheduleables)
+            {
+                if (scheduleablesList.Value.Contains(scheduleable))
+                {
+                    scheduleableListFound = scheduleablesList;
+                    break;
+                }
+            }
+
+            return scheduleableListFound;
         }
 
         public KeyValuePair<long, List<IScheduleable>> GetFirst()

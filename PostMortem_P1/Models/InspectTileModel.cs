@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 using PostMortem_P1.Core;
+using PostMortem_P1.Blocks;
 
 namespace PostMortem_P1.Models
 {
@@ -30,15 +31,21 @@ namespace PostMortem_P1.Models
         public FloorModel Floor { get; set; }
         public BlockModel Block { get; set; }
         public ItemPickupModel ItemPickup { get; set; }
+        public ConstructBlockModel ConstructBlock { get; set; }
 
         public static TileModel Get(Tile tile)
         {
             BlockModel block = null;
             ItemPickupModel itemPickup = null;
+            ConstructBlockModel constructBlock = null;
 
             if (tile.Block is ItemPickup)
             {
                 itemPickup = ItemPickupModel.Get(tile.Block as ItemPickup); 
+            }
+            else if (tile.Block is ConstructBlock)
+            {
+                constructBlock = ConstructBlockModel.Get(tile.Block as ConstructBlock);
             }
             else
             {
@@ -53,7 +60,8 @@ namespace PostMortem_P1.Models
                 IsExplored = tile.IsExplored,
                 Floor = FloorModel.Get(tile.Floor),
                 Block = block,
-                ItemPickup = itemPickup
+                ItemPickup = itemPickup,
+                ConstructBlock = constructBlock
             };
         }
     }
@@ -105,6 +113,30 @@ namespace PostMortem_P1.Models
                 Inventory = InventoryModel.Get(itemPickup.Inventory)
             };
         }
+    }
+
+    public class ConstructBlockModel : BlockModel
+    {
+        public int TurnsTillBuilt { get; set; }
+        public bool ReadyToBeChanged { get; set; }
+        public string ChangeInto { get; set; }
+
+        public static ConstructBlockModel Get(ConstructBlock constructBlock)
+        {
+            ConstructBlockModel constructBlockModel = new ConstructBlockModel();
+
+            constructBlockModel.ID = constructBlock.BlockID;
+            constructBlockModel.Name = constructBlock.Name;
+            constructBlockModel.IsAir = constructBlock.IsAir;
+            constructBlockModel.IsWalkable = constructBlock.IsWalkable;
+            constructBlockModel.IsTransparent = constructBlock.IsTransparent;
+            constructBlockModel.TurnsTillBuilt = constructBlock.TurnsTillBuilt;
+            constructBlockModel.ReadyToBeChanged = constructBlock.ReadyToBeChanged;
+            constructBlockModel.ChangeInto = constructBlock.ChangeInto.Name;
+
+            return constructBlockModel;
+        }
+
     }
 
     public class ActorModel
